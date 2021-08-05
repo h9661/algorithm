@@ -13,13 +13,6 @@ int val[MAX];
 int cost[MAX];
 int dp[MAX][100001];
 
-bool cmp(ii a, ii b) {
-	if (a.second != b.second)
-		return a.second < b.second;
-	else
-		return a.first > b.first;
-}
-
 int main() {
 	int N, M;
 	cin >> N >> M;

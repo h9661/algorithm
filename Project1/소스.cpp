@@ -7,22 +7,29 @@
 #define ii pair<int, int>
 using namespace std;
 
-// backjoon 11444 
+// backjoon 11778
 // 2021 8 6
-// 행렬과 분할정복을 이용한 피보나치 수열 구하기
+// 1. 행렬과 분할정복을 이용한 피보나치 수열 구하기
+// 2. 유클리드 호제법을 이용한 최대 공약수 구하기
 
 const int mod = 1000000007;
-ll n;
+ull n1;
+ull n2;
 
-vector<vector<ll>> multiple(vector<vector<ll>>& a, vector<vector<ll>>& b) {
-	vector<vector<ll>> c(2, vector<ll>(2));
+ull gcd(ull a, ull b) {
+	if (b == 0)
+		return a;
+	else
+		return gcd((b), (a % b));
+}
+
+vector<vector<ull>> multiple(vector<vector<ull>>& a, vector<vector<ull>>& b) {
+	vector<vector<ull>> c(2, vector<ull>(2));
 
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
 			for (int k = 0; k < 2; k++)
-				c[i][j] += a[i][k] * b[k][j];
-
-			c[i][j] %= mod;
+				c[i][j] += (((a[i][k]) % mod) * ((b[k][j]) % mod)) % mod;
 		}
 	}
 
@@ -30,26 +37,31 @@ vector<vector<ll>> multiple(vector<vector<ll>>& a, vector<vector<ll>>& b) {
 }
 
 int main() {
-	cin >> n;
+	fastio;
+	cin >> n1 >> n2;
 
-	vector<vector<ll>> ans = {
+	ull temp = gcd(n1, n2);
+
+	vector<vector<ull>> ans1 = {
 		{1, 0},
 		{0, 1}
 	};
-	vector<vector<ll>> a = {
+
+	vector<vector<ull>> a1 = {
 		{1, 1},
 		{1, 0}
 	};
 
-	while (n > 0) {
-		if (n % 2 == 1)
-			ans = multiple(ans, a);
 
-		a = multiple(a, a);
-		n /= 2;
+	while (temp > 0) {
+		if (temp % 2 == 1)
+			ans1 = multiple(ans1, a1);
+
+		a1 = multiple(a1, a1);
+		temp /= 2;
 	}
 
-	cout << ans[0][1] << endl;
+	cout << ans1[0][1] % mod << endl;
 
 	return 0;
 }

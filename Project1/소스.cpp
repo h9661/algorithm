@@ -7,30 +7,49 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 14728 kanpsack dp ps 2021 8 6
+// backjoon 11444 
+// 2021 8 6
+// 행렬과 분할정복을 이용한 피보나치 수열 구하기
 
-const int MAX = 101;
-int N, T;
-int cost[MAX];
-int value[MAX];
-int dp[MAX][10001];
+const int mod = 1000000007;
+ll n;
 
-int main() {
-	cin >> N >> T;
+vector<vector<ll>> multiple(vector<vector<ll>>& a, vector<vector<ll>>& b) {
+	vector<vector<ll>> c(2, vector<ll>(2));
 
-	for (int i = 1; i <= N; i++) {
-		cin >> cost[i];
-		cin >> value[i];
-	}
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			for (int k = 0; k < 2; k++)
+				c[i][j] += a[i][k] * b[k][j];
 
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= T; j++) {
-			if (j - cost[i] >= 0)
-				dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - cost[i]] + value[i]);
-			else
-				dp[i][j] = dp[i - 1][j];
+			c[i][j] %= mod;
 		}
 	}
 
-	cout << dp[N][T] << endl;
+	return c;
+}
+
+int main() {
+	cin >> n;
+
+	vector<vector<ll>> ans = {
+		{1, 0},
+		{0, 1}
+	};
+	vector<vector<ll>> a = {
+		{1, 1},
+		{1, 0}
+	};
+
+	while (n > 0) {
+		if (n % 2 == 1)
+			ans = multiple(ans, a);
+
+		a = multiple(a, a);
+		n /= 2;
+	}
+
+	cout << ans[0][1] << endl;
+
+	return 0;
 }

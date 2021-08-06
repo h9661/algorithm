@@ -7,21 +7,13 @@
 #define ii pair<int, int>
 using namespace std;
 
-// backjoon 11778
-// 2021 8 6
+// backjoon 2086
+// 2021 8 7
 // 1. 행렬과 분할정복을 이용한 피보나치 수열 구하기
-// 2. 유클리드 호제법을 이용한 최대 공약수 구하기
 
-const int mod = 1000000007;
+const int mod = 1000000000;
 ull n1;
 ull n2;
-
-ull gcd(ull a, ull b) {
-	if (b == 0)
-		return a;
-	else
-		return gcd((b), (a % b));
-}
 
 vector<vector<ull>> multiple(vector<vector<ull>>& a, vector<vector<ull>>& b) {
 	vector<vector<ull>> c(2, vector<ull>(2));
@@ -40,7 +32,8 @@ int main() {
 	fastio;
 	cin >> n1 >> n2;
 
-	ull temp = gcd(n1, n2);
+	n2 += 2;
+	n1 += 1;
 
 	vector<vector<ull>> ans1 = {
 		{1, 0},
@@ -52,16 +45,33 @@ int main() {
 		{1, 0}
 	};
 
+	vector<vector<ull>> ans2 = {
+		{1, 0},
+		{0, 1}
+	};
 
-	while (temp > 0) {
-		if (temp % 2 == 1)
+	vector<vector<ull>> a2 = {
+		{1, 1},
+		{1, 0}
+	};
+
+	while (n1 > 0) {
+		if (n1 % 2 == 1)
 			ans1 = multiple(ans1, a1);
 
 		a1 = multiple(a1, a1);
-		temp /= 2;
+		n1 /= 2;
 	}
 
-	cout << ans1[0][1] % mod << endl;
+	while (n2 > 0) {
+		if (n2 % 2 == 1)
+			ans2 = multiple(ans2, a2);
+
+		a2 = multiple(a2, a2);
+		n2 /= 2;
+	}
+
+	cout << (((ans2[0][1] % mod - ans1[0][1] % mod)) + mod) % mod << endl;
 
 	return 0;
 }

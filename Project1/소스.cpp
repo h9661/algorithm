@@ -7,71 +7,73 @@
 #define ii pair<int, int>
 using namespace std;
 
-// backjoon 2086
-// 2021 8 7
-// 1. 행렬과 분할정복을 이용한 피보나치 수열 구하기
+// 백준 14002
+// 이분 탐색을 이용한 가장 긴 증가하는 수열
 
-const int mod = 1000000000;
-ull n1;
-ull n2;
+const int MAX = 1000000 + 1;
+vector<int> store;
+int arr[MAX];
+int lis[MAX];
+int idxArr[MAX];
 
-vector<vector<ull>> multiple(vector<vector<ull>>& a, vector<vector<ull>>& b) {
-	vector<vector<ull>> c(2, vector<ull>(2));
+int binary_search(int left, int right, int target) {
+	int mid;
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < 2; j++) {
-			for (int k = 0; k < 2; k++)
-				c[i][j] += (((a[i][k]) % mod) * ((b[k][j]) % mod)) % mod;
-		}
+	while (left < right) {
+		mid = (left + right) / 2;
+
+		if (lis[mid] < target)
+			left = mid + 1;
+		else
+			right = mid;
 	}
 
-	return c;
+	return right;
 }
 
 int main() {
 	fastio;
-	cin >> n1 >> n2;
+	int N;
+	cin >> N;
 
-	n2 += 2;
-	n1 += 1;
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	vector<vector<ull>> ans1 = {
-		{1, 0},
-		{0, 1}
-	};
+	int j = 0;
+	int i = 1;
+	lis[0] = arr[0];
+	idxArr[0] = 0;
 
-	vector<vector<ull>> a1 = {
-		{1, 1},
-		{1, 0}
-	};
+	while (i < N) {
+		if (lis[j] < arr[i]) {
+			lis[j + 1] = arr[i];
+			idxArr[i] = j + 1;
+			j += 1;
+		}
+		else {
+			int idx = binary_search(0, j, arr[i]);
+			lis[idx] = arr[i];
+			idxArr[i] = idx;
+		}
 
-	vector<vector<ull>> ans2 = {
-		{1, 0},
-		{0, 1}
-	};
-
-	vector<vector<ull>> a2 = {
-		{1, 1},
-		{1, 0}
-	};
-
-	while (n1 > 0) {
-		if (n1 % 2 == 1)
-			ans1 = multiple(ans1, a1);
-
-		a1 = multiple(a1, a1);
-		n1 /= 2;
+		i += 1;
 	}
 
-	while (n2 > 0) {
-		if (n2 % 2 == 1)
-			ans2 = multiple(ans2, a2);
+	int k = j;
+	cout << j + 1 << endl;
 
-		a2 = multiple(a2, a2);
-		n2 /= 2;
+	for (int i = N - 1; i >= 0; i--) {
+		if (idxArr[i] == k) {
+			store.push_back(arr[i]);
+			k--;
+			continue;
+		}
 	}
 
-	cout << (((ans2[0][1] % mod - ans1[0][1] % mod)) + mod) % mod << endl;
+	reverse(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
 
 	return 0;
 }

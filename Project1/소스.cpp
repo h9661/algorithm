@@ -7,73 +7,64 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 14002
-// 이분 탐색을 이용한 가장 긴 증가하는 수열
+// 백준 4963
+// BFS 알고리즘
 
-const int MAX = 1000000 + 1;
-vector<int> store;
-int arr[MAX];
-int lis[MAX];
-int idxArr[MAX];
+int w, h;
+const int MAX = 51;
+int graph[MAX][MAX];
+bool check[MAX][MAX];
+int Y[8] = { 1, -1, 0, 0 , 1, 1, -1, -1};
+int X[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
 
-int binary_search(int left, int right, int target) {
-	int mid;
+void bfs(int i, int j) {
+	queue<ii> q;
+	q.push({ i, j });
+	check[i][j] = true;
 
-	while (left < right) {
-		mid = (left + right) / 2;
+	while (!q.empty()) {
+		int cy = q.front().first;
+		int cx = q.front().second;
 
-		if (lis[mid] < target)
-			left = mid + 1;
-		else
-			right = mid;
+		q.pop();
+
+		for (int i = 0; i < 8; i++) {
+			int ny = Y[i] + cy;
+			int nx = X[i] + cx;
+
+			if (ny >= 1 && ny <= h && nx >= 1 && nx <= w && check[ny][nx] == false && graph[ny][nx] == 1) {
+				q.push({ ny, nx });
+				check[ny][nx] = true;
+			}
+		}
 	}
-
-	return right;
 }
 
 int main() {
-	fastio;
-	int N;
-	cin >> N;
+	while (1) {
+		cin >> w >> h;
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
+		if (w == 0 && h == 0)
+			break;
 
-	int j = 0;
-	int i = 1;
-	lis[0] = arr[0];
-	idxArr[0] = 0;
+		fill(&graph[0][0], &graph[MAX - 1][MAX], 0);
+		fill(&check[0][0], &check[MAX - 1][MAX], 0);
 
-	while (i < N) {
-		if (lis[j] < arr[i]) {
-			lis[j + 1] = arr[i];
-			idxArr[i] = j + 1;
-			j += 1;
+		for (int i = 1; i <= h; i++)
+			for (int j = 1; j <= w; j++)
+				cin >> graph[i][j];
+
+		int ans = 0;
+
+		for (int i = 1; i <= h; i++) {
+			for (int j = 1; j <= w; j++) {
+				if (check[i][j] == false && graph[i][j] == 1) {
+					bfs(i, j);
+					ans++;
+				}
+			}
 		}
-		else {
-			int idx = binary_search(0, j, arr[i]);
-			lis[idx] = arr[i];
-			idxArr[i] = idx;
-		}
 
-		i += 1;
+		cout << ans << endl;
 	}
-
-	int k = j;
-	cout << j + 1 << endl;
-
-	for (int i = N - 1; i >= 0; i--) {
-		if (idxArr[i] == k) {
-			store.push_back(arr[i]);
-			k--;
-			continue;
-		}
-	}
-
-	reverse(store.begin(), store.end());
-
-	for (auto i : store)
-		cout << i << " ";
-
-	return 0;
 }

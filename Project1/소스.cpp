@@ -7,64 +7,76 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 4963
-// BFS 알고리즘
+// 백준 11779
+// 다익스트라 알고리즘
+// 최단거리 찾고 방문 노드 추적하기
 
-int w, h;
-const int MAX = 51;
-int graph[MAX][MAX];
-bool check[MAX][MAX];
-int Y[8] = { 1, -1, 0, 0 , 1, 1, -1, -1};
-int X[8] = { 0, 0, 1, -1, 1, -1, 1, -1 };
+int V, E, start, destination;
+const int MAX = 1000 + 1;
+const int INF = 987654321;
+vector<ii> graph[MAX];
+int dist[MAX];
+int route[MAX];
 
-void bfs(int i, int j) {
-	queue<ii> q;
-	q.push({ i, j });
-	check[i][j] = true;
+void djk() {
+	priority_queue<ii> pq;
+	pq.push({ 0, start });
+	dist[start] = 0;
 
-	while (!q.empty()) {
-		int cy = q.front().first;
-		int cx = q.front().second;
+	while (!pq.empty()) {
+		int currentCost = -pq.top().first;
+		int currentNode = pq.top().second;
+		pq.pop();
 
-		q.pop();
+		if (dist[currentNode] < currentCost)
+			continue;
 
-		for (int i = 0; i < 8; i++) {
-			int ny = Y[i] + cy;
-			int nx = X[i] + cx;
+		for (int i = 0; i < graph[currentNode].size(); i++) {
+			int nextCost = graph[currentNode][i].first + currentCost;
+			int nextNode = graph[currentNode][i].second;
 
-			if (ny >= 1 && ny <= h && nx >= 1 && nx <= w && check[ny][nx] == false && graph[ny][nx] == 1) {
-				q.push({ ny, nx });
-				check[ny][nx] = true;
+			if (dist[nextNode] > nextCost) {
+				dist[nextNode] = nextCost;
+				route[nextNode] = currentNode;
+				pq.push({ -nextCost, nextNode });
 			}
 		}
 	}
 }
 
 int main() {
-	while (1) {
-		cin >> w >> h;
+	fastio;
+	cin >> V;
+	cin >> E;
 
-		if (w == 0 && h == 0)
-			break;
+	fill(dist, dist + MAX, INF);
 
-		fill(&graph[0][0], &graph[MAX - 1][MAX], 0);
-		fill(&check[0][0], &check[MAX - 1][MAX], 0);
+	for (int i = 0; i < E; i++) {
+		int from, to, cost;
+		cin >> from >> to >> cost;
 
-		for (int i = 1; i <= h; i++)
-			for (int j = 1; j <= w; j++)
-				cin >> graph[i][j];
-
-		int ans = 0;
-
-		for (int i = 1; i <= h; i++) {
-			for (int j = 1; j <= w; j++) {
-				if (check[i][j] == false && graph[i][j] == 1) {
-					bfs(i, j);
-					ans++;
-				}
-			}
-		}
-
-		cout << ans << endl;
+		graph[from].push_back({ cost, to });
 	}
+
+	cin >> start >> destination;
+
+	djk();
+
+	cout << dist[destination] << endl;
+
+	vector<int> ans;
+	int node = destination;
+
+	while (node) {
+		ans.push_back(node);
+		node = route[node];
+	}
+
+	cout << ans.size() << endl;
+
+	for (int i = ans.size() - 1; i >= 0; i--)
+		cout << ans[i] << " ";
+
+
+	return 0;
 }

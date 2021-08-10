@@ -7,76 +7,61 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 11779
-// 다익스트라 알고리즘
-// 최단거리 찾고 방문 노드 추적하기
+// 백준 4485
+// 2차원 배열을 이용한 다익스트라 알고리즘
 
-int V, E, start, destination;
-const int MAX = 1000 + 1;
-const int INF = 987654321;
-vector<ii> graph[MAX];
-int dist[MAX];
-int route[MAX];
+int N;
+const int MAX = 125 + 1;
+const int INF = 50000;
+int graph[MAX][MAX];
+int check[MAX][MAX];
+int Y[4] = { 1, -1, 0, 0 };
+int X[4] = { 0, 0, -1, 1 };
 
-void djk() {
-	priority_queue<ii> pq;
-	pq.push({ 0, start });
-	dist[start] = 0;
+void bfs() {
+	queue<ii> q;
+	q.push({ 1, 1 });
+	check[1][1] = graph[1][1];
 
-	while (!pq.empty()) {
-		int currentCost = -pq.top().first;
-		int currentNode = pq.top().second;
-		pq.pop();
+	while (!q.empty()) {
+		int currentY = q.front().first;
+		int currentX = q.front().second;
 
-		if (dist[currentNode] < currentCost)
-			continue;
+		q.pop();
 
-		for (int i = 0; i < graph[currentNode].size(); i++) {
-			int nextCost = graph[currentNode][i].first + currentCost;
-			int nextNode = graph[currentNode][i].second;
+		for (int i = 0; i < 4; i++) {
+			int nextY = Y[i] + currentY;
+			int nextX = X[i] + currentX;
 
-			if (dist[nextNode] > nextCost) {
-				dist[nextNode] = nextCost;
-				route[nextNode] = currentNode;
-				pq.push({ -nextCost, nextNode });
+			if (nextY >= 1 && nextY <= N && nextX >= 1 && nextX <= N) {
+				if (check[nextY][nextX] > check[currentY][currentX] + graph[nextY][nextX]) {
+					check[nextY][nextX] = check[currentY][currentX] + graph[nextY][nextX];
+					q.push({ nextY, nextX });
+				}
 			}
 		}
 	}
 }
 
 int main() {
-	fastio;
-	cin >> V;
-	cin >> E;
+	int count = 1;
+	while (1) {
+		memset(graph, 0, sizeof(graph));
+		memset(check, INF, sizeof(check));
+		
+		cin >> N;
 
-	fill(dist, dist + MAX, INF);
+		if (N == 0)
+			break;
 
-	for (int i = 0; i < E; i++) {
-		int from, to, cost;
-		cin >> from >> to >> cost;
+		for (int i = 1; i <= N; i++)
+			for (int j = 1; j <= N; j++)
+				cin >> graph[i][j];
 
-		graph[from].push_back({ cost, to });
+		bfs();
+
+		cout << "Problem " << count << ": ";
+		count++;
+		cout << check[N][N] << endl;
 	}
-
-	cin >> start >> destination;
-
-	djk();
-
-	cout << dist[destination] << endl;
-
-	vector<int> ans;
-	int node = destination;
-
-	while (node) {
-		ans.push_back(node);
-		node = route[node];
-	}
-
-	cout << ans.size() << endl;
-
-	for (int i = ans.size() - 1; i >= 0; i--)
-		cout << ans[i] << " ";
-
-
-	return 0;
 }

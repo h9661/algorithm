@@ -7,64 +7,50 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 2056
+// 백준 1766
 // 위상 정렬
+// 우선순위 큐로 가장 높은 우선순위 먼저 내보내기
 
 vector<vector<int>> graph;
-vector<int> dist;
-vector<int> costs;
 vector<int> indiag;
 
 int main() {
-	fastio;
-	int N;
-	cin >> N;
+	int N, M;
+	cin >> N >> M;
 
 	graph.resize(N + 1);
-	dist.resize(N + 1);
-	costs.resize(N + 1);
 	indiag.resize(N + 1);
 
-	for (int i = 1; i <= N; i++) {
-		cin >> costs[i];
+	for (int i = 0; i < M; i++) {
+		int u, v;
+		cin >> u >> v;
 
-		int num;
-		cin >> num;
-
-		for (int j = 0; j < num; j++) {
-			int u;
-			cin >> u;
-
-			graph[u].push_back(i);
-			indiag[i]++;
-		}
+		graph[u].push_back(v);
+		indiag[v]++;
 	}
 
-	queue<int> q;
-
+	priority_queue<int, vector<int>, greater<>> q;
+	
 	for (int i = 1; i <= N; i++) {
-		if (indiag[i] == 0) {
+		if (indiag[i] == 0)
 			q.push(i);
-			dist[i] = costs[i];
-		}
 	}
 
 	while (!q.empty()) {
-		int currentNode = q.front();
+		int currentNode = q.top();
+
 		q.pop();
+
+		if (indiag[currentNode] == 0)
+			cout << currentNode << " ";
 
 		for (int i = 0; i < graph[currentNode].size(); i++) {
 			int nextNode = graph[currentNode][i];
 
 			if (--indiag[nextNode] == 0)
 				q.push(nextNode);
-
-			if (dist[nextNode] < dist[currentNode] + costs[nextNode])
-				dist[nextNode] = dist[currentNode] + costs[nextNode];
 		}
 	}
-
-	cout << *max_element(dist.begin(), dist.end()) << endl;
 
 	return 0;
 }

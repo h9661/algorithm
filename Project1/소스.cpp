@@ -7,46 +7,48 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 1516
+// 백준 2056
 // 위상 정렬
 
 vector<vector<int>> graph;
-vector<int> costs;
 vector<int> dist;
+vector<int> costs;
 vector<int> indiag;
 
 int main() {
+	fastio;
 	int N;
 	cin >> N;
 
 	graph.resize(N + 1);
-	costs.resize(N + 1);
 	dist.resize(N + 1);
+	costs.resize(N + 1);
 	indiag.resize(N + 1);
 
 	for (int i = 1; i <= N; i++) {
 		cin >> costs[i];
 
-		while (1) {
-			int temp;
-			cin >> temp;
+		int num;
+		cin >> num;
 
-			if (temp == -1)
-				break;
+		for (int j = 0; j < num; j++) {
+			int u;
+			cin >> u;
 
-			graph[temp].push_back(i);
+			graph[u].push_back(i);
 			indiag[i]++;
 		}
 	}
 
 	queue<int> q;
+
 	for (int i = 1; i <= N; i++) {
 		if (indiag[i] == 0) {
 			q.push(i);
 			dist[i] = costs[i];
 		}
 	}
-	
+
 	while (!q.empty()) {
 		int currentNode = q.front();
 		q.pop();
@@ -54,15 +56,15 @@ int main() {
 		for (int i = 0; i < graph[currentNode].size(); i++) {
 			int nextNode = graph[currentNode][i];
 
-			if (dist[nextNode] < dist[currentNode] + costs[nextNode]) {
-				dist[nextNode] = dist[currentNode] + costs[nextNode];
+			if (--indiag[nextNode] == 0)
 				q.push(nextNode);
-			}
+
+			if (dist[nextNode] < dist[currentNode] + costs[nextNode])
+				dist[nextNode] = dist[currentNode] + costs[nextNode];
 		}
 	}
 
-	for (int i = 1; i <= N; i++)
-		cout << dist[i] << endl;
+	cout << *max_element(dist.begin(), dist.end()) << endl;
 
 	return 0;
 }

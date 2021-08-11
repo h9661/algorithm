@@ -7,36 +7,44 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 14567
-// 가장 기본적인 위상정렬 문제
+// 백준 1516
+// 위상 정렬
 
 vector<vector<int>> graph;
-vector<int> indiag;
+vector<int> costs;
 vector<int> dist;
+vector<int> indiag;
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int N;
+	cin >> N;
 
 	graph.resize(N + 1);
-	indiag.resize(N + 1);
+	costs.resize(N + 1);
 	dist.resize(N + 1);
+	indiag.resize(N + 1);
 
-	for (int i = 0; i < M; i++) {
-		int u, v;
-		cin >> u >> v;
+	for (int i = 1; i <= N; i++) {
+		cin >> costs[i];
 
-		graph[u].push_back(v);
-		indiag[v]++;
+		while (1) {
+			int temp;
+			cin >> temp;
+
+			if (temp == -1)
+				break;
+
+			graph[temp].push_back(i);
+			indiag[i]++;
+		}
 	}
 
 	queue<int> q;
-
 	for (int i = 1; i <= N; i++) {
-		if (indiag[i] == 0)
+		if (indiag[i] == 0) {
 			q.push(i);
-
-		dist[i] = 1;
+			dist[i] = costs[i];
+		}
 	}
 	
 	while (!q.empty()) {
@@ -46,16 +54,15 @@ int main() {
 		for (int i = 0; i < graph[currentNode].size(); i++) {
 			int nextNode = graph[currentNode][i];
 
-			if (--indiag[nextNode] == 0)
+			if (dist[nextNode] < dist[currentNode] + costs[nextNode]) {
+				dist[nextNode] = dist[currentNode] + costs[nextNode];
 				q.push(nextNode);
-
-			if (dist[nextNode] < dist[currentNode] + 1)
-				dist[nextNode] = dist[currentNode] + 1;
+			}
 		}
 	}
 
 	for (int i = 1; i <= N; i++)
-		cout << dist[i] << " ";
+		cout << dist[i] << endl;
 
 	return 0;
 }

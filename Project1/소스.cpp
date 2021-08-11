@@ -7,7 +7,7 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 1766
+// 백준 2252
 // 위상 정렬
 // 우선순위 큐로 가장 높은 우선순위 먼저 내보내기
 
@@ -29,9 +29,9 @@ int main() {
 		indiag[v]++;
 	}
 
-	priority_queue<int, vector<int>, greater<>> q;
+	priority_queue<int, vector<int>, less<>> q;
 	
-	for (int i = 1; i <= N; i++) {
+	for (int i = N; i >= 1; i--) {
 		if (indiag[i] == 0)
 			q.push(i);
 	}

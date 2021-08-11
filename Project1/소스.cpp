@@ -7,12 +7,12 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 2252
+// 백준 2623
 // 위상 정렬
-// 우선순위 큐로 가장 높은 우선순위 먼저 내보내기
 
 vector<vector<int>> graph;
 vector<int> indiag;
+vector<int> store;
 
 int main() {
 	int N, M;
@@ -21,28 +21,38 @@ int main() {
 	graph.resize(N + 1);
 	indiag.resize(N + 1);
 
-	for (int i = 0; i < M; i++) {
-		int u, v;
-		cin >> u >> v;
+	for (int i = 1; i <= M; i++) {
+		int num;
+		cin >> num;
 
-		graph[u].push_back(v);
-		indiag[v]++;
+		int* arr = new int[num];
+		for (int j = 0; j < num; j++) {
+			cin >> arr[j];
+		}
+
+		for (int j = 0; j < num - 1; j++) {
+			int u = arr[j];
+			int v = arr[j + 1];
+
+			graph[u].push_back(v);
+			indiag[v]++;
+		}
 	}
 
-	priority_queue<int, vector<int>, less<>> q;
+	queue<int> q;
 	
-	for (int i = N; i >= 1; i--) {
+	for (int i = 1; i <= N; i++) {
 		if (indiag[i] == 0)
 			q.push(i);
 	}
 
 	while (!q.empty()) {
-		int currentNode = q.top();
+		int currentNode = q.front();
 
 		q.pop();
 
 		if (indiag[currentNode] == 0)
-			cout << currentNode << " ";
+			store.push_back(currentNode);
 
 		for (int i = 0; i < graph[currentNode].size(); i++) {
 			int nextNode = graph[currentNode][i];
@@ -50,6 +60,20 @@ int main() {
 			if (--indiag[nextNode] == 0)
 				q.push(nextNode);
 		}
+	}
+
+	bool check = false;
+
+	for (int i = 1; i <= N; i++) {
+		if (indiag[i] != 0)
+			check = true;
+	}
+
+	if (check)
+		cout << "0" << endl;
+	else {
+		for (auto i : store)
+			cout << i << endl;
 	}
 
 	return 0;

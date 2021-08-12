@@ -7,38 +7,33 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 300000;
-
-int N, K;
-int bag[MAX];
-pair<int, int> jewelry[MAX];
-priority_queue<int> pq;
+const int MAX = 10000;
+pair <double, double> arr[MAX + 3];
 
 int main() {
-	fastio;
-
-	cin >> N >> K;
+	int N;
+	cin >> N;
 
 	for (int i = 0; i < N; i++)
-		cin >> jewelry[i].first >> jewelry[i].second;
-	for (int i = 0; i < K; i++)
-		cin >> bag[i];
+		cin >> arr[i].first >> arr[i].second;
 
-	sort(jewelry, jewelry + N);
-	sort(bag, bag + K);
+	arr[N].first = arr[0].first;
+	arr[N].second = arr[0].second;
 
-	ll ans = 0;
-	int idx = 0;
+	long double sum1 = 0;
+	long double sum2 = 0;
 
-	for (int i = 0; i < K; i++) {
-		while (idx < N && jewelry[idx].first <= bag[i])
-			pq.push(jewelry[idx++].second);
-
-		if (!pq.empty()) {
-			ans += pq.top();
-			pq.pop();
-		}
+	for (int i = 0; i < N; i++) {
+		sum1 += arr[i].first * arr[i + 1].second;
+		sum2 += arr[i].second * arr[i + 1].first;
 	}
-	
+
+	long double ans = abs(sum1 - sum2) / 2.0;
+
+	cout.setf(ios::fixed);
+	cout.precision(1);
+
 	cout << ans << endl;
+
+	return 0;
 }

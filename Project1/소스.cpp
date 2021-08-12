@@ -7,33 +7,52 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 10000;
-pair <double, double> arr[MAX + 3];
+int memo[1000001];
+int track[1000001];
+
+int dp(int N) {
+	if (N == 1)
+		return 0;
+	if (memo[N])
+		return memo[N];
+
+	int count = dp(N - 1) + 1;
+	track[N] = N - 1;
+
+	if (N % 3 == 0) {
+		int temp = min(count, dp(N / 3) + 1);
+		if (temp < count) {
+			count = temp;
+			track[N] = N / 3;
+		}
+	}
+
+	if (N % 2 == 0) {
+		int temp = min(count, dp(N / 2) + 1);
+		if (temp < count) {
+			count = temp;
+			track[N] = N / 2;
+		}
+	}
+
+	memo[N] = count;
+
+	return memo[N];
+}
 
 int main() {
+	memo[1] = 0;
+	track[1] = -1;
+
 	int N;
 	cin >> N;
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i].first >> arr[i].second;
+	cout << dp(N) << endl;
 
-	arr[N].first = arr[0].first;
-	arr[N].second = arr[0].second;
-
-	long double sum1 = 0;
-	long double sum2 = 0;
-
-	for (int i = 0; i < N; i++) {
-		sum1 += arr[i].first * arr[i + 1].second;
-		sum2 += arr[i].second * arr[i + 1].first;
+	while (N != -1) {
+		cout << N << " ";
+		N = track[N];
 	}
-
-	long double ans = abs(sum1 - sum2) / 2.0;
-
-	cout.setf(ios::fixed);
-	cout.precision(1);
-
-	cout << ans << endl;
 
 	return 0;
 }

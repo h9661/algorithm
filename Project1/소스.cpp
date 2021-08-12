@@ -7,74 +7,38 @@
 #define ii pair<int, int>
 using namespace std;
 
-// 백준 2623
-// 위상 정렬
+const int MAX = 300000;
 
-vector<vector<int>> graph;
-vector<int> indiag;
-vector<int> store;
+int N, K;
+int bag[MAX];
+pair<int, int> jewelry[MAX];
+priority_queue<int> pq;
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	fastio;
 
-	graph.resize(N + 1);
-	indiag.resize(N + 1);
+	cin >> N >> K;
 
-	for (int i = 1; i <= M; i++) {
-		int num;
-		cin >> num;
+	for (int i = 0; i < N; i++)
+		cin >> jewelry[i].first >> jewelry[i].second;
+	for (int i = 0; i < K; i++)
+		cin >> bag[i];
 
-		int* arr = new int[num];
-		for (int j = 0; j < num; j++) {
-			cin >> arr[j];
-		}
+	sort(jewelry, jewelry + N);
+	sort(bag, bag + K);
 
-		for (int j = 0; j < num - 1; j++) {
-			int u = arr[j];
-			int v = arr[j + 1];
+	ll ans = 0;
+	int idx = 0;
 
-			graph[u].push_back(v);
-			indiag[v]++;
+	for (int i = 0; i < K; i++) {
+		while (idx < N && jewelry[idx].first <= bag[i])
+			pq.push(jewelry[idx++].second);
+
+		if (!pq.empty()) {
+			ans += pq.top();
+			pq.pop();
 		}
 	}
-
-	queue<int> q;
 	
-	for (int i = 1; i <= N; i++) {
-		if (indiag[i] == 0)
-			q.push(i);
-	}
-
-	while (!q.empty()) {
-		int currentNode = q.front();
-
-		q.pop();
-
-		if (indiag[currentNode] == 0)
-			store.push_back(currentNode);
-
-		for (int i = 0; i < graph[currentNode].size(); i++) {
-			int nextNode = graph[currentNode][i];
-
-			if (--indiag[nextNode] == 0)
-				q.push(nextNode);
-		}
-	}
-
-	bool check = false;
-
-	for (int i = 1; i <= N; i++) {
-		if (indiag[i] != 0)
-			check = true;
-	}
-
-	if (check)
-		cout << "0" << endl;
-	else {
-		for (auto i : store)
-			cout << i << endl;
-	}
-
-	return 0;
+	cout << ans << endl;
 }

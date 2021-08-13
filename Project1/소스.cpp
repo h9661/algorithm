@@ -11,37 +11,28 @@ int N, M;
 vector<int> arr;
 
 int main() {
-	cin >> N;
+	cin >> N >> M;
 	arr.resize(N + 1);
 
 	for (int i = 0; i < N; i++)
 		cin >> arr[i];
 
-	sort(arr.begin(), arr.begin() + N);
-
-	cin >> M;
-
 	int ans = 0;
 
-	for (int i = 0; i < N; i++) {
-		int left = 0;
-		int right = N - 1;
+	int start = 0;
+	int end = 0;
+	int sum = 0;
 
-		while (left <= right) {
-			int mid = (left + right) / 2;
-
-			if (arr[mid] + arr[i] == M) {
-				ans++;
-				break;
-			}
-			else if (arr[mid] + arr[i] < M)
-				left = mid + 1;
-			else
-				right = mid - 1;
-		}
+	while (end <= N) {
+		if (sum >= M)
+			sum -= arr[start++];
+		else if (sum < M)
+			sum += arr[end++];
+		if (sum == M)
+			ans++;
 	}
 
-	cout << ans / 2 << endl;
+	cout << ans << endl;
 
 	return 0;
 }

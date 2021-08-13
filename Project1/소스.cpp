@@ -7,52 +7,41 @@
 #define ii pair<int, int>
 using namespace std;
 
-int memo[1000001];
-int track[1000001];
-
-int dp(int N) {
-	if (N == 1)
-		return 0;
-	if (memo[N])
-		return memo[N];
-
-	int count = dp(N - 1) + 1;
-	track[N] = N - 1;
-
-	if (N % 3 == 0) {
-		int temp = min(count, dp(N / 3) + 1);
-		if (temp < count) {
-			count = temp;
-			track[N] = N / 3;
-		}
-	}
-
-	if (N % 2 == 0) {
-		int temp = min(count, dp(N / 2) + 1);
-		if (temp < count) {
-			count = temp;
-			track[N] = N / 2;
-		}
-	}
-
-	memo[N] = count;
-
-	return memo[N];
-}
+int N, M;
+vector<int> arr;
 
 int main() {
-	memo[1] = 0;
-	track[1] = -1;
-
-	int N;
 	cin >> N;
+	arr.resize(N + 1);
 
-	cout << dp(N) << endl;
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	while (N != -1) {
-		cout << N << " ";
-		N = track[N];
+	sort(arr.begin(), arr.begin() + N);
+
+	cin >> M;
+
+	int ans = 0;
+
+	for (int i = 0; i < N; i++) {
+		int left = 0;
+		int right = N - 1;
+
+		while (left <= right) {
+			int mid = (left + right) / 2;
+
+			if (arr[mid] + arr[i] == M) {
+				ans++;
+				break;
+			}
+			else if (arr[mid] + arr[i] < M)
+				left = mid + 1;
+			else
+				right = mid - 1;
+		}
 	}
+
+	cout << ans / 2 << endl;
 
 	return 0;
 }

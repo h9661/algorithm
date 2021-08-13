@@ -17,6 +17,8 @@ int main() {
 	for (int i = 0; i < N; i++)
 		cin >> arr[i];
 
+	sort(arr.begin(), arr.end());
+
 	int left = 0;
 	int right = N - 1;
 

@@ -7,32 +7,41 @@
 #define ii pair<int, int>
 using namespace std;
 
-int N, M;
-vector<int> arr;
-
 int main() {
-	cin >> N >> M;
-	arr.resize(N + 1);
+	fastio;
+	int N;
+	cin >> N;
+
+	vector<int> arr(N, 0);
 
 	for (int i = 0; i < N; i++)
 		cin >> arr[i];
 
-	int ans = 0;
+	int left = 0;
+	int right = N - 1;
 
-	int start = 0;
-	int end = 0;
-	int sum = 0;
+	int min = abs(arr[left] + arr[right]);
 
-	while (end <= N) {
-		if (sum >= M)
-			sum -= arr[start++];
-		else if (sum < M)
-			sum += arr[end++];
-		if (sum == M)
-			ans++;
+	int temp1 = arr[left];
+	int temp2 = arr[right];
+
+	while (left < right) {
+		int sum = arr[left] + arr[right];
+
+		if (min >= abs(sum)) {
+			min = abs(sum);
+			temp1 = arr[left];
+			temp2 = arr[right];
+		}
+
+		if (sum < 0)
+			left += 1;
+		else
+			right -= 1;
+
 	}
 
-	cout << ans << endl;
+	cout << temp1 << " " << temp2 << endl;
 
 	return 0;
 }

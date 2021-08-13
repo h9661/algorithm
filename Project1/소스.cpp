@@ -8,42 +8,35 @@
 using namespace std;
 
 int main() {
-	fastio;
-	int N;
-	cin >> N;
+	int N, S;
+	cin >> N >> S;
 
-	vector<int> arr(N, 0);
+	vector<int> arr(N + 1, 0);
 
 	for (int i = 0; i < N; i++)
 		cin >> arr[i];
 
-	sort(arr.begin(), arr.end());
-
 	int left = 0;
-	int right = N - 1;
+	int right = 0;
+	int sum = 0;
+	int minLength = 1e9;
 
-	int min = abs(arr[left] + arr[right]);
-
-	int temp1 = arr[left];
-	int temp2 = arr[right];
-
-	while (left < right) {
-		int sum = arr[left] + arr[right];
-
-		if (min >= abs(sum)) {
-			min = abs(sum);
-			temp1 = arr[left];
-			temp2 = arr[right];
+	while (right <= N) {
+		if (sum < S) {
+			sum += arr[right++];
 		}
+		else if (sum >= S) {
+			sum -= arr[left++];
 
-		if (sum < 0)
-			left += 1;
-		else
-			right -= 1;
-
+			if (minLength > right - left)
+				minLength = right - left + 1;
+		}
 	}
 
-	cout << temp1 << " " << temp2 << endl;
+	if (minLength == 1e9)
+		cout << "0" << endl;
+	else
+		cout << minLength << endl;
 
 	return 0;
 }

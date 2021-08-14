@@ -7,36 +7,54 @@
 #define ii pair<int, int>
 using namespace std;
 
+const int MAX = 4000000 + 1;
+int primeNumber[MAX];
+vector<int> arr;
+int N;
+
+void eratos() {
+	for (int i = 2; i <= N; i++)
+		primeNumber[i] = i;
+
+
+	for (int i = 2; i <= N; i++) {
+		if (primeNumber[i] == 0)
+			continue;
+
+		for (int j = i + i; j <= N; j += i)
+			primeNumber[j] = 0;
+	}
+}
+
 int main() {
-	int N, S;
-	cin >> N >> S;
+	cin >> N;
 
-	vector<int> arr(N + 1, 0);
+	eratos();
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
-
-	int left = 0;
-	int right = 0;
-	int sum = 0;
-	int minLength = 1e9;
-
-	while (right <= N) {
-		if (sum < S) {
-			sum += arr[right++];
-		}
-		else if (sum >= S) {
-			sum -= arr[left++];
-
-			if (minLength > right - left)
-				minLength = right - left + 1;
-		}
+	for (int i = 2; i <= N; i++) {
+		if (primeNumber[i] != 0)
+			arr.push_back(primeNumber[i]);
 	}
 
-	if (minLength == 1e9)
-		cout << "0" << endl;
-	else
-		cout << minLength << endl;
+
+	int start = 0;
+	int end = 0;
+	int sum = 0;
+	int count = 0;
+
+	arr.push_back(1e9);
+
+	while (end < arr.size()) {
+		if (sum <= N)
+			sum += arr[end++];
+		else if (sum > N)
+			sum -= arr[start++];
+
+		if (sum == N)
+			count++;
+	}
+
+	cout << count << endl;
 
 	return 0;
 }

@@ -7,54 +7,51 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 4000000 + 1;
-int primeNumber[MAX];
-vector<int> arr;
-int N;
-
-void eratos() {
-	for (int i = 2; i <= N; i++)
-		primeNumber[i] = i;
-
-
-	for (int i = 2; i <= N; i++) {
-		if (primeNumber[i] == 0)
-			continue;
-
-		for (int j = i + i; j <= N; j += i)
-			primeNumber[j] = 0;
-	}
-}
+const int MAX = 500 + 1;
+vector<ii> graph[MAX];
+int dist[MAX][MAX];
+const int INF = 1e9;
+int N, M;
+int Count[MAX];
 
 int main() {
-	cin >> N;
+	cin >> N >> M;
 
-	eratos();
+	fill(&dist[0][0], &dist[MAX - 1][MAX], INF);
 
-	for (int i = 2; i <= N; i++) {
-		if (primeNumber[i] != 0)
-			arr.push_back(primeNumber[i]);
+
+	for (int i = 0; i < M; i++) {
+		int from, to;
+		cin >> from >> to;
+
+		dist[from][to] = 1;
 	}
 
-
-	int start = 0;
-	int end = 0;
-	int sum = 0;
-	int count = 0;
-
-	arr.push_back(1e9);
-
-	while (end < arr.size()) {
-		if (sum <= N)
-			sum += arr[end++];
-		else if (sum > N)
-			sum -= arr[start++];
-
-		if (sum == N)
-			count++;
+	for (int k = 1; k <= N; k++) {
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				if (dist[i][j] > dist[i][k] + dist[k][j])
+					dist[i][j] = dist[i][k] + dist[k][j];
+			}
+		}
 	}
 
-	cout << count << endl;
+	for (int from = 1; from <= N; from++) {
+		for (int to = 1; to <= N; to++)
+			if (dist[from][to] == INF)
+				continue;
+			else {
+				Count[to]++;	// °¡¸£Å´À» ¹Þ´Â È½¼ö
+				Count[from]++;	// °¡¸£Å´À» ÁÖ´Â È½¼ö
+			}
+	}
 
-	return 0;
+	int ans = 0;
+
+	for (int i = 1; i <= N; i++) {
+		if (Count[i] == N - 1)	// ¹Þ´Â È½¼ö + ÁÖ´Â È½¼ö = N - 1ÀÌ¸é ¼ø¼­ ¾Ë±â °¡´É
+			ans++;
+	}
+
+	cout << ans << endl;
 }

@@ -7,51 +7,42 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 500 + 1;
-vector<ii> graph[MAX];
-int dist[MAX][MAX];
+const int MAX = 400 + 1;
 const int INF = 1e9;
-int N, M;
-int Count[MAX];
+int V, E;
+int graph[MAX][MAX];
 
 int main() {
-	cin >> N >> M;
+	cin >> V >> E;
 
-	fill(&dist[0][0], &dist[MAX - 1][MAX], INF);
+	fill(&graph[0][0], &graph[MAX - 1][MAX], INF);
 
+	for (int i = 0; i < E; i++) {
+		int from, to, cost;
+		cin >> from >> to >> cost;
 
-	for (int i = 0; i < M; i++) {
-		int from, to;
-		cin >> from >> to;
-
-		dist[from][to] = 1;
+		graph[from][to] = cost;
 	}
 
-	for (int k = 1; k <= N; k++) {
-		for (int i = 1; i <= N; i++) {
-			for (int j = 1; j <= N; j++) {
-				if (dist[i][j] > dist[i][k] + dist[k][j])
-					dist[i][j] = dist[i][k] + dist[k][j];
+	for (int k = 1; k <= V; k++) {
+		for (int i = 1; i <= V; i++) {
+			for (int j = 1; j <= V; j++) {
+				if (graph[i][j] > graph[i][k] + graph[k][j])
+					graph[i][j] = graph[i][k] + graph[k][j];
 			}
 		}
 	}
+	int ans = INF;
 
-	for (int from = 1; from <= N; from++) {
-		for (int to = 1; to <= N; to++)
-			if (dist[from][to] == INF)
-				continue;
-			else {
-				Count[to]++;	// °¡¸£Å´À» ¹Þ´Â È½¼ö
-				Count[from]++;	// °¡¸£Å´À» ÁÖ´Â È½¼ö
-			}
+	for (int i = 1; i <= V; i++) {
+		if (ans > graph[i][i])
+			ans = graph[i][i];
 	}
 
-	int ans = 0;
+	if (ans == INF)
+		cout << "-1" << endl;
+	else
+		cout << ans << endl;
 
-	for (int i = 1; i <= N; i++) {
-		if (Count[i] == N - 1)	// ¹Þ´Â È½¼ö + ÁÖ´Â È½¼ö = N - 1ÀÌ¸é ¼ø¼­ ¾Ë±â °¡´É
-			ans++;
-	}
-
-	cout << ans << endl;
+	return 0;
 }

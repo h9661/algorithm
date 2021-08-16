@@ -7,42 +7,115 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 400 + 1;
-const int INF = 1e9;
-int V, E;
-int graph[MAX][MAX];
+const int MAX = 100 + 1;
+const int INF = 2e9;
+vector<ii> graph[MAX];
+vector<int> money;
+vector<ll> income;
+bool check[MAX];
+int N, start, des, M;
 
-int main() {
-	cin >> V >> E;
+bool bfs(int startNode, int targetNode) {
+	queue<int> q;
+	q.push(startNode);
+	check[startNode] = true;
 
-	fill(&graph[0][0], &graph[MAX - 1][MAX], INF);
+	while (!q.empty()) {
+		int currentNode = q.front();
+		q.pop();
 
-	for (int i = 0; i < E; i++) {
-		int from, to, cost;
-		cin >> from >> to >> cost;
+		if (currentNode == targetNode)
+			return true;
 
-		graph[from][to] = cost;
-	}
+		for (int i = 0; i < graph[currentNode].size(); i++) {
+			int nextNode = graph[currentNode][i].first;
 
-	for (int k = 1; k <= V; k++) {
-		for (int i = 1; i <= V; i++) {
-			for (int j = 1; j <= V; j++) {
-				if (graph[i][j] > graph[i][k] + graph[k][j])
-					graph[i][j] = graph[i][k] + graph[k][j];
+			if (check[nextNode] == false) {
+				check[nextNode] = true;
+				q.push(nextNode);
 			}
 		}
 	}
-	int ans = INF;
+	
+	return false;
+}
 
-	for (int i = 1; i <= V; i++) {
-		if (ans > graph[i][i])
-			ans = graph[i][i];
+int main() {
+	cin >> N >> start >> des >> M;
+	
+	money.resize(N);
+	income.resize(N);
+
+	for (int i = 0; i < M; i++) {
+		int from, to, cost;
+		cin >> from >> to >> cost;
+
+		graph[from].push_back({ to, -cost });
 	}
 
-	if (ans == INF)
-		cout << "-1" << endl;
+	for (int i = 0; i < N; i++)
+		cin >> money[i];
+
+	ll temp1[MAX];
+	ll temp2[MAX];
+
+	fill(income.begin(), income.end(), -INF);
+	fill(temp1, temp1 + MAX, 0);
+	fill(temp2, temp2 + MAX, 0);
+
+	income[start] = money[start];
+
+	for (int i = 0; i < 100; i++) {
+		for (int j = 0; j < N; j++) {
+			for (int k = 0; k < graph[j].size(); k++) {
+				int nextNode = graph[j][k].first;
+				int nextCost = graph[j][k].second;
+
+				if (income[j] != -INF && income[nextNode] < income[j] + nextCost + money[nextNode]) {
+					income[nextNode] = income[j] + nextCost + money[nextNode];
+
+					if (i == 99) {
+						for (int k = 0; k < N; k++)
+							temp1[k] = income[k];
+					}
+					if (i == 98) {
+						for (int k = 0; k < N; k++)
+							temp2[k] = income[k];
+					}
+				}
+			}
+		}
+	}
+
+	vector<ll> cycleNode;
+
+	for (int i = 0; i < N; i++) {
+		if (temp1[i] != temp2[i])
+			cycleNode.push_back(i);
+	}
+
+	bool flag = false;
+
+	for (int i = 0; i < cycleNode.size(); i++) {
+		fill(check, check + MAX, false);
+
+		if (bfs(cycleNode[i], des) == true) {
+			flag = true;
+			break;
+		}
+	}
+
+	if (income[des] == -INF) {
+		cout << "gg" << endl;
+		return 0;
+	}
+	if (flag == true) {
+		cout << "Gee" << endl;
+		return 0;
+	}
 	else
-		cout << ans << endl;
+		cout << income[des] << endl;
+
 
 	return 0;
 }

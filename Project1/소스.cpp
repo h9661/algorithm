@@ -7,16 +7,16 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 1000 + 1;
-ll ans = 0;
-int N, M;
-
+const int MAX = 100000 + 1;
 vector<ii> graph[MAX];
 bool check[MAX];
+int ans = 0;
+int lastValue = 0;
+int N, M;
 
-void prim(int start){
+void prim() {
 	priority_queue<ii, vector<ii>, greater<ii>> pq;
-	pq.push({ 0, start });
+	pq.push({ 0, 1 });
 
 	while (!pq.empty()) {
 		int currentCost = pq.top().first;
@@ -27,8 +27,8 @@ void prim(int start){
 			continue;
 
 		check[currentNode] = true;
-
 		ans += currentCost;
+		lastValue = max(currentCost, lastValue);
 
 		for (int i = 0; i < graph[currentNode].size(); i++) {
 			int nextCost = graph[currentNode][i].first;
@@ -38,23 +38,23 @@ void prim(int start){
 				pq.push({ nextCost, nextNode });
 		}
 	}
-
-	cout << ans << endl;
 }
 
-
 int main() {
+	fastio;
 	cin >> N >> M;
 
 	for (int i = 0; i < M; i++) {
 		int from, to, cost;
 		cin >> from >> to >> cost;
 
-		graph[from].push_back({ cost , to });
+		graph[from].push_back({ cost, to });
 		graph[to].push_back({ cost, from });
 	}
 
-	prim(1);
+	prim();
+
+	cout << ans - lastValue << endl;
 
 	return 0;
 }

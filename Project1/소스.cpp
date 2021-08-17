@@ -4,19 +4,18 @@
 #define ui unsigned int
 #define endl '\n'
 #define fastio (cin.tie(NULL), cout.sync_with_stdio(false), cout.tie(NULL))
-#define ii pair<int, int>
+#define ii pair<ll, ll>
 using namespace std;
 
-const int MAX = 100000 + 1;
+int m, n;
+const int MAX = 200000 + 1;
 vector<ii> graph[MAX];
 bool check[MAX];
-int ans = 0;
-int lastValue = 0;
-int N, M;
+ll ans = 0;
 
 void prim() {
 	priority_queue<ii, vector<ii>, greater<ii>> pq;
-	pq.push({ 0, 1 });
+	pq.push({ 0, 0 });
 
 	while (!pq.empty()) {
 		int currentCost = pq.top().first;
@@ -28,7 +27,6 @@ void prim() {
 
 		check[currentNode] = true;
 		ans += currentCost;
-		lastValue = max(currentCost, lastValue);
 
 		for (int i = 0; i < graph[currentNode].size(); i++) {
 			int nextCost = graph[currentNode][i].first;
@@ -41,20 +39,30 @@ void prim() {
 }
 
 int main() {
-	fastio;
-	cin >> N >> M;
+	while (1) {
+		ans = 0;
+		fill(check, check + MAX, false);
+		for (int i = 0; i < MAX; i++)
+			graph[i].clear();
 
-	for (int i = 0; i < M; i++) {
-		int from, to, cost;
-		cin >> from >> to >> cost;
+		cin >> m >> n;
 
-		graph[from].push_back({ cost, to });
-		graph[to].push_back({ cost, from });
+		if (m == 0 && n == 0)
+			break;
+
+		ll totalCost = 0;
+
+		for (int i = 0; i < n; i++) {
+			int from, to, val;
+			cin >> from >> to >> val;
+
+			graph[from].push_back({ val, to });
+			graph[to].push_back({ val, from });
+			totalCost += val;
+		}
+
+		prim();
+
+		cout << totalCost - ans << endl;
 	}
-
-	prim();
-
-	cout << ans - lastValue << endl;
-
-	return 0;
 }

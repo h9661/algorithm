@@ -8,23 +8,24 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
+	int N;
+	cin >> N;
 
-	int k = 1000 - n;
+	vector<int> arr;
+	arr.resize(N);
 
-	int arr[6] = { 500, 100, 50, 10, 5, 1 };
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	int count = 0;
+	sort(arr.begin(), arr.end());
 
-	for (int i = 0; i < 6; i++) {
-		while (k >= arr[i]) {
-			k -= arr[i];
-			count++;
+	int ans = 0;
+
+	for (int i = 0; i < N; i++) {
+		if (arr[i] * (N - i) >= arr[N - 1]) {
+			ans = max(ans, arr[i] * (N - i));
 		}
 	}
 
-	cout << count << endl;
-
-	return 0;
+	cout << ans << endl;
 }

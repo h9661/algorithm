@@ -8,46 +8,53 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 500000 + 1;
-int N, M;
-int arr1[MAX];
-int arr2[MAX];
-
 int main() {
-	fastio;
-	cin >> N;
-	for (int i = 0; i < N; i++)
-		cin >> arr1[i];
+	list<char> lst;
+	string str;
+	cin >> str;
 
-	cin >> M;
-	for (int i = 0; i < M; i++)
-		cin >> arr2[i];
+	for (int i = 0; i < str.size(); i++)
+		lst.push_back(str[i]);
 
-	sort(arr1, arr1 + N);
+	int n;
+	cin >> n;
 
-	int count = 0;
 
-	for (int i = 0; i < M; i++) {
-		int start = 0;
-		int end = N;
-		bool flag = false;
+	auto pointer = lst.end();
+	for (int i = 0; i < n; i++) {
 
-		while (start <= end) {
-			int mid = (start + end) / 2;
+		char a;
+		cin >> a;
 
-			if (arr1[mid] < arr2[i])
-				start = mid + 1;
-			else if(arr1[mid] >= arr2[i])
-				end = mid - 1;
-
-			if (arr1[mid] == arr2[i])
-				flag = true;
+		if (a == 'L') {
+			if (pointer == lst.begin())
+				continue;
+			else
+				pointer--;
 		}
-		if (flag)
-			cout << "1" << " ";
-		else
-			cout << "0" << " ";
+		else if (a == 'D') {
+			if (pointer == lst.end())
+				continue;
+			else
+				pointer++;
+		}
+		else if (a == 'B') {
+			if (pointer == lst.begin())
+				continue;
+			else {
+				pointer = lst.erase(--pointer);
+			}
+		}
+		else if (a == 'P') {
+			char temp;
+			cin >> temp;
+
+			lst.insert(pointer, temp);
+		}
 	}
+
+	for (auto i : lst)
+		cout << i;
 
 	return 0;
 }

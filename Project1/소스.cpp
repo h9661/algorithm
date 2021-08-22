@@ -8,53 +8,35 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+bool cmp1(int a, int b) {
+	return a < b;
+}
+
+bool cmp2(int a, int b) {
+	return a > b;
+}
+
 int main() {
-	list<char> lst;
-	string str;
-	cin >> str;
+	int N;
+	cin >> N;
 
-	for (int i = 0; i < str.size(); i++)
-		lst.push_back(str[i]);
+	vector<int> A(N);
+	vector<int> B(N);
+	vector<int> S(N);
 
-	int n;
-	cin >> n;
+	for (int i = 0; i < N; i++)
+		cin >> A[i];
 
+	for (int i = 0; i < N; i++)
+		cin >> B[i];
 
-	auto pointer = lst.end();
-	for (int i = 0; i < n; i++) {
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end(), cmp2);
 
-		char a;
-		cin >> a;
+	for (int i = 0; i < N; i++)
+		S[i] = A[i] * B[i];
 
-		if (a == 'L') {
-			if (pointer == lst.begin())
-				continue;
-			else
-				pointer--;
-		}
-		else if (a == 'D') {
-			if (pointer == lst.end())
-				continue;
-			else
-				pointer++;
-		}
-		else if (a == 'B') {
-			if (pointer == lst.begin())
-				continue;
-			else {
-				pointer = lst.erase(--pointer);
-			}
-		}
-		else if (a == 'P') {
-			char temp;
-			cin >> temp;
-
-			lst.insert(pointer, temp);
-		}
-	}
-
-	for (auto i : lst)
-		cout << i;
+	cout << accumulate(S.begin(), S.end(), 0) << endl;
 
 	return 0;
 }

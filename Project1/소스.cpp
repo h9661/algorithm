@@ -8,15 +8,17 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 10000 + 1;
+const int MAX = 2000 + 1;
 const int INF = 2e9;
-int dist[MAX];
 vector<pii> graph[MAX];
+vector<int> destinationArr;
+vector<int> ans;
+int distS[MAX];
 
-void djk(int c) {
+void djk(int start, int dist[]) {
 	priority_queue<pii, vector<pii>, greater<pii>> pq;
-	dist[c] = 0;
-	pq.push({ 0, c });
+	dist[start] = 0;
+	pq.push({ 0, start });
 
 	while (!pq.empty()) {
 		int currentCost = pq.top().first;
@@ -41,34 +43,51 @@ int main() {
 	cin >> t;
 
 	while (t--) {
-		for (int i = 0; i < MAX; i++)
+		for (int i = 0; i < MAX; i++) {
 			graph[i].clear();
-		fill(dist, dist + MAX, INF);
-
-		int n, d, c;
-		cin >> n >> d >> c;
-
-		for (int i = 0; i < d; i++) {
-			int from, to, val;
-			cin >> to >> from >> val;
-
-			graph[from].push_back({ val, to });
 		}
+		destinationArr.clear();
+		ans.clear();
 
-		djk(c);
+		int V, E, T;
+		cin >> V >> E >> T;
 
-		int computer_count = 0;
-		int time = 0;
+		int S, G, H;
+		cin >> S >> G >> H;
 
-		for (int i = 1; i <= n; i++) {
-			if (dist[i] != INF) {
-				computer_count++;
+		for (int i = 0; i < E; i++) {
+			int from, to, val;
+			cin >> from >> to >> val;
 
-				if (dist[i] > time)
-					time = dist[i];
+			if (from == G && to == H || from == H && to == G) {
+				graph[from].push_back({ val * 2 - 1, to });
+				graph[to].push_back({ val * 2 - 1, from });
+			}
+			else {
+				graph[from].push_back({ val * 2, to });
+				graph[to].push_back({ val * 2, from });
 			}
 		}
 
-		cout << computer_count << " " << time << endl;
+		for (int i = 0; i < T; i++) {
+			int des;
+			cin >> des;
+
+			destinationArr.push_back(des);
+		}
+
+		fill(distS, distS + MAX, INF);
+		djk(S, distS);
+
+		for (int i = 0; i < destinationArr.size(); i++) {
+			if (distS[destinationArr[i]] % 2 == 1)
+				ans.push_back(destinationArr[i]);
+		}
+
+		sort(ans.begin(), ans.end());
+
+		for (auto i : ans)
+			cout << i << " ";
+		cout << endl;
 	}
 }

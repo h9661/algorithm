@@ -8,35 +8,67 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-bool cmp1(int a, int b) {
-	return a < b;
-}
+const int MAX = 10000 + 1;
+const int INF = 2e9;
+int dist[MAX];
+vector<pii> graph[MAX];
 
-bool cmp2(int a, int b) {
-	return a > b;
+void djk(int c) {
+	priority_queue<pii, vector<pii>, greater<pii>> pq;
+	dist[c] = 0;
+	pq.push({ 0, c });
+
+	while (!pq.empty()) {
+		int currentCost = pq.top().first;
+		int currentNode = pq.top().second;
+		pq.pop();
+
+		for (int i = 0; i < graph[currentNode].size(); i++) {
+			int nextCost = graph[currentNode][i].first;
+			int nextNode = graph[currentNode][i].second;
+
+			if (dist[nextNode] > dist[currentNode] + nextCost) {
+				dist[nextNode] = dist[currentNode] + nextCost;
+				pq.push({ nextCost, nextNode });
+			}
+		}
+	}
 }
 
 int main() {
-	int N;
-	cin >> N;
+	fastio;
+	int t;
+	cin >> t;
 
-	vector<int> A(N);
-	vector<int> B(N);
-	vector<int> S(N);
+	while (t--) {
+		for (int i = 0; i < MAX; i++)
+			graph[i].clear();
+		fill(dist, dist + MAX, INF);
 
-	for (int i = 0; i < N; i++)
-		cin >> A[i];
+		int n, d, c;
+		cin >> n >> d >> c;
 
-	for (int i = 0; i < N; i++)
-		cin >> B[i];
+		for (int i = 0; i < d; i++) {
+			int from, to, val;
+			cin >> to >> from >> val;
 
-	sort(A.begin(), A.end());
-	sort(B.begin(), B.end(), cmp2);
+			graph[from].push_back({ val, to });
+		}
 
-	for (int i = 0; i < N; i++)
-		S[i] = A[i] * B[i];
+		djk(c);
 
-	cout << accumulate(S.begin(), S.end(), 0) << endl;
+		int computer_count = 0;
+		int time = 0;
 
-	return 0;
+		for (int i = 1; i <= n; i++) {
+			if (dist[i] != INF) {
+				computer_count++;
+
+				if (dist[i] > time)
+					time = dist[i];
+			}
+		}
+
+		cout << computer_count << " " << time << endl;
+	}
 }

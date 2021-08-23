@@ -8,86 +8,58 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 2000 + 1;
+const int MAX = 100 + 1;
 const int INF = 2e9;
-vector<pii> graph[MAX];
-vector<int> destinationArr;
-vector<int> ans;
-int distS[MAX];
-
-void djk(int start, int dist[]) {
-	priority_queue<pii, vector<pii>, greater<pii>> pq;
-	dist[start] = 0;
-	pq.push({ 0, start });
-
-	while (!pq.empty()) {
-		int currentCost = pq.top().first;
-		int currentNode = pq.top().second;
-		pq.pop();
-
-		for (int i = 0; i < graph[currentNode].size(); i++) {
-			int nextCost = graph[currentNode][i].first;
-			int nextNode = graph[currentNode][i].second;
-
-			if (dist[nextNode] > dist[currentNode] + nextCost) {
-				dist[nextNode] = dist[currentNode] + nextCost;
-				pq.push({ nextCost, nextNode });
-			}
-		}
-	}
-}
+ll arr[MAX][MAX];
 
 int main() {
-	fastio;
-	int t;
-	cin >> t;
+	int N;
+	cin >> N;
 
-	while (t--) {
-		for (int i = 0; i < MAX; i++) {
-			graph[i].clear();
+	int M;
+	cin >> M;
+
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+			if (i == j)
+				arr[i][j] = 0;
+			else
+				arr[i][j] = INF;
 		}
-		destinationArr.clear();
-		ans.clear();
-
-		int V, E, T;
-		cin >> V >> E >> T;
-
-		int S, G, H;
-		cin >> S >> G >> H;
-
-		for (int i = 0; i < E; i++) {
-			int from, to, val;
-			cin >> from >> to >> val;
-
-			if (from == G && to == H || from == H && to == G) {
-				graph[from].push_back({ val * 2 - 1, to });
-				graph[to].push_back({ val * 2 - 1, from });
-			}
-			else {
-				graph[from].push_back({ val * 2, to });
-				graph[to].push_back({ val * 2, from });
-			}
-		}
-
-		for (int i = 0; i < T; i++) {
-			int des;
-			cin >> des;
-
-			destinationArr.push_back(des);
-		}
-
-		fill(distS, distS + MAX, INF);
-		djk(S, distS);
-
-		for (int i = 0; i < destinationArr.size(); i++) {
-			if (distS[destinationArr[i]] % 2 == 1)
-				ans.push_back(destinationArr[i]);
-		}
-
-		sort(ans.begin(), ans.end());
-
-		for (auto i : ans)
-			cout << i << " ";
-		cout << endl;
 	}
+
+	for (int i = 0; i < M; i++) {
+		int big, small;
+		cin >> big >> small;
+
+		arr[small][big] = 1;
+	}
+
+	for (int k = 1; k <= N; k++) {
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				if (arr[i][j] > arr[i][k] + arr[k][j])
+					arr[i][j] = arr[i][k] + arr[k][j];
+			}
+		}
+	}
+
+	vector<int> ans(N + 1, 0);
+
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+			if (i != j) {
+				if (arr[i][j] != INF) {
+					ans[j]++;
+					ans[i]++;
+				}
+			}
+		}
+	}
+
+	for (int i = 1; i <= N; i++) {
+		cout << N - ans[i] - 1 << endl;
+	}
+
+	return 0;
 }

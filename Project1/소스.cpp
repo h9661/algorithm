@@ -8,9 +8,10 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int n, m;
-const int MAX = 1000000 + 1;
+const int MAX = 200 + 1;
 int root[MAX];
+int N, M;
+int cities[10001];
 
 int do_find(int x) {
 	if (root[x] == x)
@@ -19,39 +20,45 @@ int do_find(int x) {
 }
 
 void do_union(int x, int y) {
-	int rootX = do_find(x);
-	int rootY = do_find(y);
+	int rx = do_find(x);
+	int ry = do_find(y);
 
-	if (rootX < rootY)
-		root[rootY] = rootX;
+	if (rx < ry)
+		root[ry] = rx;
 	else
-		root[rootX] = rootY;
+		root[rx] = ry;
 }
 
 int main() {
-	fastio;
-	// 0 a b -> a포함 집합 b 포함 집합 union
-	// 1 a b -> a와 b의 루트가 같나 ? YES : NO
-	cin >> n >> m;
+	cin >> N;
+	cin >> M;
 
-	for (int i = 0; i <= n; i++)
+	for (int i = 0; i < MAX; i++)
 		root[i] = i;
 
-	for (int i = 0; i < m; i++) {
-		int op, a, b;
-		cin >> op >> a >> b;
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+			int temp;
+			cin >> temp;
 
-		if (op == 0) {
-			do_union(a, b);
-		}
-		else {
-			if (do_find(a) == do_find(b))
-				cout << "YES" << endl;
-			else
-				cout << "NO" << endl;
+			if (temp == 1)
+				do_union(i, j);
 		}
 	}
-	
 
+
+	for (int i = 0; i < M; i++)
+		cin >> cities[i];
+
+	int k = do_find(cities[0]);
+
+	for (int i = 0; i < M; i++) {
+		if (k != do_find(cities[i])) {
+			cout << "NO" << endl;
+			return 0;
+		}
+	}
+
+	cout << "YES" << endl;
 	return 0;
 }

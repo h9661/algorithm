@@ -8,65 +8,52 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-map<string, string> root;
-map<string, int> m;
-vector<int> store;
+int board[10][10];
+int row[10][10], col[10][10], matrix[10][10];
 
-string do_find(string x) {
-	if (root[x] == x)
-		return x;
-	return root[x] = do_find(root[x]);
-}
-
-void do_union(string x, string y) {
-	string rootX = do_find(x);
-	string rootY = do_find(y);
-
-	if (m[rootX] < m[rootY]) {
-		root[rootX] = rootY;
-		m[rootY] += m[rootX];
-		m[rootX] = 0;
+void dfs(int pos) {
+	if (pos == 81) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++)
+				cout<< board[i][j] << " ";
+			cout << endl;
+		}
+		exit(0);
 	}
-	else {
-		root[rootY] = rootX;
-		m[rootX] += m[rootY];
-		m[rootY] = 0;
+
+	int y = pos / 9, x = pos % 9;
+
+	if (board[y][x] == 0) {
+		for (int i = 1; i <= 9; ++i) {
+			if (!row[y][i] && !col[x][i] && !matrix[(y / 3) * 3 + x / 3][i]) {
+				row[y][i] = col[x][i] = matrix[(y / 3) * 3 + x / 3][i] = true;
+				board[y][x] = i;
+				dfs(pos + 1);
+				row[y][i] = col[x][i] = matrix[(y / 3) * 3 + x / 3][i] = false;
+				board[y][x] = 0;
+			}
+		}
 	}
+	else
+		dfs(pos + 1);
 }
 
 int main() {
-	fastio;
-	int t;
-	cin >> t;
-	while (t--) {
-		root.clear();
-		m.clear();
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
-		int F;
-		cin >> F;
-
-		for (int i = 0; i < F; i++) {
-			string x, y;
-			cin >> x >> y;
-
-			if (root[x] == "") {
-				root[x] = x;
-				m[x]++;
-			}
-			if (root[y] == "") {
-				root[y] = y;
-				m[y]++;
-			}
-
-			if(do_find(x) != do_find(y))
-				do_union(x, y);
-
-			store.push_back(m[do_find(x)]);
-		}
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++)
+			cin >> board[i][j];
 	}
 
-	for (auto i : store)
-		cout << i << endl;
-
+	for (int i = 0; i < 9; ++i) {
+		for (int j = 0; j < 9; ++j)
+			if (board[i][j] != 0) {
+				row[i][board[i][j]] = col[j][board[i][j]] = matrix[(i / 3) * 3 + j / 3][board[i][j]] = true;
+			}
+	}
+	dfs(0);
 	return 0;
 }

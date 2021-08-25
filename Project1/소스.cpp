@@ -8,57 +8,65 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 200 + 1;
-int root[MAX];
-int N, M;
-int cities[10001];
+map<string, string> root;
+map<string, int> m;
+vector<int> store;
 
-int do_find(int x) {
+string do_find(string x) {
 	if (root[x] == x)
 		return x;
 	return root[x] = do_find(root[x]);
 }
 
-void do_union(int x, int y) {
-	int rx = do_find(x);
-	int ry = do_find(y);
+void do_union(string x, string y) {
+	string rootX = do_find(x);
+	string rootY = do_find(y);
 
-	if (rx < ry)
-		root[ry] = rx;
-	else
-		root[rx] = ry;
+	if (m[rootX] < m[rootY]) {
+		root[rootX] = rootY;
+		m[rootY] += m[rootX];
+		m[rootX] = 0;
+	}
+	else {
+		root[rootY] = rootX;
+		m[rootX] += m[rootY];
+		m[rootY] = 0;
+	}
 }
 
 int main() {
-	cin >> N;
-	cin >> M;
+	fastio;
+	int t;
+	cin >> t;
+	while (t--) {
+		root.clear();
+		m.clear();
 
-	for (int i = 0; i < MAX; i++)
-		root[i] = i;
+		int F;
+		cin >> F;
 
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++) {
-			int temp;
-			cin >> temp;
+		for (int i = 0; i < F; i++) {
+			string x, y;
+			cin >> x >> y;
 
-			if (temp == 1)
-				do_union(i, j);
+			if (root[x] == "") {
+				root[x] = x;
+				m[x]++;
+			}
+			if (root[y] == "") {
+				root[y] = y;
+				m[y]++;
+			}
+
+			if(do_find(x) != do_find(y))
+				do_union(x, y);
+
+			store.push_back(m[do_find(x)]);
 		}
 	}
 
+	for (auto i : store)
+		cout << i << endl;
 
-	for (int i = 0; i < M; i++)
-		cin >> cities[i];
-
-	int k = do_find(cities[0]);
-
-	for (int i = 0; i < M; i++) {
-		if (k != do_find(cities[i])) {
-			cout << "NO" << endl;
-			return 0;
-		}
-	}
-
-	cout << "YES" << endl;
 	return 0;
 }

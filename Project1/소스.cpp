@@ -8,52 +8,64 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int board[10][10];
-int row[10][10], col[10][10], matrix[10][10];
+int N, M;
 
-void dfs(int pos) {
-	if (pos == 81) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++)
-				cout<< board[i][j] << " ";
-			cout << endl;
-		}
-		exit(0);
-	}
-
-	int y = pos / 9, x = pos % 9;
-
-	if (board[y][x] == 0) {
-		for (int i = 1; i <= 9; ++i) {
-			if (!row[y][i] && !col[x][i] && !matrix[(y / 3) * 3 + x / 3][i]) {
-				row[y][i] = col[x][i] = matrix[(y / 3) * 3 + x / 3][i] = true;
-				board[y][x] = i;
-				dfs(pos + 1);
-				row[y][i] = col[x][i] = matrix[(y / 3) * 3 + x / 3][i] = false;
-				board[y][x] = 0;
-			}
-		}
-	}
-	else
-		dfs(pos + 1);
-}
+const int MAX = 300 + 1;
+int costs[MAX][MAX];
+int dp[MAX][MAX];
+int path[MAX][MAX];
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	cin >> N >> M;
 
-	for (int i = 0; i < 9; i++) {
-		for (int j = 0; j < 9; j++)
-			cin >> board[i][j];
+	for (int i = 1; i <= N; i++) {
+		int n;
+		cin >> n;
+
+		for (int j = 1; j <= M; j++)
+			cin >> costs[j][i];
 	}
 
-	for (int i = 0; i < 9; ++i) {
-		for (int j = 0; j < 9; ++j)
-			if (board[i][j] != 0) {
-				row[i][board[i][j]] = col[j][board[i][j]] = matrix[(i / 3) * 3 + j / 3][board[i][j]] = true;
+	for (int i = 1; i <= M; i++) {
+		for (int j = 1; j <= N; j++) {
+			if (dp[i - 1][j] < costs[i][j]) {
+				dp[i][j] = costs[i][j];
+				path[i][j] = j;
 			}
+			else {
+				dp[i][j] = dp[i - 1][j];
+				path[i][j] = 0;
+			}
+
+			int k = 1;
+			while (k < j) {
+				if (dp[i][j] < dp[i - 1][k] + costs[i][j - k]) {
+					dp[i][j] = dp[i - 1][k] + costs[i][j - k];
+					path[i][j] = j - k;
+				}
+				k++;
+			}
+		}
 	}
-	dfs(0);
+
+	cout << dp[M][N] << endl;
+
+	vector<int> store;
+	int temp = path[M][N];
+	int k = N;
+	store.push_back(temp);
+
+	for (int i = M - 1; i >= 1; i--) {
+		k -= temp;
+		temp = path[i][k];
+		store.push_back(temp);
+	}
+
+	reverse(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
+
+
 	return 0;
 }

@@ -8,75 +8,31 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int N, M;
-int start, des;
-const int MAX = 10000 + 1;
-vector<pii> graph[MAX];
-bool check[MAX];
-
-bool bfs(int limit) {
-	fill(check, check + MAX, false);
-	queue<pii> q;
-	q.push({ 0, start });
-	check[start] = true;
-
-	while (!q.empty()) {
-		int weight = q.front().first;
-		int node = q.front().second;
-		q.pop();
-
-		if (node == des)
-			return true;
-
-		for (int i = 0; i < graph[node].size(); i++) {
-			int nextWeight = graph[node][i].first;
-			int nextNode = graph[node][i].second;
-
-			if (check[nextNode] == false && limit <= nextWeight) {
-				check[nextNode] = true;
-				q.push({ nextWeight, nextNode });
-			}
-		}
-	}
-
-	return false;
-}
-
-int bin_search(int maxWeight) {
-	int left = 0;
-	int right = maxWeight;
-
-	while (left <= right) {
-		int center = (left + right) / 2;
-
-		bool flag = bfs(center);
-
-		if (flag == true)
-			left = center + 1;
-		else
-			right = center - 1;
-	}
-
-	return right;
-}
+const int MAX = 3000 + 1;
+int arr[MAX];
 
 int main() {
-	cin >> N >> M;
-	int maxWeight = 0;
-	
-	for (int i = 0; i < M; i++) {
-		int u, v, weight;
-		cin >> u >> v >> weight;
+	int N;
+	cin >> N;
 
-		graph[u].push_back({ weight, v });
-		graph[v].push_back({ weight, u });
-		
-		if (maxWeight < weight)
-			maxWeight = weight;
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
+
+		if (temp >= 0)
+			arr[temp + 1500]++;
+		else
+			arr[1500 + temp]++;
 	}
-	cin >> start >> des;
 
-	cout << bin_search(maxWeight) << endl;
+	for (int i = 0; i <= 3000; i++) {
+		if (i >= 1500 && arr[i] != 0) {
+			cout << i - 1500 << " ";
+		}
+		else if (i < 1500 && arr[i] != 0) {
+			cout << i - 1500 << " ";
+		}
+	}
 
 	return 0;
 }

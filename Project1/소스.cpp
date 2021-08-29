@@ -8,31 +8,36 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 3000 + 1;
-int arr[MAX];
-
 int main() {
-	int N;
-	cin >> N;
+	int N, K;
+	cin >> N >> K;
 
-	for (int i = 0; i < N; i++) {
-		int temp;
-		cin >> temp;
+	queue<int> q;
+	vector<int> store;
+	int count = 1;
 
-		if (temp >= 0)
-			arr[temp + 1500]++;
-		else
-			arr[1500 + temp]++;
+	for (int i = 1; i <= N; i++)
+		q.push(i);
+
+	while (!q.empty()) {
+		if (count == K) {
+			store.push_back(q.front());
+			q.pop();
+			count = 1;
+		}
+		else {
+			q.push(q.front());
+			q.pop();
+			count++;
+		}
 	}
 
-	for (int i = 0; i <= 3000; i++) {
-		if (i >= 1500 && arr[i] != 0) {
-			cout << i - 1500 << " ";
-		}
-		else if (i < 1500 && arr[i] != 0) {
-			cout << i - 1500 << " ";
-		}
-	}
+
+	cout << "<";
+	for (int i = 0; i < store.size() - 1; i++)
+		cout << store[i] << ", ";
+	cout << store[store.size() - 1] << ">";
 
 	return 0;
+
 }

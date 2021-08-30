@@ -69,5 +69,7 @@ int main() {
 	for (auto i : store)
 		cout << i << " ";
 
+	cout << "hello!!" << endl;
+
 	return 0;
 }

@@ -8,36 +8,66 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+const int MAX = 5000 + 1;
+ll arr[MAX];
+
 int main() {
-	int N, K;
-	cin >> N >> K;
+	int N;
+	cin >> N;
 
-	queue<int> q;
-	vector<int> store;
-	int count = 1;
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	for (int i = 1; i <= N; i++)
-		q.push(i);
+	sort(arr, arr + N);
 
-	while (!q.empty()) {
-		if (count == K) {
-			store.push_back(q.front());
-			q.pop();
-			count = 1;
-		}
-		else {
-			q.push(q.front());
-			q.pop();
-			count++;
+	int left = 0;
+	int right = N - 1;
+
+	ll minimum = 4e9;
+
+	vector<ll> store;
+	ll temp1 = arr[0];
+	ll temp2 = arr[1];
+	ll temp3 = arr[2];
+
+	for (int i = 0; i < N; i++) {
+		left = 0;
+		right = N - 1;
+
+		while (left < right) {
+			ll sum = arr[left] + arr[right] + arr[i];
+
+			if (abs(sum) < minimum) {
+				if (i == left || i == right) {
+					if (sum < 0)
+						left += 1;
+					else
+						right -= 1;
+					continue;
+				}
+
+				minimum = abs(sum);
+				temp1 = arr[left];
+				temp2 = arr[right];
+				temp3 = arr[i];
+			}
+
+			if (sum < 0)
+				left += 1;
+			else
+				right -= 1;
+
 		}
 	}
 
+	store.push_back(temp1);
+	store.push_back(temp2);
+	store.push_back(temp3);
 
-	cout << "<";
-	for (int i = 0; i < store.size() - 1; i++)
-		cout << store[i] << ", ";
-	cout << store[store.size() - 1] << ">";
+	sort(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
 
 	return 0;
-
 }

@@ -8,69 +8,55 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+const int MAX = 100 + 1;
+vector<vector<pll>> graph;
 vector<int> indeg;
-vector<vector<int>> graph;
-vector<int> cons;
-
+int N, M;
+int countArr[MAX][MAX];
 
 int main() {
-	fastio;
-	int N, M, K;
-	cin >> N >> M >> K;
+	cin >> N >> M;
 
-	graph.resize(N + 1);
 	indeg.resize(N + 1);
-	cons.resize(N + 1);
+	graph.resize(N + 1);
 
 	for (int i = 0; i < M; i++) {
-		int u, v;
-		cin >> u >> v;
+		int X, Y, K;;
+		cin >> X >> Y >> K;
 
-		graph[u].push_back(v);
-		indeg[v]++;
+		graph[Y].push_back({ X, K });
+		indeg[X]++;
 	}
 
-	queue<pii> command;
-	for (int i = 0; i < K; i++) {
-		int a, b;
-		cin >> a >> b;
-		command.push({ a, b });
-	}
-
-	while (!command.empty()) {
-		int op = command.front().first;
-		int n = command.front().second;
-		command.pop();
-
-		if (op == 1) {
-			if (indeg[n] > 0) {
-				cout << "Lier!" << endl;
-				return 0;
-			}
-			else {
-				cons[n]++;
-				for (int i = 0; i < graph[n].size(); i++) {
-					int next = graph[n][i];
-					indeg[next]--;
-				}
-			}
-		}
-
-		if (op == 2) {
-			if (cons[n] <= 0) {
-				cout << "Lier!" << endl;
-				return 0;
-			}
-			else {
-				cons[n]--;
-				for (int i = 0; i < graph[n].size(); i++) {
-					int next = graph[n][i];
-					indeg[next]++;
-				}
-			}
+	queue<int> q;
+	for (int i = 1; i <= N; i++) {
+		if (indeg[i] == 0) {
+			q.push(i);
+			countArr[i][i] = 1;
 		}
 	}
 
-	cout << "King-God-Emperor";
+	while (!q.empty()) {
+		int now = q.front();
+		q.pop();
+
+		for (int i = 0; i < graph[now].size(); i++) {
+			int next = graph[now][i].first;
+			int num = graph[now][i].second;
+
+			for (int j = 1; j <= N; j++)
+				countArr[next][j] += countArr[now][j] * num;
+			
+			if (--indeg[next] == 0)
+				q.push(next);
+		}
+	}
+
+
+	for (int i = 1; i <= N; i++) {
+		if (countArr[N][i] != 0)
+			cout << i << " " << countArr[N][i] << endl;
+	}
+
 	return 0;
 }

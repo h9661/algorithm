@@ -8,66 +8,69 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 5000 + 1;
-ll arr[MAX];
+vector<int> indeg;
+vector<vector<int>> graph;
+vector<int> cons;
+
 
 int main() {
-	int N;
-	cin >> N;
+	fastio;
+	int N, M, K;
+	cin >> N >> M >> K;
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
+	graph.resize(N + 1);
+	indeg.resize(N + 1);
+	cons.resize(N + 1);
 
-	sort(arr, arr + N);
+	for (int i = 0; i < M; i++) {
+		int u, v;
+		cin >> u >> v;
 
-	int left = 0;
-	int right = N - 1;
+		graph[u].push_back(v);
+		indeg[v]++;
+	}
 
-	ll minimum = 4e9;
+	queue<pii> command;
+	for (int i = 0; i < K; i++) {
+		int a, b;
+		cin >> a >> b;
+		command.push({ a, b });
+	}
 
-	vector<ll> store;
-	ll temp1 = arr[0];
-	ll temp2 = arr[1];
-	ll temp3 = arr[2];
+	while (!command.empty()) {
+		int op = command.front().first;
+		int n = command.front().second;
+		command.pop();
 
-	for (int i = 0; i < N; i++) {
-		left = 0;
-		right = N - 1;
-
-		while (left < right) {
-			ll sum = arr[left] + arr[right] + arr[i];
-
-			if (abs(sum) < minimum) {
-				if (i == left || i == right) {
-					if (sum < 0)
-						left += 1;
-					else
-						right -= 1;
-					continue;
-				}
-
-				minimum = abs(sum);
-				temp1 = arr[left];
-				temp2 = arr[right];
-				temp3 = arr[i];
+		if (op == 1) {
+			if (indeg[n] > 0) {
+				cout << "Lier!" << endl;
+				return 0;
 			}
+			else {
+				cons[n]++;
+				for (int i = 0; i < graph[n].size(); i++) {
+					int next = graph[n][i];
+					indeg[next]--;
+				}
+			}
+		}
 
-			if (sum < 0)
-				left += 1;
-			else
-				right -= 1;
-
+		if (op == 2) {
+			if (cons[n] <= 0) {
+				cout << "Lier!" << endl;
+				return 0;
+			}
+			else {
+				cons[n]--;
+				for (int i = 0; i < graph[n].size(); i++) {
+					int next = graph[n][i];
+					indeg[next]++;
+				}
+			}
 		}
 	}
 
-	store.push_back(temp1);
-	store.push_back(temp2);
-	store.push_back(temp3);
-
-	sort(store.begin(), store.end());
-
-	for (auto i : store)
-		cout << i << " ";
-
+	cout << "King-God-Emperor";
 	return 0;
 }

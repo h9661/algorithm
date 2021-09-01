@@ -8,69 +8,68 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 1000 + 1;
-vector<int> graph[MAX];
-int indeg[MAX];
-int order[MAX];
-int orderCount[MAX];
+const int MAX = 100 + 1;
+vector<pair<double, double>> coord;
+vector<pair<double, int>> graph[MAX];
+bool check[MAX];
+
+double FindDistance(double x1, double y1, double x2, double y2) {
+	double dx = (x2 - x1) * (x2 - x1);
+	double dy = (y2 - y1) * (y2 - y1);
+	return sqrt(dx + dy);
+}
 
 int main() {
-	int tt;
-	cin >> tt;
-	
-	int k = 1;
+	int n;
+	cin >> n;
 
-	while (tt--) {
-		int K, M, P;
-		cin >> K >> M >> P;
-
-		for (int i = 0; i < MAX; i++)
-			graph[i].clear();
-
-		fill(indeg, indeg + MAX, 0);
-		fill(order, order + MAX, 0);
-		fill(orderCount, orderCount + MAX, 0);
-
-		for (int i = 0; i < P; i++) {
-			int u, v;
-			cin >> u >> v;
-
-			graph[u].push_back(v);
-			indeg[v]++;
-		}
-		
-		queue<int> q;
-		for (int i = 1; i <= M; i++) {
-			if (indeg[i] == 0) {
-				q.push(i);
-				order[i] = 1;
-			}
-		}
-
-		while (!q.empty()) {
-			int now = q.front();
-			q.pop();
-
-			for (int i = 0; i < graph[now].size(); i++) {
-				int next = graph[now][i];
-
-				// 순서가 크면 바꿔주고 카운트 1
-				if (order[now] > order[next]) {
-					order[next] = order[now];
-					orderCount[next] = 1;
-				}
-				else if (order[now] == order[next])
-					orderCount[next]++;
-
-				if (--indeg[next] == 0) {
-					if (orderCount[next] >= 2)
-						order[next] = order[next] + 1;
-
-					q.push(next);
-				}
-			}
-		}
-		
-		cout << K << " " << *max_element(order, order + M + 1) << endl;
+	for (int i = 0; i < n; i++) {
+		double a, b;
+		cin >> a >> b;
+		coord.push_back({ a, b });
 	}
+
+	for (int i = 0; i < n; i++) {
+		double x1 = coord[i].first;
+		double y1 = coord[i].second;
+
+		for (int j = i + 1; j < n; j++) {
+			double x2 = coord[j].first;
+			double y2 = coord[j].second;
+			double dist = FindDistance(x1, y1, x2, y2);
+
+			graph[i].push_back({ dist, j });
+			graph[j].push_back({ dist, i });
+		}
+	}
+
+	priority_queue <pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+	pq.push({ 0.0, 0 });
+
+	double ans = 0;
+
+	while (!pq.empty()) {
+		double nowDist = pq.top().first;
+		int nowNode = pq.top().second;
+		pq.pop();
+
+		if (check[nowNode] == true)
+			continue;
+
+		check[nowNode] = true;
+
+		ans += nowDist;
+
+		for (int i = 0; i < graph[nowNode].size(); i++) {
+			double nextCost = graph[nowNode][i].first;
+			int nextNode = graph[nowNode][i].second;
+
+			if (check[nextNode] == false)
+				pq.push({ nextCost, nextNode });
+		}
+	}
+	cout << fixed;
+	cout.precision(2);
+
+	cout << ans << endl;
 }

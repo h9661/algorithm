@@ -8,51 +8,35 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 50 + 1;
-bool check[MAX];
 vector<int> arr;
-vector<int> store(6);
-int k;
+bool check[300000];
+int N, S;
+int g_count = 0;
 
-void dfs(int count) {
-	if (count == 6){
-		if (is_sorted(store.begin(), store.end())) {
-			for (auto i : store)
-				cout << i << " ";
-			cout << endl;
-		}
-
-		return;
+void bfs(int sum, int count) {
+	if (sum == S && count > 0) {
+		g_count++;
 	}
 
-	for (int i = 0; i < arr.size(); i++) {
-		if (check[arr[i]] == false) {
-			check[arr[i]] = true;
+	if (count == N)
+		return;
 
-			store[count] = arr[i];
-			dfs(count + 1);
-
-			check[arr[i]] = false;
-		}
+	for (int i = count; i < arr.size(); i++) {
+		bfs(arr[i] + sum, i + 1);
 	}
 }
 
 int main() {
-	while (1) {
-		arr.clear();
-		cin >> k;
+	cin >> N >> S;
 
-		if (k == 0)
-			break;
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
 
-		for (int i = 0; i < k; i++) {
-			int num;
-			cin >> num;
-
-			arr.push_back(num);
-		}
-
-		dfs(0);
-		cout << endl;
+		arr.push_back(temp);
 	}
+
+	bfs(0, 0);
+
+	cout << g_count << endl;
 }

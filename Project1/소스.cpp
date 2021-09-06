@@ -8,18 +8,55 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+const int MAX = 1000 + 1;
+vector<pii> graph[MAX];
+bool check[MAX];
+
+int arr[MAX][MAX];
+
 int main() {
 	int N;
 	cin >> N;
 
-	vector<int> arr(N, 0);
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++)
+			cin >> arr[i][j];
+	}
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
+	for (int i = 1; i <= N; i++) {
+		for (int j = i + 1; j <= N; j++) {
+			if (i == j)
+				continue;
 
-	sort(arr.begin(), arr.end());
+			graph[i].push_back({ arr[i][j], j });
+			graph[j].push_back({ arr[i][j], i });
+		}
+	}
 
-	cout << arr[0] * arr[N - 1] << endl;
+	priority_queue<pii, vector<pii>, greater<pii>> pq;
+	pq.push({ 0, 1 });
 
-	return 0;
+	ll ans = 0;
+
+	while (!pq.empty()) {
+		int currentCost = pq.top().first;
+		int currentNode = pq.top().second;
+		pq.pop();
+
+		if (check[currentNode] == true)
+			continue;
+
+		check[currentNode] = true;
+		ans += currentCost;
+
+		for (int i = 0; i < graph[currentNode].size(); i++) {
+			int nextCost = graph[currentNode][i].first;
+			int nextNode = graph[currentNode][i].second;
+
+			if (check[nextNode] == false)
+				pq.push({ nextCost, nextNode });
+		}
+	}
+
+	cout << ans << endl;
 }

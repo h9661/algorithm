@@ -8,35 +8,18 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-vector<int> arr;
-bool check[300000];
-int N, S;
-int g_count = 0;
-
-void bfs(int sum, int count) {
-	if (sum == S && count > 0) {
-		g_count++;
-	}
-
-	if (count == N)
-		return;
-
-	for (int i = count; i < arr.size(); i++) {
-		bfs(arr[i] + sum, i + 1);
-	}
-}
-
 int main() {
-	cin >> N >> S;
+	int N;
+	cin >> N;
 
-	for (int i = 0; i < N; i++) {
-		int temp;
-		cin >> temp;
+	vector<int> arr(N, 0);
 
-		arr.push_back(temp);
-	}
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	bfs(0, 0);
+	sort(arr.begin(), arr.end());
 
-	cout << g_count << endl;
+	cout << arr[0] * arr[N - 1] << endl;
+
+	return 0;
 }

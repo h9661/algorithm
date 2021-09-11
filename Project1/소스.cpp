@@ -8,85 +8,53 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int INF = 987654321;
-const int MAXN = 52;
-int pipe_num;
-int capacity[MAXN][MAXN], flow[MAXN][MAXN];
-int parent[MAXN];
-vector<int> graph[MAXN];
+const int MAX = 100 + 1;
+bool check[MAX];
+vector<int> graph[MAX];
+int start, des;
 
-int MaximumFlow(int source, int sink) {
-    memset(flow, 0, sizeof(flow));
-    int total_flow = 0;
+int bfs(int start, int des) {
+	queue<pii> q;
+	q.push({ 0, start });
+	check[start] = true;
 
-    while (1) {
-        fill(parent, parent + MAXN, -1);
-        queue<int> q;
-        parent[source] = source;
-        q.push(source);
+	while (!q.empty()) {
+		int ct = q.front().first;
+		int cn = q.front().second;
+		q.pop();
 
-        while (!q.empty()) {
-            int x = q.front();
-            q.pop();
+		if (cn == des)
+			return ct;
 
-            for (int i = 0; i < graph[x].size(); i++) {
-                int y = graph[x][i];
+		for (int i = 0; i < graph[cn].size(); i++) {
+			int nt = ct + 1;
+			int nn = graph[cn][i];
 
-                if (capacity[x][y] - flow[x][y] > 0 && parent[y] == -1) {
-                    q.push(y);
-                    parent[y] = x;
+			if (check[nn] == false) {
+				q.push({ nt, nn });
+				check[nn] = true;
+			}
+		}
+	}
 
-                    if (y == sink)
-                        break;
-                }
-            }
-        }
-
-        if (parent[sink] == -1)
-            break;
-
-        int amount = INF;
-        for (int p = sink; p != source; p = parent[p])
-            amount = min(capacity[parent[p]][p] - flow[parent[p]][p], amount);
-
-        for (int p = sink; p != source; p = parent[p]) {
-            flow[parent[p]][p] += amount;
-            flow[p][parent[p]] -= amount;
-        }
-
-        total_flow += amount;
-    }
-
-    return total_flow;
+	return -1;
 }
 
-int main() {
-    ios_base::sync_with_stdio(0);
-    cin >> pipe_num;
+int main(){
+	int n;
+	cin >> n;
 
-    memset(capacity, 0, sizeof(capacity));
-    char u, v;
-    int pipe_cap;
-    for (int i = 0; i < pipe_num; ++i) {
-        cin >> u >> v >> pipe_cap;
+	cin >> start >> des;
 
-        if (u > 90)
-            u = u - 'a' + 26;
-        else
-            u = u - 'A';
+	int m;
+	cin >> m;
+	for (int i = 0; i < m; i++) {
+		int u, v;
+		cin >> u >> v;
 
-        if (v > 90)
-            v = v - 'a' + 26;
-        else
-            v = v - 'A';
+		graph[u].push_back(v);
+		graph[v].push_back(u);
+	}
 
-        graph[u].push_back(v);
-        graph[v].push_back(u);
-
-        capacity[u][v] += pipe_cap;
-        capacity[v][u] += pipe_cap;
-    }
-
-    cout << MaximumFlow('A' - 'A', 'Z' - 'A') << "\n";
-    return 0;
+	cout << bfs(start, des) << endl;
 }

@@ -8,53 +8,36 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 100 + 1;
-bool check[MAX];
-vector<int> graph[MAX];
-int start, des;
+int main() {
+	int N;
+	cin >> N;
 
-int bfs(int start, int des) {
-	queue<pii> q;
-	q.push({ 0, start });
-	check[start] = true;
+	vector<int> arr(N, 0);
 
-	while (!q.empty()) {
-		int ct = q.front().first;
-		int cn = q.front().second;
-		q.pop();
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-		if (cn == des)
-			return ct;
+	int M;
+	cin >> M;
 
-		for (int i = 0; i < graph[cn].size(); i++) {
-			int nt = ct + 1;
-			int nn = graph[cn][i];
+	sort(arr.begin(), arr.end());
 
-			if (check[nn] == false) {
-				q.push({ nt, nn });
-				check[nn] = true;
-			}
-		}
+	int sum = 0;
+	int left = 0;
+	int right = arr[N - 1];
+
+	while (left <= right) {
+		sum = 0;
+		int center = (left + right) / 2;
+
+		for (int i = 0; i < N; i++)
+			sum += min(center, arr[i]);
+
+		if (sum <= M)
+			left = center + 1;
+		else
+			right = center - 1;
 	}
 
-	return -1;
-}
-
-int main(){
-	int n;
-	cin >> n;
-
-	cin >> start >> des;
-
-	int m;
-	cin >> m;
-	for (int i = 0; i < m; i++) {
-		int u, v;
-		cin >> u >> v;
-
-		graph[u].push_back(v);
-		graph[v].push_back(u);
-	}
-
-	cout << bfs(start, des) << endl;
+	cout << right << endl;
 }

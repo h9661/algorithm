@@ -8,36 +8,39 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int gcd(int a, int b) {
+	if (b == 0)
+		return a;
+	return gcd(b, a % b);
+}
+
 int main() {
 	int N;
 	cin >> N;
 
-	vector<int> arr(N, 0);
+	vector<ll> arr(N, 0);
 
 	for (int i = 0; i < N; i++)
 		cin >> arr[i];
 
-	int M;
-	cin >> M;
+	vector<ll> differ(N - 1, 0);
 
-	sort(arr.begin(), arr.end());
+	for (int i = 0; i < N - 1; i++)
+		differ[i] = arr[i + 1] - arr[i];
 
-	int sum = 0;
-	int left = 0;
-	int right = arr[N - 1];
+	int k = 987654321;
+	for (int i = 0; i < N - 2; i++) {
+		int temp = gcd(differ[i], differ[i + 1]);
 
-	while (left <= right) {
-		sum = 0;
-		int center = (left + right) / 2;
-
-		for (int i = 0; i < N; i++)
-			sum += min(center, arr[i]);
-
-		if (sum <= M)
-			left = center + 1;
-		else
-			right = center - 1;
+		if (temp < k)
+			k = temp;
 	}
 
-	cout << right << endl;
+	ll count = 0;
+	for (int i = arr[0]; i <= arr[N - 1]; i += k)
+		count++;
+
+	cout << count - arr.size() << endl;
+
+	return 0;
 }

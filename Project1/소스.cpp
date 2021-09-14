@@ -8,39 +8,78 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int gcd(int a, int b) {
-	if (b == 0)
-		return a;
-	return gcd(b, a % b);
+const int MAX = 400 + 1;
+const int INF = 987654321;
+
+vector<int> graph[MAX];
+int parent[MAX];
+int capacity[MAX][MAX];
+int flow[MAX][MAX];
+
+int maxFlow(int start, int des) {
+	int total_flow = 0;
+
+	while (1) {
+		fill(parent, parent + MAX, -1);
+		queue<int> q;
+		q.push(start);
+		parent[start] = start;
+
+		while (!q.empty()) {
+			int x = q.front();
+			q.pop();
+
+			for (int i = 0; i < graph[x].size(); i++) {
+				int y = graph[x][i];
+
+				if (capacity[x][y] - flow[x][y] > 0 && parent[y] == -1) {
+					q.push(y);
+					parent[y] = x;
+
+					if (y == des)
+						break;
+				}
+			}
+		}
+
+		if (parent[des] == -1)
+			break;
+
+		int amount = INF;
+		for (int i = des; i != start; i = parent[i])
+			amount = min(capacity[parent[i]][i] - flow[parent[i]][i], amount);
+
+		for (int i = des; i != start; i = parent[i]) {
+			flow[parent[i]][i] += amount;
+			flow[i][parent[i]] -= amount;
+		}
+
+		total_flow += amount;
+	}
+
+	return total_flow;
 }
 
 int main() {
-	int N;
-	cin >> N;
+	int N, P;
+	cin >> N >> P;
 
-	vector<ll> arr(N, 0);
+	for (int i = 0; i < P; i++) {
+		int u, v;
+		cin >> u >> v;
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
+		graph[u].push_back(v);
+		graph[v].push_back(u);
 
-	vector<ll> differ(N - 1, 0);
-
-	for (int i = 0; i < N - 1; i++)
-		differ[i] = arr[i + 1] - arr[i];
-
-	int k = 987654321;
-	for (int i = 0; i < N - 2; i++) {
-		int temp = gcd(differ[i], differ[i + 1]);
-
-		if (temp < k)
-			k = temp;
+		capacity[u][v] += 1;
 	}
 
-	ll count = 0;
-	for (int i = arr[0]; i <= arr[N - 1]; i += k)
-		count++;
+	int start = 1;
+	int des = 2;
 
-	cout << count - arr.size() << endl;
+
+	cout << maxFlow(start, des) << endl;
+
 
 	return 0;
 }

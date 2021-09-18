@@ -9,54 +9,24 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 400 + 1;
-vector<int> graph[MAX];
-int d[MAX];
-bool c[MAX];
-
-bool dfs(int x) {
-	for (int i = 0; i < graph[x].size(); i++) {
-		int t = graph[x][i];
-
-		if (c[t])
-			continue;
-
-		c[t] = true;
-
-		if (d[t] == 0 || dfs(d[t])) {
-			d[t] = x;
-			return true;
-		}
+int gcd(int a, int b) {
+	while (b != 0) {
+		int r = a % b;
+		a = b;
+		b = r;
 	}
 
-	return false;
+	return a;
 }
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int tc;
+	cin >> tc;
 
-	const int ROOM = 200;
+	while (tc--) {
+		int A, B;
+		cin >> A >> B;
 
-	for (int i = 1; i <= N; i++) {
-		int k;
-		cin >> k;
-
-		while (k--) {
-			int temp;
-			cin >> temp;
-
-			graph[i].push_back(temp + ROOM);
-		}
+		cout << (A * B) / gcd(A, B) << endl;
 	}
-
-	int count = 0;
-
-	for (int i = 1; i <= N; i++) {
-		fill(c, c + MAX, false);
-		if (dfs(i))
-			count++;
-	}
-
-	cout << count << endl;
 }

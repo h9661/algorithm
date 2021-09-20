@@ -9,69 +9,57 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-//10830
+const int MAX = 2000 + 1;
+vector<int> graph[MAX];
+bool capacity[MAX];
+int d[MAX];
+int N, M;
 
-const int MAX = 5 + 1;
-const int mod = 1000;
-ll N, B;
+bool dfs(int x) {
+	for (int i = 0; i < graph[x].size(); i++) {
+		int y = graph[x][i];
 
-vector<vector<ull>> multiple(vector<vector<ull>>& a, vector<vector<ull>>& b) {
-	vector<vector<ull>> retval(MAX, vector<ull>(MAX, 0));
+		if (capacity[y])
+			continue;
 
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++) {
-			for (int k = 1; k <= N; k++)
-				retval[i][j] += a[i][k] * b[k][j];
-			retval[i][j] %= mod;
+		capacity[y] = true;
+
+		if (d[y] == 0 || dfs(d[y])) {
+			d[y] = x;
+			return true;
 		}
 	}
 
-	return retval;
+	return false;
 }
 
-
 int main() {
-	cin >> N >> B;
+	cin >> N >> M;
 
-	vector<vector<ull>> E(MAX, vector<ull>(MAX, 0));
-
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++) {
-			if (i == j)
-				E[i][j] = 1;
-		}
-	}
-
-	vector<vector<ull>> A(MAX, vector<ull>(MAX, 0));
+	const int ROOM = 1000;
 
 	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++)
-			cin >> A[i][j];
-	}
+		int n;
+		cin >> n;
 
-	while (B > 0) {
-		if (B % 2 == 1) {
-			E = multiple(E, A);
-		}
+		while (n--) {
+			int temp;
+			cin >> temp;
 
-		A = multiple(A, A);
-		B /= 2;
-	}
-
-	if (B == 1) {
-		for (int i = 1; i <= N; i++) {
-			for (int j = 1; j <= N; j++) {
-				cout << E[i][j] << " ";
-			}
-			cout << endl;
+			graph[i].push_back(temp + ROOM);
 		}
 	}
-	else {
-		for (int i = 1; i <= N; i++) {
-			for (int j = 1; j <= N; j++) {
-				cout << E[i][j] % 1000 << " ";
-			}
-			cout << endl;
+
+	int count = 0;
+	for (int i = 1; i <= N; i++) {
+		fill(capacity, capacity + MAX, false);
+
+		if (dfs(i)) {
+			count++;
 		}
 	}
+
+	cout << count << endl;
+
+	return 0;
 }

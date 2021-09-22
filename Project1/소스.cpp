@@ -34,33 +34,37 @@ bool dfs(int x) {
 }
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int tc;
+	cin >> tc;
 
-	const int ROOM = 1000;
+	const int BOOK = 1000;
 
-	for (int i = 1; i <= N; i++) {
-		int n;
-		cin >> n;
+	while (tc--) {
+		for (int i = 0; i < MAX; i++)
+			graph[i].clear();
+		fill(d, d + MAX, 0);
+		fill(capacity, capacity + MAX, false);
 
-		while (n--) {
-			int temp;
-			cin >> temp;
+		int N, M;
+		cin >> N >> M;
 
-			graph[i].push_back(temp + ROOM);
+		for (int i = 1; i <= M; i++) {
+			int a, b;
+			cin >> a >> b;
+
+			for (int j = a; j <= b; j++)
+				graph[i].push_back(j + BOOK);
 		}
-	}
 
-	int count = 0;
+		int count = 0;
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 1; j <= N; j++) {
-			fill(capacity, capacity + MAX, 0);
+		for (int i = 1; i <= M; i++) {
+			fill(capacity, capacity + MAX, false);
 
-			if (dfs(j))
+			if (dfs(i))
 				count++;
 		}
-	}
 
-	cout << count << endl;
+		cout << count << endl;
+	}
 }

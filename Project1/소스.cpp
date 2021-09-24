@@ -9,87 +9,72 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 2000 + 1;
-vector<int> graph[MAX];
-bool capacity[MAX];
-int d[MAX];
-vector<pii> parr;
+const int MAX = 100 + 1;
+const int INF = 2e9;
+int graph[MAX][MAX];
+int costMap[MAX][MAX];
+int Y[4] = { -1, 1, 0, 0 };
+int X[4] = { 0, 0, 1, -1 };
+bool check[MAX][MAX];
+int N, M;
 
-bool compare1(pii a, pii b) {
-	return a.second > b.second;
-}
+void bfs() {
+	priority_queue<pair<int, pii>, vector<pair<int, pii>>, greater<pair<int, pii>>> q;
+	q.push({ 0, {0, 0} });
+	costMap[0][0] = 0;
+	check[0][0] = true;
 
-bool compare2(pii a, pii b) {
-	return a.second < b.second;
-}
+	while (!q.empty()) {
+		int currentY = q.top().second.first;
+		int currentX = q.top().second.second;
+		int currentCost = q.top().first;
+		q.pop();
 
-bool dfs(int x) {
-	for (int i = 0; i < graph[x].size(); i++) {
-		int y = graph[x][i];
+		if (currentY == M - 1 && currentX == N - 1)
+			return;
 
-		if (capacity[y])
-			continue;
+		for (int i = 0; i < 4; i++) {
+			int nextY = currentY + Y[i];
+			int nextX = currentX + X[i];
 
-		capacity[y] = true;
+			if (nextY >= 0 && nextY < M && nextX >= 0 && nextX < N && check[nextY][nextX] == false) {
+				if (costMap[nextY][nextX] > currentCost) {
+					if (graph[nextY][nextX] == 0) {
+						costMap[nextY][nextX] = currentCost;
+						q.push({ currentCost,{nextY, nextX} });
+					}
+					else {
+						costMap[nextY][nextX] = currentCost + 1;
+						q.push({ currentCost + 1,{nextY, nextX} });
+					}
+				}
 
-		if (d[y] == 0 || dfs(d[y])) {
-			d[y] = x;
-			return true;
+				check[nextY][nextX] = true;
+			}
 		}
 	}
-
-	return false;
 }
 
 int main() {
-	int N, M, K;
-	cin >> N >> M >> K;
+	cin >> N >> M;
 
-	const int ROOM = 1000;
-
-	for (int i = 1; i <= N; i++) {
-		int k;
-		cin >> k;
-
-		while (k--) {
-			int temp;
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < N; j++) {
+			char temp;
 			cin >> temp;
 
-			graph[i].push_back(temp + ROOM);
+			if (temp == '0')
+				graph[i][j] = 0;
+			else
+				graph[i][j] = 1;
 		}
-
-		parr.push_back({ i, graph[i].size() });
 	}
 
+	fill(&costMap[0][0], &costMap[MAX - 1][MAX], INF);
 
+	bfs();
 
-	int count = 0;
+	cout << costMap[M - 1][N - 1] << endl;
 
-	for (int i = 1; i <= N; i++) {
-		fill(capacity, capacity + MAX, false);
-
-		if (dfs(i))
-			count++;
-	}
-
-	sort(parr.begin(), parr.end(), compare1);
-
-	int i = 0;
-
-	while (K > 0) {
-		fill(capacity, capacity + MAX, false);
-
-		if (dfs(parr[i].first)) {
-			count++;
-			K--;
-		}
-
-		i++;
-
-		if (i > parr.size())
-			break;
-	}
-
-
-	cout << count << endl;
+	return 0;
 }

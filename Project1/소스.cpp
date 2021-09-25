@@ -9,7 +9,7 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 100 + 1;
+const int MAX = 50 + 1;
 const int INF = 2e9;
 int graph[MAX][MAX];
 int costMap[MAX][MAX];
@@ -39,7 +39,7 @@ void bfs() {
 
 			if (nextY >= 0 && nextY < M && nextX >= 0 && nextX < N && check[nextY][nextX] == false) {
 				if (costMap[nextY][nextX] > currentCost) {
-					if (graph[nextY][nextX] == 0) {
+					if (graph[nextY][nextX] == 1) {
 						costMap[nextY][nextX] = currentCost;
 						q.push({ currentCost,{nextY, nextX} });
 					}
@@ -56,7 +56,8 @@ void bfs() {
 }
 
 int main() {
-	cin >> N >> M;
+	cin >> N;
+	M = N;
 
 	for (int i = 0; i < M; i++) {
 		for (int j = 0; j < N; j++) {

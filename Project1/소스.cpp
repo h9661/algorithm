@@ -11,13 +11,27 @@ using namespace std;
 
 int main() {
 	string s;
+	getline(cin, s);
 
-	while (getline(cin, s)) {
-		if (s == "")
-			break;
+	vector<char> temp;
 
-		cout << s << endl;
+	int k = 0;
+	int count = 0;
+	while (k < s.size()) {
+		if (count == 10) {
+			count = 0;
+			for (auto i : temp)
+				cout << i;
+			cout << endl;
+			temp.clear();
+		}
+		temp.push_back(s[k]);
+		k++;
+		count++;
 	}
+
+	for (auto i : temp)
+		cout << i;
 	
 	return 0;
 }

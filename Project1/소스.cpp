@@ -10,8 +10,16 @@
 using namespace std;
 
 int main() {
+	vector<int> arr(26, 0);
+
 	string s;
-	while (getline(cin, s))
-		cout << s << endl;
+	cin >> s;
+
+	for (int i = 0; i < s.size(); i++)
+		arr[s[i] - 'a']++;
+
+	for (auto& i : arr)
+		cout << i << " ";
+
 	return 0;
 }

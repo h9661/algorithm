@@ -9,58 +9,25 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-string P, T;
-int result = 0;
-vector<int> result_vec;
-
-vector<int> makeTable(const string& pattern) {
-	int patternSize = pattern.size();
-	vector<int> table(patternSize, 0);
-
-	int j = 0;
-	for (int i = 1; i < patternSize; i++) {
-		while (j > 0 && pattern[i] != pattern[j])
-			j = table[j - 1];
-
-		if (pattern[i] == pattern[j])
-			table[i] = ++j;
-	}
-
-	return table;
-}
-
-void kmp(const string& text, const string& pattern) {
-	vector<int> table = makeTable(pattern);
-
-	int textSize = text.size();
-	int patternSize = pattern.size();
-
-	int j = 0;
-	for (int i = 0; i < textSize; i++) {
-		while (j > 0 && text[i] != pattern[j])
-			j = table[j - 1];
-
-		if (text[i] == pattern[j]) {
-			if (j == patternSize - 1) {
-				result_vec.push_back(i - patternSize + 2);
-				j = table[j];
-				result++;
-			}
-			else
-				j++;
-		}
-	}
-}
-
 int main() {
-	getline(cin, T);
-	getline(cin, P);
+	bool flag = true;
+	int count = 0;
 
-	kmp(T, P);
+	for (int i = 0; i < 8; i++) {
+		string s;
+		getline(cin, s);
 
-	cout << result << endl;
-	for (int i = 0; i < result_vec.size(); i++)
-		cout << result_vec[i] << " ";
+		for (int j = 0; j < 8; j++) {
+			if (flag) {
+				if (s[j] == 'F')
+					count++;
+			}
 
-	return 0;
+			flag = !flag;
+		}
+
+		flag = !flag;
+	}
+
+	cout << count << endl;
 }

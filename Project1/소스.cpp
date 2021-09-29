@@ -9,55 +9,60 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 25 + 1;
-vector<pair<int, bool>> tree[MAX];
+int result = 0;
+vector<int> result_vec;
 
-void preOrder(int node) {
-	cout << (char)(node + 'A');
-	for (int i = 0; i < tree[node].size(); i++)
-		preOrder(tree[node][i].first);
+vector<int> makeTable(const string& p) {
+	vector<int> table(p.size(), 0);
+
+	int j = 0;
+	for (int i = 1; i < p.size(); i++) {
+		while (j > 0 && p[i] != p[j])
+			j = table[j - 1];
+
+		if (p[i] == p[j])
+			table[i] = ++j;
+	}
+
+	return table;
 }
 
-void inOrder(int node) {
-	if (tree[node].size() && tree[node][0].second == true)
-		inOrder(tree[node][0].first);
+void kmp(const string& t, const string& p) {
+	vector<int> table = makeTable(p);
 
-	cout << (char)(node + 'A');
+	int j = 0;
+	for (int i = 0; i < t.size(); i++) {
+		while (j > 0 && t[i] != p[j])
+			j = table[j - 1];
 
-	if (tree[node].size() && tree[node][0].second == false)
-		inOrder(tree[node][0].first);
-	else if (tree[node].size() == 2)
-		inOrder(tree[node][1].first);
-}
-
-void postOrder(int node) {
-	for (int i = 0; i < tree[node].size(); i++)
-		postOrder(tree[node][i].first);
-
-	cout << (char)(node + 'A');
+		if (t[i] == p[j]) {
+			if (j == p.size() - 1) {
+				result_vec.push_back(i - p.size() + 2);
+				j = table[j];
+				result++;
+			}
+			else
+				j++;
+		}
+	}
 }
 
 int main() {
-	int N;
-	cin >> N;
+	string p;
+	cin >> p;
 
-	for (int i = 0; i < N; i++) {
-		char a, b, c;
-		cin >> a >> b >> c;
+	int maxValue = 0;
 
-		if (b != '.')
-			tree[a - 'A'].push_back({ b - 'A', true });
+	for (int i = 0; i < p.size(); i++) {
+		vector<int> table = makeTable(p.substr(i, string::npos));
+		
+		int value = *max_element(table.begin(), table.end());
 
-		if (c != '.')
-			tree[a - 'A'].push_back({ c - 'A' , false });
+		if (value > maxValue)
+			maxValue = value;
 	}
 
-	preOrder(0);
-	cout << endl;
-	inOrder(0);
-	cout << endl;
-	postOrder(0);
-	cout << endl;
+	cout << maxValue << endl;
 
 	return 0;
 }

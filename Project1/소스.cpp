@@ -9,60 +9,30 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int result = 0;
-vector<int> result_vec;
-
-vector<int> makeTable(const string& p) {
-	vector<int> table(p.size(), 0);
-
-	int j = 0;
-	for (int i = 1; i < p.size(); i++) {
-		while (j > 0 && p[i] != p[j])
-			j = table[j - 1];
-
-		if (p[i] == p[j])
-			table[i] = ++j;
-	}
-
-	return table;
-}
-
-void kmp(const string& t, const string& p) {
-	vector<int> table = makeTable(p);
-
-	int j = 0;
-	for (int i = 0; i < t.size(); i++) {
-		while (j > 0 && t[i] != p[j])
-			j = table[j - 1];
-
-		if (t[i] == p[j]) {
-			if (j == p.size() - 1) {
-				result_vec.push_back(i - p.size() + 2);
-				j = table[j];
-				result++;
-			}
-			else
-				j++;
-		}
-	}
-}
-
 int main() {
-	string p;
-	cin >> p;
+	int tc;
+	cin >> tc;
 
-	int maxValue = 0;
+	int result = 0;
 
-	for (int i = 0; i < p.size(); i++) {
-		vector<int> table = makeTable(p.substr(i, string::npos));
-		
-		int value = *max_element(table.begin(), table.end());
+	while (tc--) {
+		double x1, y1, r1, x2, y2, r2;
+		cin >> x1 >> y1 >> r1 >> x2 >> y2 >> r2;
 
-		if (value > maxValue)
-			maxValue = value;
+		// 점 (x1, y1)과 점 (x2, y2) 사이의 거리
+		double d = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+		// 두 원의 반지름 차
+		double subtract = r1 > r2 ? r1 - r2 : r2 - r1;
+	
+		if (d == 0 && r1 == r2)
+			result = -1;
+		else if ((d < r1 + r2) && (subtract < d))
+			result = 2;
+		else if ((d == r1 + r2) || (subtract == d))
+			result = 1;
+		else
+			result = 0;
+
+		cout << result << endl;
 	}
-
-	cout << maxValue << endl;
-
-	return 0;
 }

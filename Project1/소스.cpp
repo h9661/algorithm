@@ -9,30 +9,27 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+pair<int, int> dp[40 + 1];
+
 int main() {
 	int tc;
 	cin >> tc;
 
-	int result = 0;
+	dp[0].first = 1;
+	dp[0].second = 0;
+
+	dp[1].first = 0;
+	dp[1].second = 1;
+
+	for (int i = 2; i <= 40; i++) {
+		dp[i].first = dp[i - 1].first + dp[i - 2].first;
+		dp[i].second = dp[i - 1].second + dp[i - 2].second;
+	}
 
 	while (tc--) {
-		double x1, y1, r1, x2, y2, r2;
-		cin >> x1 >> y1 >> r1 >> x2 >> y2 >> r2;
+		int n;
+		cin >> n;
 
-		// 점 (x1, y1)과 점 (x2, y2) 사이의 거리
-		double d = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-		// 두 원의 반지름 차
-		double subtract = r1 > r2 ? r1 - r2 : r2 - r1;
-	
-		if (d == 0 && r1 == r2)
-			result = -1;
-		else if ((d < r1 + r2) && (subtract < d))
-			result = 2;
-		else if ((d == r1 + r2) || (subtract == d))
-			result = 1;
-		else
-			result = 0;
-
-		cout << result << endl;
+		cout << dp[n].first << " " << dp[n].second << endl;
 	}
 }

@@ -9,27 +9,59 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-pair<int, int> dp[40 + 1];
-
 int main() {
 	int tc;
 	cin >> tc;
 
-	dp[0].first = 1;
-	dp[0].second = 0;
-
-	dp[1].first = 0;
-	dp[1].second = 1;
-
-	for (int i = 2; i <= 40; i++) {
-		dp[i].first = dp[i - 1].first + dp[i - 2].first;
-		dp[i].second = dp[i - 1].second + dp[i - 2].second;
-	}
-
 	while (tc--) {
-		int n;
-		cin >> n;
+		int N, M;
+		cin >> N >> M;
 
-		cout << dp[n].first << " " << dp[n].second << endl;
+		vector<int> times(N + 1, 0);
+		vector<int> costs(N + 1, 0);
+		vector<int> indeg(N + 1, 0);
+		vector<vector<int>> graph(N + 1);
+
+		for (int i = 1; i <= N; i++)
+			cin >> times[i];
+
+		for (int i = 0; i < M; i++) {
+			int from, to;
+			cin >> from >> to;
+
+			graph[from].push_back(to);
+			indeg[to]++;
+		}
+
+		int W;
+		cin >> W;
+
+		queue<int> q;
+
+		for (int i = 1; i <= N; i++) {
+			if (indeg[i] == 0) {
+				q.push(i);
+				costs[i] = times[i];
+			}
+		}
+
+		while (!q.empty()) {
+			int curNode = q.front();
+			int curCost = costs[curNode];
+			q.pop();
+
+			for (int i = 0; i < graph[curNode].size(); i++) {
+				int nextNode = graph[curNode][i];
+				int nextCost = times[nextNode] + curCost;
+
+				if (--indeg[nextNode] == 0)
+					q.push(nextNode);
+
+				if (costs[nextNode] < nextCost)
+					costs[nextNode] = nextCost;
+			}
+		}
+
+		cout << costs[W] << endl;
 	}
 }

@@ -10,8 +10,42 @@
 using namespace std;
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int N;
+	cin >> N;
 
-	cout << N * M - 1 << endl;
+	stack<int> arr;
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
+
+		arr.push(temp);
+	}
+
+	stack<int> stk;
+
+	vector<int> ans;
+
+	while(arr.size() != 0){
+		int num = arr.top();
+
+		if (stk.size() == 0) {
+			stk.push(num);
+			arr.pop();
+			ans.push_back(-1);
+			continue;
+		}
+
+		if (num < stk.top()) {
+			ans.push_back(stk.top());
+			stk.push(num);
+			arr.pop();
+		}
+		else
+			stk.pop();
+	}
+
+	for (int i = ans.size() - 1; i >= 0; i--)
+		cout << ans[i] << " ";
+
+	return 0;
 }

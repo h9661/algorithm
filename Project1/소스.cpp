@@ -10,21 +10,39 @@
 using namespace std;
 
 int main() {
-	ll S;
-	cin >> S;
-	ll sum = 0;
-	ll temp;
+	int N;
+	cin >> N;
 
-	for (ll i = 1; ; i++) {
-		sum = i * (i + 1);
+	vector<ll> cost(N - 1, 0);
+	vector<ll> city(N, 0);
 
-		if (sum > 2 * S) {
-			temp = i;
-			break;
+	for (int i = 0; i < N - 1; i++)
+		cin >> cost[i];
+
+	for (int i = 0; i < N; i++)
+		cin >> city[i];
+
+	ll temp = city[0];
+	ll i = 0;
+	ll j = 1;
+	ll gas = 0;
+	ll money = 0;
+
+	while (j < N) {
+		gas += cost[i];
+
+		if (temp >= city[j]) {
+			money += gas * temp;
+			temp = city[j];
+			gas = 0;
 		}
+
+		i += 1;
+		j += 1;
 	}
 
-	cout << temp - 1 << endl;
+	money += gas * temp;
 
-	return 0;
+
+	cout << money << endl;
 }

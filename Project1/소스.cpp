@@ -10,31 +10,34 @@
 using namespace std;
 
 int main() {
-	ll A, B;
-	cin >> A >> B;
+	fastio;
+	int tc;
+	cin >> tc;
 
-	queue<pll> q;
+	while (tc--) {
+		int N;
+		cin >> N;
 
-	q.push({ A, 1 });
+		vector<pii> arr(N, { 0, 0 });
 
-	while (!q.empty()) {
-		ll x = q.front().first;
-		ll count = q.front().second;
-		q.pop();
+		for (int i = 0; i < N; i++)
+			cin >> arr[i].first >> arr[i].second;
 
-		if (x == B) {
-			cout << count << endl;
-			return 0;
+		sort(arr.begin(), arr.end());
+
+		int count = 1;
+
+		int a = arr[0].first;
+		int b = arr[0].second;
+
+		for (int i = 1; i < N; i++) {
+			if (b > arr[i].second) {
+				a = arr[i].first;
+				b = arr[i].second;
+				count++;
+			}
 		}
 
-		if (x * 2 <= B) {
-			q.push({ x * 2, count + 1 });
-		}
-
-		if ( (x * 10 + 1) <= B) {
-			q.push({ x * 10 + 1, count + 1 });
-		}
+		cout << count << endl;
 	}
-
-	cout << -1 << endl;
 }

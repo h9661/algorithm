@@ -10,34 +10,21 @@
 using namespace std;
 
 int main() {
-	fastio;
-	int tc;
-	cin >> tc;
+	ll S;
+	cin >> S;
+	ll sum = 0;
+	ll temp;
 
-	while (tc--) {
-		int N;
-		cin >> N;
+	for (ll i = 1; ; i++) {
+		sum = i * (i + 1);
 
-		vector<pii> arr(N, { 0, 0 });
-
-		for (int i = 0; i < N; i++)
-			cin >> arr[i].first >> arr[i].second;
-
-		sort(arr.begin(), arr.end());
-
-		int count = 1;
-
-		int a = arr[0].first;
-		int b = arr[0].second;
-
-		for (int i = 1; i < N; i++) {
-			if (b > arr[i].second) {
-				a = arr[i].first;
-				b = arr[i].second;
-				count++;
-			}
+		if (sum > 2 * S) {
+			temp = i;
+			break;
 		}
-
-		cout << count << endl;
 	}
+
+	cout << temp - 1 << endl;
+
+	return 0;
 }

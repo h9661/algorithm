@@ -10,39 +10,34 @@
 using namespace std;
 
 int main() {
-	int N;
-	cin >> N;
+	string s1, s2;
+	getline(cin, s1);
+	getline(cin, s2);
 
-	vector<ll> cost(N - 1, 0);
-	vector<ll> city(N, 0);
+	int count = 0;
 
-	for (int i = 0; i < N - 1; i++)
-		cin >> cost[i];
+	int i = 0;
+	while (i < s1.size()) {
+		bool flag = false;
+		int temp = i;
 
-	for (int i = 0; i < N; i++)
-		cin >> city[i];
+		for (int j = 0; j < s2.size(); j++) {
+			if (s1[temp] != s2[j])
+				break;
+			else
+				temp++;
 
-	ll temp = city[0];
-	ll i = 0;
-	ll j = 1;
-	ll gas = 0;
-	ll money = 0;
-
-	while (j < N) {
-		gas += cost[i];
-
-		if (temp >= city[j]) {
-			money += gas * temp;
-			temp = city[j];
-			gas = 0;
+			if (j == s2.size() - 1) {
+				count++;
+				flag = true;
+			}
 		}
 
-		i += 1;
-		j += 1;
+		if (flag)
+			i += s2.size();
+		else
+			i++;
 	}
 
-	money += gas * temp;
-
-
-	cout << money << endl;
+	cout << count << endl;
 }

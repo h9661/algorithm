@@ -9,34 +9,56 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int N, M;
+
+void Transfrom(vector<string>& matrix, int row, int col) {
+	for (int i = row; i < row + 3; i++) {
+		for (int j = col; j < col + 3; j++) {
+			if (matrix[i][j] == '0')
+				matrix[i][j] = '1';
+			else
+				matrix[i][j] = '0';
+		}
+	}
+}
+
 int main() {
-	string s;
-	cin >> s;
-	int count_1 = 0;
-	bool flag_1 = true;
-	int count_0 = 0;
-	bool flag_0 = true;
+	cin >> N >> M;
 
-	for (int i = 0; i < s.size(); i++) {
-		if (s[i] == '1' and flag_1 == true) {
-			count_1++;
-			flag_1 = false;
+	vector<string> matrix1;
+	vector<string> matrix2;
+
+	for (int i = 0; i < N; i++) {
+		string temp;
+		cin >> temp;
+
+		matrix1.push_back(temp);
+	}
+	for (int i = 0; i < N; i++) {
+		string temp;
+		cin >> temp;
+
+		matrix2.push_back(temp);
+	}
+	int count = 0;
+
+	for (int i = 0; i <= N - 3; i++) {
+		for (int j = 0; j <= M - 3; j++) {
+			if (matrix1[i][j] != matrix2[i][j]) {
+				Transfrom(matrix1, i, j);
+				count++;
+			}
 		}
-
-		if (s[i] == '0' and flag_0 == true) {
-			count_0++;
-			flag_0 = false;
-		}
-		
-		if (s[i] == '0')
-			flag_1 = true;
-
-		if (s[i] == '1')
-			flag_0 = true;
 	}
 
-	if (count_0 < count_1)
-		cout << count_0 << endl;
-	else
-		cout << count_1 << endl;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (matrix1[i][j] != matrix2[i][j]) {
+				cout << -1 << endl;
+				return 0;
+			}
+		}
+	}
+
+	cout << count << endl;
 }

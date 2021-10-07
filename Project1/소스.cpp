@@ -9,56 +9,29 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int N, M;
-
-void Transfrom(vector<string>& matrix, int row, int col) {
-	for (int i = row; i < row + 3; i++) {
-		for (int j = col; j < col + 3; j++) {
-			if (matrix[i][j] == '0')
-				matrix[i][j] = '1';
-			else
-				matrix[i][j] = '0';
-		}
-	}
-}
+const int MAX = 100000 + 1;
+int arr[MAX];
+int dp[MAX];
 
 int main() {
-	cin >> N >> M;
+	int N;
+	cin >> N;
 
-	vector<string> matrix1;
-	vector<string> matrix2;
+	for (int i = 1; i <= N; i++)
+		cin >> arr[i];
 
-	for (int i = 0; i < N; i++) {
-		string temp;
-		cin >> temp;
+	dp[N] = arr[N];
 
-		matrix1.push_back(temp);
-	}
-	for (int i = 0; i < N; i++) {
-		string temp;
-		cin >> temp;
+	for (int i = N - 1; i >= 1; i--)
+		dp[i] = max(arr[i], arr[i] + dp[i + 1]);
 
-		matrix2.push_back(temp);
-	}
-	int count = 0;
+	int ans = -987654321;
 
-	for (int i = 0; i <= N - 3; i++) {
-		for (int j = 0; j <= M - 3; j++) {
-			if (matrix1[i][j] != matrix2[i][j]) {
-				Transfrom(matrix1, i, j);
-				count++;
-			}
-		}
+	for (int i = 1; i <= N; i++) {
+		if (dp[i] > ans)
+			ans = dp[i];
 	}
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (matrix1[i][j] != matrix2[i][j]) {
-				cout << -1 << endl;
-				return 0;
-			}
-		}
-	}
-
-	cout << count << endl;
+	cout << ans << endl;
+	
 }

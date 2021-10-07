@@ -10,21 +10,33 @@
 using namespace std;
 
 int main() {
-	int i = 1;
-	while (i) {
-		int L, P, V;
-		cin >> L >> P >> V;
+	string s;
+	cin >> s;
+	int count_1 = 0;
+	bool flag_1 = true;
+	int count_0 = 0;
+	bool flag_0 = true;
 
-		if (L == 0 and P == 0 and V == 0)
-			break;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == '1' and flag_1 == true) {
+			count_1++;
+			flag_1 = false;
+		}
 
-		int count = 0;
-		count += (V / P) * L;
-		count += (V % P) > L ? L : (V % P);
+		if (s[i] == '0' and flag_0 == true) {
+			count_0++;
+			flag_0 = false;
+		}
+		
+		if (s[i] == '0')
+			flag_1 = true;
 
-		cout << "Case " << i << ": ";
-		cout << count << endl;
-
-		i++;
+		if (s[i] == '1')
+			flag_0 = true;
 	}
+
+	if (count_0 < count_1)
+		cout << count_0 << endl;
+	else
+		cout << count_1 << endl;
 }

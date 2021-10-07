@@ -10,34 +10,21 @@
 using namespace std;
 
 int main() {
-	string s1, s2;
-	getline(cin, s1);
-	getline(cin, s2);
+	int i = 1;
+	while (i) {
+		int L, P, V;
+		cin >> L >> P >> V;
 
-	int count = 0;
+		if (L == 0 and P == 0 and V == 0)
+			break;
 
-	int i = 0;
-	while (i < s1.size()) {
-		bool flag = false;
-		int temp = i;
+		int count = 0;
+		count += (V / P) * L;
+		count += (V % P) > L ? L : (V % P);
 
-		for (int j = 0; j < s2.size(); j++) {
-			if (s1[temp] != s2[j])
-				break;
-			else
-				temp++;
+		cout << "Case " << i << ": ";
+		cout << count << endl;
 
-			if (j == s2.size() - 1) {
-				count++;
-				flag = true;
-			}
-		}
-
-		if (flag)
-			i += s2.size();
-		else
-			i++;
+		i++;
 	}
-
-	cout << count << endl;
 }

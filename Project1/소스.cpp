@@ -9,29 +9,37 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 100000 + 1;
-int arr[MAX];
-int dp[MAX];
-
 int main() {
-	int N;
-	cin >> N;
+	int N, L;
+	cin >> N >> L;
 
-	for (int i = 1; i <= N; i++)
+	vector<int> arr(N, 0);
+
+	for (int i = 0; i < N; i++)
 		cin >> arr[i];
+	arr.push_back(987654321);
 
-	dp[N] = arr[N];
+	sort(arr.begin(), arr.end());
 
-	for (int i = N - 1; i >= 1; i--)
-		dp[i] = max(arr[i], arr[i] + dp[i + 1]);
+	int i = 0;
+	int j;
+	int count = 0;
+	while (i < N) {
+		int temp = arr[i];
+		j = i + 1;
 
-	int ans = -987654321;
+		while (j <= N) {
+			if (arr[j] - temp <= L - 1) {
+				j++;
+			}
+			else {
+				i += j - i;
+				count++;
+				break;
+			}
+		}
 
-	for (int i = 1; i <= N; i++) {
-		if (dp[i] > ans)
-			ans = dp[i];
 	}
 
-	cout << ans << endl;
-	
+	cout << count << endl;
 }

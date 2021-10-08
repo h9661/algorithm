@@ -9,37 +9,21 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+ll dp[1000001];
+
 int main() {
-	int N, L;
-	cin >> N >> L;
+	int N;
+	cin >> N;
 
-	vector<int> arr(N, 0);
+	dp[1] = 1;
+	dp[2] = 2;
+	dp[3] = 3;
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
-	arr.push_back(987654321);
-
-	sort(arr.begin(), arr.end());
-
-	int i = 0;
-	int j;
-	int count = 0;
-	while (i < N) {
-		int temp = arr[i];
-		j = i + 1;
-
-		while (j <= N) {
-			if (arr[j] - temp <= L - 1) {
-				j++;
-			}
-			else {
-				i += j - i;
-				count++;
-				break;
-			}
-		}
-
+	for (int i = 4; i <= 1000000; i++) {
+		dp[i] = (dp[i - 1] + dp[i - 2]) % 15746;
 	}
 
-	cout << count << endl;
+	cout << dp[N] << endl;
+
+	return 0;
 }

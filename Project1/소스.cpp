@@ -9,21 +9,28 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-ll dp[1000001];
-
 int main() {
-	int N;
-	cin >> N;
 
-	dp[1] = 1;
-	dp[2] = 2;
-	dp[3] = 3;
+	while (1) {
+		string s;
+		cin >> s;
 
-	for (int i = 4; i <= 1000000; i++) {
-		dp[i] = (dp[i - 1] + dp[i - 2]) % 15746;
+		if (s == "0")
+			break;
+
+		int count = 0;
+
+		for (int i = 0; i < s.size(); i++) {
+			if (s[i] == '1')
+				count += 2;
+			else if (s[i] == '0')
+				count += 4;
+			else
+				count += 3;
+
+			count += 1;
+		}
+
+		cout << count + 1<< endl;
 	}
-
-	cout << dp[N] << endl;
-
-	return 0;
 }

@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #pragma warning (disable : 4996)
+#pragma warning (disable : 6385)
 #define ull unsigned long long
 #define ll long long int
 #define ui unsigned int
@@ -9,28 +10,26 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int cost[21];
+int value[21];
+int dp[100001];
+
 int main() {
+	int C, N;
+	cin >> C >> N;
 
-	while (1) {
-		string s;
-		cin >> s;
+	for (int i = 1; i <= N; i++)
+		cin >> cost[i] >> value[i];
 
-		if (s == "0")
-			break;
+	for (int i = 1; i <= N; i++) {
+		for (int j = cost[i]; j <= 100001; j++)
+			dp[j] = max(dp[j], dp[j - cost[i]] + value[i]);
+	}
 
-		int count = 0;
-
-		for (int i = 0; i < s.size(); i++) {
-			if (s[i] == '1')
-				count += 2;
-			else if (s[i] == '0')
-				count += 4;
-			else
-				count += 3;
-
-			count += 1;
+	for (int i = 1; i <= 100001; i++) {
+		if (dp[i] >= C) {
+			cout << i << endl;
+			return 0;
 		}
-
-		cout << count + 1<< endl;
 	}
 }

@@ -12,22 +12,14 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 90 + 1;
-ll dp[MAX];
-int N;
-
 int main() {
+	int N;
 	cin >> N;
 
-	dp[1] = 1;
-	dp[2] = 1;
-	dp[3] = 2;
-
-	for (int i = 4; i <= 90; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2];
-	}
-
-	cout << dp[N] << endl;
+	if (N % 2 == 1)
+		cout << "SK" << endl;
+	else
+		cout << "CY" << endl;
 
 	return 0;
 }

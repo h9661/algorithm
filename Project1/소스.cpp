@@ -12,28 +12,27 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int dp[1001];
+
 int main() {
-	fastio;
 	int N;
 	cin >> N;
 
-	vector<int> level;
-	for (int i = 0; i < N; i++) {
-		int temp; cin >> temp;
-		level.push_back(temp);
+	dp[1] = 1;
+	dp[2] = 0;
+	dp[3] = 1;
+
+	for (int i = 4; i <= 1000; i++) {
+		if (!dp[i - 1] || !dp[i - 3])
+			dp[i] = 1;
+		else
+			dp[i] = 0;
 	}
 
-	int count = 0;
-	for (int i = N - 1; i >= 1; i--) {
-		if (level[i] <= level[i - 1]) {
-			while (1) {
-				if (level[i] > level[i - 1])
-					break;
-				level[i - 1]--;
-				count++;
-			}
-		}
-	}
+	if (dp[N] == 1)
+		cout << "CY" << endl;
+	else
+		cout << "SK" << endl;
 
-	cout << count << endl;
+	return 0;
 }

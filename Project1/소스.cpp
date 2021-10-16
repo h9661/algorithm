@@ -12,14 +12,27 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int dp[1001];
+
 int main() {
-	ll N;
+	fastio;
+	int N;
 	cin >> N;
 
-	if (N % 2 == 1)
+	dp[1] = 0;
+	dp[2] = 1;
+	dp[3] = 0;
+	dp[4] = 1;
+
+	for (int i = 5; i <= 1000; i++) {
+		if (dp[i - 1] == 0 || dp[i - 3] == 0 || dp[i - 4] == 0)
+			dp[i] = 1;
+		else
+			dp[i] = 0;
+	}
+
+	if (dp[N])
 		cout << "SK" << endl;
 	else
 		cout << "CY" << endl;
-
-	return 0;
 }

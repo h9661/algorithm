@@ -12,27 +12,38 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int dp[1001];
-
 int main() {
-	fastio;
-	int N;
-	cin >> N;
+	int N, M;
+	cin >> N >> M;
 
-	dp[1] = 0;
-	dp[2] = 1;
-	dp[3] = 0;
-	dp[4] = 1;
+	int appleCount;
+	cin >> appleCount;
+	vector<int> arr(appleCount, 0);
 
-	for (int i = 5; i <= 1000; i++) {
-		if (dp[i - 1] == 0 || dp[i - 3] == 0 || dp[i - 4] == 0)
-			dp[i] = 1;
-		else
-			dp[i] = 0;
+	for (int i = 0; i < appleCount; i++)
+		cin >> arr[i];
+
+	int startLocation = 1;
+	int endLocation = M;
+	int movedDist = 0;
+
+	for (int i = 0; i < appleCount; i++) {
+		while (1) {
+			if (arr[i] >= startLocation && arr[i] <= endLocation) {
+				break;
+			}
+			else if (arr[i] < startLocation) {
+				startLocation--;
+				endLocation--;
+				movedDist++;
+			}
+			else {
+				startLocation++;
+				endLocation++;
+				movedDist++;
+			}
+		}
 	}
 
-	if (dp[N])
-		cout << "SK" << endl;
-	else
-		cout << "CY" << endl;
+	cout << movedDist << endl;
 }

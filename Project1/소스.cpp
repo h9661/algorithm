@@ -14,29 +14,22 @@ using namespace std;
 
 int main() {
 	fastio;
-	int N;
-	cin >> N;
 
-	int elapsedTime = 0;
-	int count = 0;
+	int X, Y;
+	cin >> X >> Y;
 
-	vector<pii> arr;
-	for (int i = 0; i < N; i++) {
-		int a, b;
-		cin >> a >> b;
+	int ans = 0;
 
-		arr.push_back({ a, b });
+	if (X > Y) {
+		ans += X;
+		ans += Y;
+		ans += Y / 10;
+	}
+	else {
+		ans += Y;
+		ans += X;
+		ans += X / 10;
 	}
 
-	while (count < N) {
-		if (((elapsedTime % (arr[count].first + arr[count].second))) < arr[count].second) {
-			elapsedTime++;
-		}
-		else {
-			elapsedTime++;
-			count++;
-		}
-	}
-
-	cout << elapsedTime << endl;
+	cout << ans << endl;
 }

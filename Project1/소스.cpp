@@ -13,37 +13,30 @@
 using namespace std;
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	fastio;
+	int N;
+	cin >> N;
 
-	int appleCount;
-	cin >> appleCount;
-	vector<int> arr(appleCount, 0);
+	int elapsedTime = 0;
+	int count = 0;
 
-	for (int i = 0; i < appleCount; i++)
-		cin >> arr[i];
+	vector<pii> arr;
+	for (int i = 0; i < N; i++) {
+		int a, b;
+		cin >> a >> b;
 
-	int startLocation = 1;
-	int endLocation = M;
-	int movedDist = 0;
+		arr.push_back({ a, b });
+	}
 
-	for (int i = 0; i < appleCount; i++) {
-		while (1) {
-			if (arr[i] >= startLocation && arr[i] <= endLocation) {
-				break;
-			}
-			else if (arr[i] < startLocation) {
-				startLocation--;
-				endLocation--;
-				movedDist++;
-			}
-			else {
-				startLocation++;
-				endLocation++;
-				movedDist++;
-			}
+	while (count < N) {
+		if (((elapsedTime % (arr[count].first + arr[count].second))) < arr[count].second) {
+			elapsedTime++;
+		}
+		else {
+			elapsedTime++;
+			count++;
 		}
 	}
 
-	cout << movedDist << endl;
+	cout << elapsedTime << endl;
 }

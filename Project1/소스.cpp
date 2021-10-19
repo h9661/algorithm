@@ -13,23 +13,45 @@
 using namespace std;
 
 int main() {
-	fastio;
+	int L;
+	cin >> L;
 
-	int X, Y;
-	cin >> X >> Y;
+	vector<int> arr(L, 0);
+
+	for (int i = 0; i < L; i++)
+		cin >> arr[i];
+
+	int n;
+	cin >> n;
+
+	sort(arr.begin(), arr.end());
+
+	int min_value = 0;
+	int max_value = arr[0];
+	bool flag = false;
+
+	for (int i = 0; i < arr.size(); i++) {
+		if (arr[i] <= n)
+			min_value = arr[i];
+
+		if (arr[i] >= n && flag == false) {
+			max_value = arr[i];
+			flag = true;
+		}
+	}
 
 	int ans = 0;
 
-	if (X > Y) {
-		ans += X;
-		ans += Y;
-		ans += Y / 10;
-	}
-	else {
-		ans += Y;
-		ans += X;
-		ans += X / 10;
+	for (int i = min_value + 1; i <= n; i++) {
+		for (int j = n; j <= max_value - 1; j++) {
+			if (i == j)
+				continue;
+
+			ans++;
+		}
 	}
 
 	cout << ans << endl;
+
+	return 0;
 }

@@ -13,45 +13,32 @@
 using namespace std;
 
 int main() {
-	int L;
-	cin >> L;
+	int X;
+	cin >> X;
 
-	vector<int> arr(L, 0);
+	int arr[7];
+	fill(arr, arr + 7, 0);
 
-	for (int i = 0; i < L; i++)
-		cin >> arr[i];
+	int index = 6;
 
-	int n;
-	cin >> n;
-
-	sort(arr.begin(), arr.end());
-
-	int min_value = 0;
-	int max_value = arr[0];
-	bool flag = false;
-
-	for (int i = 0; i < arr.size(); i++) {
-		if (arr[i] <= n)
-			min_value = arr[i];
-
-		if (arr[i] >= n && flag == false) {
-			max_value = arr[i];
-			flag = true;
+	while (X > 0) {
+		if (X % 2 == 1) {
+			arr[index] = 1;
 		}
+		else {
+			arr[index] = 0;
+		}
+
+		X /= 2;
+		index--;
 	}
 
-	int ans = 0;
+	int count = 0;
 
-	for (int i = min_value + 1; i <= n; i++) {
-		for (int j = n; j <= max_value - 1; j++) {
-			if (i == j)
-				continue;
-
-			ans++;
-		}
+	for (int i = 0; i < 7; i++) {
+		if (arr[i])
+			count++;
 	}
 
-	cout << ans << endl;
-
-	return 0;
+	cout << count << endl;
 }

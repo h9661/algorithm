@@ -13,31 +13,15 @@
 using namespace std;
 
 int main() {
-	int X;
-	cin >> X;
-
-	int arr[7];
-	fill(arr, arr + 7, 0);
-
-	int index = 6;
-
-	while (X > 0) {
-		if (X % 2 == 1) {
-			arr[index] = 1;
-		}
-		else {
-			arr[index] = 0;
-		}
-
-		X /= 2;
-		index--;
-	}
+	string s;
+	cin >> s;
 
 	int count = 0;
+	char startPoint = 'A';
 
-	for (int i = 0; i < 7; i++) {
-		if (arr[i])
-			count++;
+	for (int i = 0; i < s.size(); i++) {
+		count += min(abs(startPoint - s[i]), 26 - abs(startPoint - s[i]));
+		startPoint = s[i];
 	}
 
 	cout << count << endl;

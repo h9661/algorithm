@@ -14,15 +14,18 @@ using namespace std;
 
 int main() {
 	string s;
-	cin >> s;
+	getline(cin, s);
 
+	char strArr[5] = { 'U', 'C', 'P', 'C', '\0' };
 	int count = 0;
-	char startPoint = 'A';
 
 	for (int i = 0; i < s.size(); i++) {
-		count += min(abs(startPoint - s[i]), 26 - abs(startPoint - s[i]));
-		startPoint = s[i];
+		if (s[i] == strArr[count])
+			count++;
 	}
 
-	cout << count << endl;
+	if (count == 4)
+		cout << "I love UCPC" << endl;
+	else
+		cout << "I hate UCPC" << endl;
 }

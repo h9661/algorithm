@@ -13,19 +13,7 @@
 using namespace std;
 
 int main() {
-	string s;
-	getline(cin, s);
+	cout << "ÆÄÀÌÆÃ!!" << endl;
 
-	char strArr[5] = { 'U', 'C', 'P', 'C', '\0' };
-	int count = 0;
-
-	for (int i = 0; i < s.size(); i++) {
-		if (s[i] == strArr[count])
-			count++;
-	}
-
-	if (count == 4)
-		cout << "I love UCPC" << endl;
-	else
-		cout << "I hate UCPC" << endl;
+	return 0;
 }

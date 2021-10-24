@@ -13,7 +13,51 @@
 using namespace std;
 
 int main() {
-	cout << "ÆÄÀÌÆÃ!!" << endl;
+	int N, M;
+	cin >> N >> M;
 
-	return 0;
+	vector<int> arr(M, 0);
+
+	for (int i = 0; i < M; i++)
+		cin >> arr[i];
+
+	deque<int> dq;
+	for (int i = 1; i <= N; i++)
+		dq.push_back(i);
+
+	int count = 0;
+	int ans = 0;
+	while (count < M) {
+		int findNumber = arr[count];
+		int findNumberIndex = 0;
+
+		for (int i = 0; i < dq.size(); i++) {
+			if (dq[i] == findNumber) {
+				findNumberIndex = i;
+				break;
+			}
+		}
+
+		while (1) {
+			if (dq.front() == findNumber) {
+				dq.pop_front();
+				count++;
+				break;
+			}
+			else if (findNumberIndex <= (dq.size() / 2)) {
+				int temp = dq.front();
+				dq.push_back(temp);
+				dq.pop_front();
+				ans++;
+			}
+			else {
+				int temp = dq.back();
+				dq.push_front(temp);
+				dq.pop_back();
+				ans++;
+			}
+		}
+	}
+
+	cout << ans << endl;
 }

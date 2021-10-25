@@ -13,51 +13,51 @@
 using namespace std;
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int N, K, M;
+	cin >> N >> K >> M;
 
-	vector<int> arr(M, 0);
-
-	for (int i = 0; i < M; i++)
-		cin >> arr[i];
-
+	int deleted = 0;
+	int count = 1;
+	bool flag = false;
 	deque<int> dq;
+
 	for (int i = 1; i <= N; i++)
 		dq.push_back(i);
-
-	int count = 0;
-	int ans = 0;
-	while (count < M) {
-		int findNumber = arr[count];
-		int findNumberIndex = 0;
-
-		for (int i = 0; i < dq.size(); i++) {
-			if (dq[i] == findNumber) {
-				findNumberIndex = i;
-				break;
-			}
-		}
-
-		while (1) {
-			if (dq.front() == findNumber) {
+	
+	while (!dq.empty()) {
+		if (count == K) {
+			if (flag == false) {
+				cout << dq.front() << " ";
 				dq.pop_front();
-				count++;
-				break;
 			}
-			else if (findNumberIndex <= (dq.size() / 2)) {
+			else {
+				cout << dq.back() << " ";
+				dq.pop_back();
+			}
+
+			count = 1;
+			deleted++;
+		}
+		else {
+			if (flag == false) {
 				int temp = dq.front();
 				dq.push_back(temp);
 				dq.pop_front();
-				ans++;
+				count++;
 			}
 			else {
 				int temp = dq.back();
 				dq.push_front(temp);
 				dq.pop_back();
-				ans++;
+				count++;
 			}
+		}
+
+		if (deleted == M) {
+			flag = !flag;
+			deleted = 0;
 		}
 	}
 
-	cout << ans << endl;
+	return 0;
 }

@@ -13,51 +13,13 @@
 using namespace std;
 
 int main() {
-	int N, K, M;
-	cin >> N >> K >> M;
+	int N, W, H, L;
+	cin >> N >> W >> H >> L;
 
-	int deleted = 0;
-	int count = 1;
-	bool flag = false;
-	deque<int> dq;
+	int temp = (W / L) * (H / L);
 
-	for (int i = 1; i <= N; i++)
-		dq.push_back(i);
-	
-	while (!dq.empty()) {
-		if (count == K) {
-			if (flag == false) {
-				cout << dq.front() << " ";
-				dq.pop_front();
-			}
-			else {
-				cout << dq.back() << " ";
-				dq.pop_back();
-			}
-
-			count = 1;
-			deleted++;
-		}
-		else {
-			if (flag == false) {
-				int temp = dq.front();
-				dq.push_back(temp);
-				dq.pop_front();
-				count++;
-			}
-			else {
-				int temp = dq.back();
-				dq.push_front(temp);
-				dq.pop_back();
-				count++;
-			}
-		}
-
-		if (deleted == M) {
-			flag = !flag;
-			deleted = 0;
-		}
-	}
-
-	return 0;
+	if (temp < N)
+		cout << temp << endl;
+	else
+		cout << N << endl;
 }

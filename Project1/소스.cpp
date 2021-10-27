@@ -13,13 +13,15 @@
 using namespace std;
 
 int main() {
-	int N, W, H, L;
-	cin >> N >> W >> H >> L;
+	int n;
+	cin >> n;
 
-	int temp = (W / L) * (H / L);
+	vector<int> arr(n, 0);
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+	int sum = accumulate(arr.begin(), arr.end(), 0);
 
-	if (temp < N)
-		cout << temp << endl;
-	else
-		cout << N << endl;
+	sum -= *max_element(arr.begin(), arr.end());
+
+	cout << sum << endl;
 }

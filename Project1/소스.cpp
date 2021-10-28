@@ -13,15 +13,11 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
+	int a_x, a_y, a_z;
+	int c_x, c_y, c_z;
 
-	vector<int> arr(n, 0);
-	for (int i = 0; i < n; i++)
-		cin >> arr[i];
-	int sum = accumulate(arr.begin(), arr.end(), 0);
+	cin >> a_x >> a_y >> a_z;
+	cin >> c_x >> c_y >> c_z;
 
-	sum -= *max_element(arr.begin(), arr.end());
-
-	cout << sum << endl;
+	cout << c_x - a_z << " " << c_y / a_y << " " << c_z - a_x << endl;
 }

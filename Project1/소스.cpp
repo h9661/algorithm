@@ -13,11 +13,12 @@
 using namespace std;
 
 int main() {
-	int a_x, a_y, a_z;
-	int c_x, c_y, c_z;
+	int N;
+	cin >> N;
 
-	cin >> a_x >> a_y >> a_z;
-	cin >> c_x >> c_y >> c_z;
+	while (N--) {
+		cout << "SciComLove" << endl;
+	}
 
-	cout << c_x - a_z << " " << c_y / a_y << " " << c_z - a_x << endl;
+	return 0;
 }

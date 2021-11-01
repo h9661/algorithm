@@ -12,28 +12,42 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int N;
+
 int main() {
-	int M;
-	cin >> M;
+	fastio;
+	cin >> N;
 
-	vector<int> arr(4, 0);
-	arr[1] = 1;
+	int dpM1, dpM2, dpM3;
+	int dpN1, dpN2, dpN3;
+	cin >> dpM1 >> dpM2 >> dpM3;
+	dpN1 = dpM1, dpN2 = dpM2, dpN3 = dpM3;
 
-	for (int i = 0; i < M; i++) {
-		int a, b;
-		cin >> a >> b;
+	int a, b, c;
+	int x, y, z;
+	for (int i = 0; i < N - 1; i++) {
+		a = dpM1, b = dpM2, c = dpM3;
+		x = dpN1, y = dpN2, z = dpN3;
+		int temp1, temp2, temp3;
+		cin >> temp1 >> temp2 >> temp3;
 
-		int temp = arr[b];
-		arr[b] = arr[a];
-		arr[a] = temp;
+		dpM1 = max(a + temp1, b + temp1);
+		dpN1 = min(x + temp1, y + temp1);
+
+		dpM2 = max(a + temp2, b + temp2);
+		dpM2 = max(dpM2, c + temp2);
+		dpN2 = min(x + temp2, y + temp2);
+		dpN2 = min(dpN2, z + temp2);
+
+		dpM3 = max(b + temp3, c + temp3);
+		dpN3 = min(y + temp3, z + temp3);
 	}
 
-	for (int i = 1; i <= 3; i++) {
-		if (arr[i] == 1) {
-			cout << i << endl;
-			return 0;
-		}
-	}
+	int ansMax = max(dpM1, dpM2);
+	ansMax = max(ansMax, dpM3);
 
-	cout << -1 << endl;
+	int ansMin = min(dpN1, dpN2);
+	ansMin = min(ansMin, dpN3);
+
+	cout << ansMax << " " << ansMin << endl;
 }

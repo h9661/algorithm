@@ -12,38 +12,47 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const ll mod = 1000000007;
+typedef struct Node {
+	int data;
+	Node* left;
+	Node* right;
+}Node;
 
-ll pow_mod(ll a, ll b){
-	ll ret = 1;
-
-	while (b) {
-		if (b % 2) {
-			ret *= a;
-			ret %= mod;
-		}
-
-		a = ((a * a) % mod);
-		b /= 2;
+Node* Insert(Node* node, int data) {
+	if (node == NULL) {
+		node = new Node();
+		node->data = data;
+		node->left = node->right = NULL;
 	}
+	else if (data <= node->data)
+		node->left = Insert(node->left, data);
+	else
+		node->right = Insert(node->right, data);
 
-	return ret;
+	return node;
+}
+
+void PostOrder(Node* node) {
+	if (node->left != NULL)
+		PostOrder(node->left);
+
+	if (node->right != NULL)
+		PostOrder(node->right);
+
+	cout << node->data << endl;
 }
 
 int main() {
-	int M;
-	cin >> M;
+	Node* root = NULL;
 
-	ll sum = 0;
+	int temp;
+	while (cin >> temp) {
+		if (temp == EOF)
+			break;
 
-	while (M--) {
-		ll a, b;
-		cin >> b >> a;
-
-		ll temp = pow_mod(b, mod - 2);
-		sum += ((a % mod) * (temp % mod)) % mod;
-		sum %= mod;
+		root = Insert(root, temp);
 	}
 
-	cout << sum % mod << endl;
+	PostOrder(root);
+	return 0;
 }

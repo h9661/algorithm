@@ -12,47 +12,45 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-typedef struct Node {
-	int data;
-	Node* left;
-	Node* right;
-}Node;
+char arr[3072][6143];
 
-Node* Insert(Node* node, int data) {
-	if (node == NULL) {
-		node = new Node();
-		node->data = data;
-		node->left = node->right = NULL;
-	}
-	else if (data <= node->data)
-		node->left = Insert(node->left, data);
-	else
-		node->right = Insert(node->right, data);
+void draw(int row, int col) {
+	arr[row][col] = '*';
 
-	return node;
+	arr[row + 1][col - 1] = '*';
+	arr[row + 1][col + 1] = '*';
+
+	for (int i = 0; i < 5; i++)
+		arr[row + 2][col - 2 + i] = '*';
 }
 
-void PostOrder(Node* node) {
-	if (node->left != NULL)
-		PostOrder(node->left);
+void dfs(int len, int row, int col) {
+	if (len == 3) {
+		draw(row, col);
+		return;
+	}
 
-	if (node->right != NULL)
-		PostOrder(node->right);
-
-	cout << node->data << endl;
+	dfs(len / 2, row, col);
+	dfs(len / 2, row + len / 2, col - len / 2);
+	dfs(len / 2, row + len / 2, col + len / 2);
 }
 
 int main() {
-	Node* root = NULL;
+	int N;
+	cin >> N;
 
-	int temp;
-	while (cin >> temp) {
-		if (temp == EOF)
-			break;
-
-		root = Insert(root, temp);
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < 2 * N - 1; j++)
+			arr[i][j] = ' ';
 	}
 
-	PostOrder(root);
+	dfs(N, 0, N - 1);
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < 2 * N - 1; j++)
+			cout << arr[i][j];
+		cout << endl;
+	}
+
 	return 0;
 }

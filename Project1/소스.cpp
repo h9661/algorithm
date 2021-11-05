@@ -12,45 +12,33 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-char arr[3072][6143];
-
-void draw(int row, int col) {
-	arr[row][col] = '*';
-
-	arr[row + 1][col - 1] = '*';
-	arr[row + 1][col + 1] = '*';
-
-	for (int i = 0; i < 5; i++)
-		arr[row + 2][col - 2 + i] = '*';
-}
-
-void dfs(int len, int row, int col) {
-	if (len == 3) {
-		draw(row, col);
-		return;
-	}
-
-	dfs(len / 2, row, col);
-	dfs(len / 2, row + len / 2, col - len / 2);
-	dfs(len / 2, row + len / 2, col + len / 2);
-}
-
 int main() {
-	int N;
-	cin >> N;
+	fastio;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < 2 * N - 1; j++)
-			arr[i][j] = ' ';
+	int arr[1000000];
+	int test_num, day_num;
+
+	cin >> test_num;
+
+	ll profit_sum = 0;
+	int max_stock = 0;
+
+	while (test_num--) {
+		cin >> day_num;
+
+		for (int day = 0; day < day_num; day++)
+			cin >> arr[day];
+
+		profit_sum = 0;
+		max_stock = 0;
+
+		for (int day = day_num - 1; day >= 0; day--) {
+			if (arr[day] < max_stock)
+				profit_sum += (max_stock - arr[day]);
+			else
+				max_stock = arr[day];
+		}
+
+		cout << profit_sum << endl;
 	}
-
-	dfs(N, 0, N - 1);
-
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < 2 * N - 1; j++)
-			cout << arr[i][j];
-		cout << endl;
-	}
-
-	return 0;
 }

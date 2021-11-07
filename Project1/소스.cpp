@@ -13,32 +13,24 @@
 using namespace std;
 
 int main() {
-	fastio;
+	int N;
+	cin >> N;
+	vector<int> arr(N, 0);
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	int arr[1000000];
-	int test_num, day_num;
+	int Y = 0;
+	int M = 0;
 
-	cin >> test_num;
-
-	ll profit_sum = 0;
-	int max_stock = 0;
-
-	while (test_num--) {
-		cin >> day_num;
-
-		for (int day = 0; day < day_num; day++)
-			cin >> arr[day];
-
-		profit_sum = 0;
-		max_stock = 0;
-
-		for (int day = day_num - 1; day >= 0; day--) {
-			if (arr[day] < max_stock)
-				profit_sum += (max_stock - arr[day]);
-			else
-				max_stock = arr[day];
-		}
-
-		cout << profit_sum << endl;
+	for (int i = 0; i < N; i++) {
+		Y += ((arr[i] / 30) + 1) * 10;
+		M += ((arr[i] / 60) + 1) * 15;
 	}
+
+	if (M < Y)
+		cout << "M" << " " << M << endl;
+	else if (M > Y)
+		cout << "Y" << " " << Y << endl;
+	else
+		cout << "Y" << " " << "M" << " " << Y << endl;
 }

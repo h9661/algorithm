@@ -12,25 +12,64 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int main() {
-	int N;
-	cin >> N;
-	vector<int> arr(N, 0);
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
+const int MAX = 50;
+int arr[MAX][MAX];
+int N, M;
+vector<pii> homePosArr;
+vector<pair<pii, bool>> chPosArr;
+int ans = 2e9;
 
-	int Y = 0;
-	int M = 0;
+int FindDistance(pii x, pii y) {
+	return abs(x.first - y.first) + abs(x.second - y.second);
+}
+
+void dfs(int idx, int count) {
+	if (count == M) {
+		int sum = 0;
+
+		for (int i = 0; i < homePosArr.size(); i++) {
+			int minDist = 2e9;
+
+			for (int j = 0; j < chPosArr.size(); j++) {
+				if(chPosArr[j].second == true)
+					minDist = min(minDist, FindDistance(homePosArr[i], chPosArr[j].first));
+			}
+
+			sum += minDist;
+		}
+
+		ans = min(sum, ans);
+
+	}
+	else {
+		for (int i = idx; i < chPosArr.size(); i++) {
+			if (chPosArr[i].second == false) {
+				chPosArr[i].second = true;
+
+				dfs(i, count + 1);
+
+				chPosArr[i].second = false;
+			}
+		}
+	}
+}
+
+int main() {
+	fastio;
+	cin >> N >> M;
 
 	for (int i = 0; i < N; i++) {
-		Y += ((arr[i] / 30) + 1) * 10;
-		M += ((arr[i] / 60) + 1) * 15;
+		for (int j = 0; j < N; j++) {
+			cin >> arr[i][j];
+
+			if (arr[i][j] == 1)
+				homePosArr.push_back(make_pair(i, j));
+			else if (arr[i][j] == 2)
+				chPosArr.push_back({ make_pair(i, j), false });
+		}
 	}
 
-	if (M < Y)
-		cout << "M" << " " << M << endl;
-	else if (M > Y)
-		cout << "Y" << " " << Y << endl;
-	else
-		cout << "Y" << " " << "M" << " " << Y << endl;
+	dfs(0, 0);
+
+	cout << ans << endl;
 }

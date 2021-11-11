@@ -14,14 +14,20 @@
 using namespace std;
 
 int main() {
-	int N;
-	cin >> N;
-	vector<int> arr(N, 0);
+	fastio;
 
-	for (int i = 0; i < N; i++) 
-		cin >> arr[i];
-	
-	sort(arr.begin(), arr.end());
+	int N, K;
+	cin >> N >> K;
 
-	cout << arr[(N - 1) / 2] << endl;
+	int temp = (K * (K + 1)) / 2;
+	N -= temp;
+
+	if (N < 0)
+		cout << -1 << endl;
+	else {
+		if (N % K == 0)
+			cout << K - 1 << endl;
+		else
+			cout << K << endl;
+	}
 }

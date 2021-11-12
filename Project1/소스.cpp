@@ -15,19 +15,39 @@ using namespace std;
 
 int main() {
 	fastio;
+	int tc;
+	cin >> tc;
 
-	int N, K;
-	cin >> N >> K;
+	while (tc--) {
+		int N;
+		cin >> N;
 
-	int temp = (K * (K + 1)) / 2;
-	N -= temp;
+		string start, end;
+		cin >> start;
+		cin >> end;
 
-	if (N < 0)
-		cout << -1 << endl;
-	else {
-		if (N % K == 0)
-			cout << K - 1 << endl;
-		else
-			cout << K << endl;
+		int ans = 0;
+		int count_WB = 0;
+		int count_BW = 0;
+
+		for (int i = 0; i < start.size(); i++) {
+			if (start[i] == 'W' && end[i] == 'B')
+				count_WB++;
+			if (start[i] == 'B' && end[i] == 'W')
+				count_BW++;
+		}
+
+		if (count_WB < count_BW) {
+			count_BW -= count_WB;
+			ans += count_WB;
+			ans += count_BW;
+		}
+		else {
+			count_WB -= count_BW;
+			ans += count_BW;
+			ans += count_WB;
+		}
+
+		cout << ans << endl;
 	}
 }

@@ -14,40 +14,21 @@
 using namespace std;
 
 int main() {
-	fastio;
-	int tc;
-	cin >> tc;
+	string L, R;
+	cin >> L >> R;
 
-	while (tc--) {
-		int N;
-		cin >> N;
+	if (L.size() != R.size())
+		cout << 0 << endl;
+	else {
+		int count_8 = 0;
 
-		string start, end;
-		cin >> start;
-		cin >> end;
-
-		int ans = 0;
-		int count_WB = 0;
-		int count_BW = 0;
-
-		for (int i = 0; i < start.size(); i++) {
-			if (start[i] == 'W' && end[i] == 'B')
-				count_WB++;
-			if (start[i] == 'B' && end[i] == 'W')
-				count_BW++;
+		for (int i = 0; i < L.size(); i++) {
+			if (L[i] == R[i] && R[i] == '8')
+				count_8++;
+			else if(L[i] != R[i])
+				break;
 		}
 
-		if (count_WB < count_BW) {
-			count_BW -= count_WB;
-			ans += count_WB;
-			ans += count_BW;
-		}
-		else {
-			count_WB -= count_BW;
-			ans += count_BW;
-			ans += count_WB;
-		}
-
-		cout << ans << endl;
+		cout << count_8 << endl;
 	}
 }

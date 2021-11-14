@@ -14,21 +14,25 @@
 using namespace std;
 
 int main() {
-	string L, R;
-	cin >> L >> R;
+	fastio;
+	int N;
+	cin >> N;
+	
+	vector<int> arr(N, 0);
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-	if (L.size() != R.size())
-		cout << 0 << endl;
-	else {
-		int count_8 = 0;
+	sort(arr.begin(), arr.end());
 
-		for (int i = 0; i < L.size(); i++) {
-			if (L[i] == R[i] && R[i] == '8')
-				count_8++;
-			else if(L[i] != R[i])
-				break;
-		}
+	int ans = 0;
 
-		cout << count_8 << endl;
+	for (int i = 0; i < N - 2; i++) {
+		if (arr[i + 2] < arr[i + 1] + arr[i])
+			ans = max(arr[i + 2] + arr[i + 1] + arr[i], ans);
 	}
+
+	if (ans == 0)
+		cout << -1 << endl;
+	else
+		cout << ans << endl;
 }

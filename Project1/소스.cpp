@@ -17,22 +17,27 @@ int main() {
 	fastio;
 	int N;
 	cin >> N;
-	
-	vector<int> arr(N, 0);
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
 
-	sort(arr.begin(), arr.end());
-
-	int ans = 0;
-
-	for (int i = 0; i < N - 2; i++) {
-		if (arr[i + 2] < arr[i + 1] + arr[i])
-			ans = max(arr[i + 2] + arr[i + 1] + arr[i], ans);
+	vector<pii> parr;
+	for (int i = 0; i < N; i++) {
+		int a, b;
+		cin >> a >> b;
+		parr.push_back({ a, b });
 	}
 
-	if (ans == 0)
-		cout << -1 << endl;
-	else
-		cout << ans << endl;
+	sort(parr.begin(), parr.end());
+
+	int ptr = 0;
+	int time = 0;
+
+	while (ptr < N) {
+		if (time < parr[ptr].first)
+			time++;
+		else {
+			time += parr[ptr].second;
+			ptr++;
+		}
+	}
+
+	cout << time << endl;
 }

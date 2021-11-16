@@ -14,30 +14,38 @@
 using namespace std;
 
 int main() {
-	fastio;
-	int N;
-	cin >> N;
+	int tc;
+	cin >> tc;
 
-	vector<pii> parr;
-	for (int i = 0; i < N; i++) {
-		int a, b;
-		cin >> a >> b;
-		parr.push_back({ a, b });
-	}
+	while (tc--) {
+		int N;
+		cin >> N;
+		vector<char> arr(N, NULL);
 
-	sort(parr.begin(), parr.end());
+		for (int i = 0; i < N; i++)
+			cin >> arr[i];
 
-	int ptr = 0;
-	int time = 0;
+		deque<char> ans;
 
-	while (ptr < N) {
-		if (time < parr[ptr].first)
-			time++;
-		else {
-			time += parr[ptr].second;
-			ptr++;
+		char temp = NULL;
+
+		for (int i = 0; i < N; i++) {
+			if (i == 0) {
+				temp = arr[0];
+				ans.push_back(arr[0]);
+				continue;
+			}
+			
+			if (temp < arr[i])
+				ans.push_back(arr[i]);
+			else
+				ans.push_front(arr[i]);
+
+			temp = ans.front();
 		}
-	}
 
-	cout << time << endl;
+		for (auto i : ans)
+			cout << i;
+		cout << endl;
+	}
 }

@@ -13,39 +13,59 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int main() {
-	int tc;
-	cin >> tc;
+const int MAX = 300000 + 1;
+int N, M, K, X;
+vector<int> graph[MAX];
+int dist[MAX];
 
-	while (tc--) {
-		int N;
-		cin >> N;
-		vector<char> arr(N, NULL);
+void bfs(int X) {
+	queue<int> q;
+	q.push({ X });
+	dist[X] = 0;
 
-		for (int i = 0; i < N; i++)
-			cin >> arr[i];
+	while (!q.empty()) {
+		int curNode = q.front();
 
-		deque<char> ans;
+		q.pop();
 
-		char temp = NULL;
+		for (int i = 0; i < graph[curNode].size(); i++) {
+			int nextNode = graph[curNode][i];
 
-		for (int i = 0; i < N; i++) {
-			if (i == 0) {
-				temp = arr[0];
-				ans.push_back(arr[0]);
-				continue;
+			if (dist[nextNode] > dist[curNode] + 1) {
+				dist[nextNode] = dist[curNode] + 1;
+				q.push(nextNode);
 			}
-			
-			if (temp < arr[i])
-				ans.push_back(arr[i]);
-			else
-				ans.push_front(arr[i]);
-
-			temp = ans.front();
 		}
+	}
+}
 
+int main() {
+	fastio;
+	cin >> N >> M >> K >> X;
+	fill(dist, dist + MAX, 2e9);
+
+	for (int i = 0; i < M; i++) {
+		int u, v;
+		cin >> u >> v;
+
+		graph[u].push_back(v);
+	}
+
+	bfs(X);
+
+	vector<int> ans;
+
+	for (int i = 1; i <= N; i++) {
+		if (dist[i] == K)
+			ans.push_back(i);
+	}
+
+	sort(ans.begin(), ans.end());
+
+	if (ans.empty())
+		cout << -1 << endl;
+	else {
 		for (auto i : ans)
-			cout << i;
-		cout << endl;
+			cout << i << endl;
 	}
 }

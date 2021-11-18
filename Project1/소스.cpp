@@ -13,59 +13,41 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 300000 + 1;
-int N, M, K, X;
-vector<int> graph[MAX];
-int dist[MAX];
+int main() {
+	int N, M;
+	cin >> N >> M;
 
-void bfs(int X) {
-	queue<int> q;
-	q.push({ X });
-	dist[X] = 0;
+	vector<int> arr(M, 0);
+	for (int i = 0; i < M; i++)
+		cin >> arr[i];
 
-	while (!q.empty()) {
-		int curNode = q.front();
+	sort(arr.begin(), arr.end());
 
-		q.pop();
+	int ans = 0;
 
-		for (int i = 0; i < graph[curNode].size(); i++) {
-			int nextNode = graph[curNode][i];
+	int temp1 = 0;
+	int temp2 = 0;
 
-			if (dist[nextNode] > dist[curNode] + 1) {
-				dist[nextNode] = dist[curNode] + 1;
-				q.push(nextNode);
+	for (int i = 0; i < M; i++) {
+		if (N < M - i) {
+			if (ans < N * arr[i]) {
+				ans = N * arr[i];
+				temp1 = i;
+			}
+		}
+		else {
+			if (ans < (M - i) * arr[i]) {
+				ans = (M - i) * arr[i];
+				temp2 = i;
 			}
 		}
 	}
-}
 
-int main() {
-	fastio;
-	cin >> N >> M >> K >> X;
-	fill(dist, dist + MAX, 2e9);
+	if ((M - temp1) * arr[temp1] == ans)
+		cout << arr[temp1] << " ";
+	else
+		cout << arr[temp2] << " ";
 
-	for (int i = 0; i < M; i++) {
-		int u, v;
-		cin >> u >> v;
+	cout << ans << endl;
 
-		graph[u].push_back(v);
-	}
-
-	bfs(X);
-
-	vector<int> ans;
-
-	for (int i = 1; i <= N; i++) {
-		if (dist[i] == K)
-			ans.push_back(i);
-	}
-
-	sort(ans.begin(), ans.end());
-
-	if (ans.empty())
-		cout << -1 << endl;
-	else {
-		for (auto i : ans)
-			cout << i << endl;
-	}
 }

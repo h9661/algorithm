@@ -14,40 +14,20 @@
 using namespace std;
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int n;
+	cin >> n;
+	vector<int> arr(2 * n, 0);
 
-	vector<int> arr(M, 0);
-	for (int i = 0; i < M; i++)
+	for (int i = 0; i < 2 * n; i++)
 		cin >> arr[i];
 
 	sort(arr.begin(), arr.end());
 
-	int ans = 0;
+	int ans = 2e9;
 
-	int temp1 = 0;
-	int temp2 = 0;
-
-	for (int i = 0; i < M; i++) {
-		if (N < M - i) {
-			if (ans < N * arr[i]) {
-				ans = N * arr[i];
-				temp1 = i;
-			}
-		}
-		else {
-			if (ans < (M - i) * arr[i]) {
-				ans = (M - i) * arr[i];
-				temp2 = i;
-			}
-		}
+	for (int i = 0; i < n; i++) {
+		ans = min(ans, arr[i] + arr[2 * n - (i + 1)]);
 	}
 
-	if ((M - temp1) * arr[temp1] == ans)
-		cout << arr[temp1] << " ";
-	else
-		cout << arr[temp2] << " ";
-
 	cout << ans << endl;
-
 }

@@ -14,19 +14,46 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
-	vector<int> arr(2 * n, 0);
+	fastio;
+	int N;
+	cin >> N;
 
-	for (int i = 0; i < 2 * n; i++)
+	int k;
+	cin >> k;
+	
+	if (N == 1) {
+		cout << 0 << endl;
+		return 0;
+	}
+
+	vector<int> arr(N - 1, 0);
+	for (int i = 0; i < N - 1; i++)
 		cin >> arr[i];
 
 	sort(arr.begin(), arr.end());
 
-	int ans = 2e9;
+	bool flag = false;
+	int ans = 0;
 
-	for (int i = 0; i < n; i++) {
-		ans = min(ans, arr[i] + arr[2 * n - (i + 1)]);
+	while (1) {
+		for (int i = 0; i < N - 1; i++) {
+			if (arr[i] >= k)
+				break;
+
+			if (i == N - 2)
+				flag = true;
+		}
+
+		if (flag == true)
+			break;
+
+		sort(arr.begin(), arr.end());
+		
+		arr[N - 2] -= 1;
+		k += 1;
+		ans++;
+
+
 	}
 
 	cout << ans << endl;

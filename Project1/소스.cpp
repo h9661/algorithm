@@ -14,47 +14,45 @@
 using namespace std;
 
 int main() {
-	fastio;
-	int N;
-	cin >> N;
+	int tc;
+	cin >> tc;
 
-	int k;
-	cin >> k;
-	
-	if (N == 1) {
-		cout << 0 << endl;
-		return 0;
-	}
+	while (tc--) {
+		int N, M;
+		cin >> N >> M;
 
-	vector<int> arr(N - 1, 0);
-	for (int i = 0; i < N - 1; i++)
-		cin >> arr[i];
+		vector<int> graph[1001];
+		bool check[1001];
+		fill(check, check + 1001, false);
 
-	sort(arr.begin(), arr.end());
+		for (int i = 0; i < M; i++) {
+			int a, b;
+			cin >> a >> b;
 
-	bool flag = false;
-	int ans = 0;
-
-	while (1) {
-		for (int i = 0; i < N - 1; i++) {
-			if (arr[i] >= k)
-				break;
-
-			if (i == N - 2)
-				flag = true;
+			graph[a].push_back(b);
+			graph[b].push_back(a);
 		}
 
-		if (flag == true)
-			break;
+		int ans = 0;
+		queue<int> q;
+		q.push(1);
+		check[1] = true;
 
-		sort(arr.begin(), arr.end());
-		
-		arr[N - 2] -= 1;
-		k += 1;
-		ans++;
+		while (!q.empty()) {
+			int cur = q.front();
+			q.pop();
 
+			for (int i = 0; i < graph[cur].size(); i++) {
+				int nxt = graph[cur][i];
+				
+				if (check[nxt] == false) {
+					check[nxt] = true;
+					ans++;
+					q.push(nxt);
+				}
+			}
+		}
 
+		cout << ans << endl;
 	}
-
-	cout << ans << endl;
 }

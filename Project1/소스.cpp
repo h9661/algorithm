@@ -13,46 +13,30 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+int arrows[1000001];
+
 int main() {
-	int tc;
-	cin >> tc;
+	fastio;
+	int N;
+	cin >> N;
+	vector<int> arr(N, 0);
 
-	while (tc--) {
-		int N, M;
-		cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
 
-		vector<int> graph[1001];
-		bool check[1001];
-		fill(check, check + 1001, false);
+	int ans = 0;
 
-		for (int i = 0; i < M; i++) {
-			int a, b;
-			cin >> a >> b;
-
-			graph[a].push_back(b);
-			graph[b].push_back(a);
+	for (int i = 0; i < N; i++) {
+		if (arrows[arr[i]] > 0) {
+			arrows[arr[i]]--;
+			arrows[arr[i] - 1]++;
+			continue;
 		}
-
-		int ans = 0;
-		queue<int> q;
-		q.push(1);
-		check[1] = true;
-
-		while (!q.empty()) {
-			int cur = q.front();
-			q.pop();
-
-			for (int i = 0; i < graph[cur].size(); i++) {
-				int nxt = graph[cur][i];
-				
-				if (check[nxt] == false) {
-					check[nxt] = true;
-					ans++;
-					q.push(nxt);
-				}
-			}
+		else {
+			arrows[arr[i] - 1]++;
+			ans++;
 		}
-
-		cout << ans << endl;
 	}
+
+	cout << ans << endl;
 }

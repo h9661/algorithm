@@ -13,30 +13,26 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int arrows[1000001];
 
 int main() {
-	fastio;
-	int N;
-	cin >> N;
-	vector<int> arr(N, 0);
+	string s;
+	cin >> s;
 
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
+	vector<int> arr;
 
-	int ans = 0;
+	for (int i = 0; i < s.size(); i++)
+		arr.push_back(s[i] - '0');
 
-	for (int i = 0; i < N; i++) {
-		if (arrows[arr[i]] > 0) {
-			arrows[arr[i]]--;
-			arrows[arr[i] - 1]++;
-			continue;
-		}
-		else {
-			arrows[arr[i] - 1]++;
-			ans++;
-		}
+	sort(arr.begin(), arr.end());
+
+	int sum = 0;
+	for (int i = 0; i < arr.size(); i++)
+		sum += arr[i];
+
+	if (arr[0] || sum % 3)
+		cout << -1 << endl;
+	else {
+		for (int i = arr.size() - 1; i >= 0; i--)
+			cout << arr[i];
 	}
-
-	cout << ans << endl;
 }

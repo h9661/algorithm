@@ -13,26 +13,39 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-
 int main() {
-	string s;
-	cin >> s;
+	fastio;
+	int N, K;
+	cin >> N >> K;
 
-	vector<int> arr;
+	int k = 1;
+	int ans = 0;
 
-	for (int i = 0; i < s.size(); i++)
-		arr.push_back(s[i] - '0');
+	while (1) {
+		int bottle_number = 0;
+		int q = N / 2;
+		int r = N % 2;
 
-	sort(arr.begin(), arr.end());
+		while (q >= 1) {
+			if(q % 2 == 1)
+				bottle_number += 1;
+			q /= 2;
+		}
+		bottle_number += 1;
+		
+		if (bottle_number <= K)
+			break;
+		else {
+			N /= 2;
 
-	int sum = 0;
-	for (int i = 0; i < arr.size(); i++)
-		sum += arr[i];
+			if (r == 1) {
+				ans += k;
+				N += 1;
+			}
 
-	if (arr[0] || sum % 3)
-		cout << -1 << endl;
-	else {
-		for (int i = arr.size() - 1; i >= 0; i--)
-			cout << arr[i];
+			k *= 2;
+		}
 	}
+
+	cout << ans << endl;
 }

@@ -14,36 +14,22 @@
 using namespace std;
 
 int main() {
-	fastio;
-	int N, K;
-	cin >> N >> K;
+	string s;
+	cin >> s;
 
-	int k = 1;
+	stack<char> stk;
 	int ans = 0;
 
-	while (1) {
-		int bottle_number = 0;
-		int q = N / 2;
-		int r = N % 2;
-
-		while (q >= 1) {
-			if(q % 2 == 1)
-				bottle_number += 1;
-			q /= 2;
-		}
-		bottle_number += 1;
-		
-		if (bottle_number <= K)
-			break;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == '(')
+			stk.push('(');
 		else {
-			N /= 2;
+			stk.pop();
 
-			if (r == 1) {
-				ans += k;
-				N += 1;
-			}
-
-			k *= 2;
+			if (s[i - 1] == '(')
+				ans += stk.size();
+			else
+				ans += 1;
 		}
 	}
 

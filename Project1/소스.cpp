@@ -14,24 +14,48 @@
 using namespace std;
 
 int main() {
-	string s;
-	cin >> s;
+	fastio;
+	queue<int> q;
 
-	stack<char> stk;
-	int ans = 0;
+	int N;
+	cin >> N;
 
-	for (int i = 0; i < s.size(); i++) {
-		if (s[i] == '(')
-			stk.push('(');
-		else {
-			stk.pop();
+	while (N--) {
+		string s;
+		cin >> s;
 
-			if (s[i - 1] == '(')
-				ans += stk.size();
+		if (s == "push") {
+			int k;
+			cin >> k;
+			q.push(k);
+		}
+		if (s == "pop") {
+			if (q.empty())
+				cout << -1 << endl;
+			else {
+				cout << q.front() << endl;
+				q.pop();
+			}
+		}
+		if (s == "size")
+			cout << q.size() << endl;
+		if (s == "empty") {
+			if (q.empty())
+				cout << 1 << endl;
 			else
-				ans += 1;
+				cout << 0 << endl;
+		}
+		if (s == "front") {
+			if (q.empty())
+				cout << -1 << endl;
+			else
+				cout << q.front() << endl;
+		}
+		if (s == "back") {
+			if (q.empty())
+				cout << -1 << endl;
+			else
+				cout << q.back() << endl;
 		}
 	}
-
-	cout << ans << endl;
 }

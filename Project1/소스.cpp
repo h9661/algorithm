@@ -13,48 +13,50 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-int dp[51][51][51];
+const int MAX = 501;
+bool check[MAX];
+vector<int> graph[MAX];
+int g_count = 0;
 
-ll w(int a, int b, int c) {
-	if (a <= 0 || b <= 0 || c <= 0)
-		return 1;
-	else if (a > 20 || b > 20 || c > 20) {
-		if (!dp[20][20][20])
-			dp[20][20][20] = w(20, 20, 20);
+void bfs() {
+	queue<pii> q;
+	q.push({ 1, 2 });
+	check[1] = true;
 
-		return dp[20][20][20];
-	}
-	else if (a < b and b < c) {
-		if (!dp[a][b][c - 1])
-			dp[a][b][c - 1] = w(a, b, c - 1);
-		if (!dp[a][b - 1][c - 1])
-			dp[a][b - 1][c - 1] = w(a, b - 1, c - 1);
-		if (!dp[a][b - 1][c])
-			dp[a][b - 1][c] = w(a, b - 1, c);
+	while (!q.empty()) {
+		int x = q.front().first;
+		int remain = q.front().second;
+		q.pop();
 
-		return dp[a][b][c - 1] + dp[a][b - 1][c - 1] - dp[a][b - 1][c];
-	}
-	else {
-		if (!dp[a - 1][b][c])
-			dp[a - 1][b][c] = w(a - 1, b, c);
-		if (!dp[a - 1][b - 1][c])
-			dp[a - 1][b - 1][c] = w(a - 1, b - 1, c);
-		if (!dp[a - 1][b - 1][c - 1])
-			dp[a - 1][b - 1][c - 1] = w(a - 1, b - 1, c - 1);
+		if (remain == 0)
+			continue;
 
-		return dp[a - 1][b][c] + dp[a - 1][b - 1][c] + w(a - 1, b, c - 1) - dp[a - 1][b - 1][c - 1];
+		for (int i = 0; i < graph[x].size(); i++) {
+			int y = graph[x][i];
+
+			if (check[y] == false) {
+				q.push({ y, remain - 1 });
+				check[y] = true;
+				g_count++;
+			}
+		}
 	}
 }
 
 int main() {
-	while (1) {
-		int a, b, c;
-		cin >> a >> b >> c;
+	fastio;
+	int n, m;
+	cin >> n >> m;
 
-		if (a == -1 and b == -1 and c == -1)
-			break;
+	for (int i = 0; i < m; i++) {
+		int u, v;
+		cin >> u >> v;
 
-		printf("w(%d, %d, %d) = ", a, b, c);
-		cout << w(a, b, c) << endl;
+		graph[u].push_back(v);
+		graph[v].push_back(u);
 	}
+
+	bfs();
+
+	cout << g_count << endl;
 }

@@ -11,52 +11,78 @@
 #define fastio (cin.tie(NULL), cout.sync_with_stdio(false), cout.tie(NULL))
 #define pii pair<int, int>
 #define pll pair<ll, ll>
+
 using namespace std;
 
-const int MAX = 501;
-bool check[MAX];
+const int MAX = 10001;
 vector<int> graph[MAX];
-int g_count = 0;
+bool check[MAX];
 
-void bfs() {
-	queue<pii> q;
-	q.push({ 1, 2 });
-	check[1] = true;
+int bfs(int i) {
+	int count = 0;
+	queue<int> q;
+	
+	q.push(i);
+	check[i] = true;
+	count++;
 
 	while (!q.empty()) {
-		int x = q.front().first;
-		int remain = q.front().second;
+		int cur = q.front();
 		q.pop();
 
-		if (remain == 0)
-			continue;
+		for (int i = 0; i < graph[cur].size(); i++) {
+			int nxt = graph[cur][i];
 
-		for (int i = 0; i < graph[x].size(); i++) {
-			int y = graph[x][i];
-
-			if (check[y] == false) {
-				q.push({ y, remain - 1 });
-				check[y] = true;
-				g_count++;
+			if (check[nxt] == false) {
+				check[nxt] = true;
+				count++;
+				q.push(nxt);
 			}
 		}
 	}
+	
+	return count;
+}
+
+bool cmp(pii a, pii b) {
+	if (a.first == b.first)
+		return a.second < b.second;
+	else
+		return a.first > b.first;
 }
 
 int main() {
 	fastio;
-	int n, m;
-	cin >> n >> m;
+	vector<int> store;
+	vector<pii> save;
+	int N, M;
+	cin >> N >> M;
 
-	for (int i = 0; i < m; i++) {
+	for (int i = 0; i < M; i++) {
 		int u, v;
 		cin >> u >> v;
 
-		graph[u].push_back(v);
 		graph[v].push_back(u);
 	}
 
-	bfs();
+	int maximum = -1;
 
-	cout << g_count << endl;
+	for (int i = 1; i <= N; i++) {
+		int count = bfs(i);
+		maximum = max(maximum, count);
+		save.push_back({ count, i });
+		fill(check, check + MAX, false);
+	}
+
+	for (int i = 0; i < save.size(); i++) {
+		if (save[i].first == maximum)
+			store.push_back(save[i].second);
+	}
+	sort(store.begin(), store.end());
+
+	for (int i = 0; i < store.size(); i++)
+		cout << store[i] << " ";
+
+
+	return 0;
 }

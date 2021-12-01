@@ -13,39 +13,37 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-vector<int> arr(9, 0);
-vector<int> store;
-bool check[9];
-bool flag = false;
-
-void bfs(int count, int sum, int idx) {
-	if (count == 7 && sum == 100) {
-		if (flag)
-			return;
-
-		for (int i = 0; i < 7; i++)
-			cout << store[i] << " ";
-		flag = true;
+int main() {
+	int N;
+	cin >> N;
+	vector<string> strArr;
+	for (int i = 0; i < N; i++) {
+		string temp;
+		cin >> temp;
+		
+		strArr.push_back(temp);
 	}
-	else {
-		for (int i = idx; i < 9; i++) {
-			if (check[i] == false) {
-				check[i] = true;
 
-				store.push_back(arr[i]);
-				bfs(count + 1, sum + arr[i], i + 1);
-				store.pop_back();
+	string ans;
 
-				check[i] = false;
+	for (int i = 0; i < strArr[0].size(); i++) {
+		bool flag = true;
+
+		for (int j = 0; j < strArr.size() - 1; j++) {
+			if (strArr[j][i] == strArr[j + 1][i]) {
+				continue;
+			}
+			else {
+				flag = false;
+				break;
 			}
 		}
-	}
-}
 
-int main() {
-	for (int i = 0; i < 9; i++)
-		cin >> arr[i];
-	sort(arr.begin(), arr.end());
-	bfs(0, 0, 0);
-	return 0;
+		if (flag)
+			ans.push_back(strArr[0][i]);
+		else
+			ans.push_back('?');
+	}
+
+	cout << ans << endl;
 }

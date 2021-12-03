@@ -13,28 +13,35 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 16;
-int L, C;
-char arr[MAX];
-bool check[MAX];
-string str(L, NULL);
-vector<string> ans;
+int k;
+vector<char> arr;
+char selects[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+bool check[10];
+string temp;
+vector<string> result;
 
-void backtracking(int count, int a, int b, int idx) {
-	if (count == L and a >= 1 and b >= 2) {
-		ans.push_back(str);
+void backtracking(int count) {
+	if (count == k + 1) {
+		for (int i = 0; i < k; i++) {
+			if (arr[i] == '<') {
+				if (temp[i] > temp[i + 1])
+					return;
+			}
+			if (arr[i] == '>') {
+				if (temp[i] < temp[i + 1])
+					return;
+			}
+		}
+		result.push_back(temp);
 	}
 	else {
-		for (int i = idx; i < C; i++) {
+		for (int i = 0; i < 10; i++) {
 			if (check[i] == false) {
 				check[i] = true;
-
-				str.push_back(arr[i]);
-				if (arr[i] == 'a' or arr[i] == 'e' or arr[i] == 'i' or arr[i] == 'o' or arr[i] == 'u')
-					backtracking(count + 1, a + 1, b, i + 1);
-				else
-					backtracking(count + 1, a, b + 1, i + 1);
-				str.pop_back();
+				
+				temp.push_back(i + '0');
+				backtracking(count + 1);
+				temp.pop_back();
 
 				check[i] = false;
 			}
@@ -44,16 +51,21 @@ void backtracking(int count, int a, int b, int idx) {
 
 int main() {
 	fastio;
-	cin >> L >> C;
+	cin >> k;
 
-	for (int i = 0; i < C; i++)
-		cin >> arr[i];
 
-	sort(arr, arr + C);
-	backtracking(0, 0, 0, 0);
-	
-	for (int i = 0; i < ans.size(); i++)
-		cout << ans[i] << endl;
+	for (int i = 0; i < k; i++) {
+		char temp;
+		cin >> temp;
+		arr.push_back(temp);
+	}
+
+	backtracking(0);
+
+	sort(result.begin(), result.end());
+
+	cout << result.at(result.size() - 1) << endl;
+	cout << result.at(0) << endl;
 
 	return 0;
 }

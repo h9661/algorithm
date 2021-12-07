@@ -14,24 +14,14 @@
 using namespace std;
 
 int main() {
-	int N;
-	cin >> N;
-
-	int ans = 0;
-
+	fastio;
+	int N, K;
+	cin >> N >> K;
 	vector<int> arr(N, 0);
 	for (int i = 0; i < N; i++)
 		cin >> arr[i];
 
 	sort(arr.begin(), arr.end());
 
-	int temp = arr[0] + arr[1];
-	ans += arr[0] * arr[1];
-
-	for (int i = 2; i < N; i++) {
-		ans += temp * arr[i];
-		temp = temp + arr[i];
-	}
-
-	cout << ans << endl;
+	cout << arr[K - 1] << endl;
 }

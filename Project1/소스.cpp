@@ -13,20 +13,39 @@
 #define pll pair<ll, ll>
 using namespace std;
 
+const int MAX = 100;
+int matrix1[MAX][MAX];
+int matrix2[MAX][MAX];
+int ans[MAX][MAX];
+
 int main() {
-	while (1) {
-		int a, b;
-		cin >> a >> b;
+	int N, M;
+	cin >> N >> M;
 
-		if (a == 0 and b == 0)
-			break;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++)
+			cin >> matrix1[i][j];
+	}
 
-		if (b % a == 0 && a < b)
-			cout << "factor" << endl;
-		else if (a % b == 0 && a > b)
-			cout << "multiple" << endl;
-		else
-			cout << "neither" << endl;
+	int K;
+	cin >> M >> K;
+
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < K; j++)
+			cin >> matrix2[i][j];
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < K; j++) {
+			for (int k = 0; k < M; k++)
+				ans[i][j] += matrix1[i][k] * matrix2[k][j];
+		}
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < K; j++)
+			cout << ans[i][j] << " ";
+		cout << endl;
 	}
 
 	return 0;

@@ -13,40 +13,49 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 100;
-int matrix1[MAX][MAX];
-int matrix2[MAX][MAX];
-int ans[MAX][MAX];
+int arr[1000001];
+
+void eratos() {
+	for (int i = 2; i <= 1000000; i++)
+		arr[i] = i;
+
+	for (int i = 2; i <= 1000000; i++) {
+		if (arr[i] == 0)
+			continue;
+
+		for (int j = i + i; j <= 1000000; j += i)
+			arr[j] = 0;
+	}
+}
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	eratos();
+	fastio;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++)
-			cin >> matrix1[i][j];
-	}
+	while (1) {
+		int n;
+		cin >> n;
 
-	int K;
-	cin >> M >> K;
+		if (n == 0)
+			break;
 
-	for (int i = 0; i < M; i++) {
-		for (int j = 0; j < K; j++)
-			cin >> matrix2[i][j];
-	}
+		int left = 3;
+		int right = n - 3;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < K; j++) {
-			for (int k = 0; k < M; k++)
-				ans[i][j] += matrix1[i][k] * matrix2[k][j];
+		while (left <= right) {
+			if (arr[left] != 0 && arr[right] != 0)
+				if (left + right == n)
+					break;
+
+			if (left + right < n)
+				left += 2;
+			else
+				right -= 2;
 		}
-	}
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < K; j++)
-			cout << ans[i][j] << " ";
-		cout << endl;
+		if (left > right)
+			cout << "Goldbach's conjecture is wrong." << endl;
+		else 
+			cout << n << " = " << left << " + " << right << '\n';
 	}
-
-	return 0;
 }

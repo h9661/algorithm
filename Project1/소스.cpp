@@ -13,71 +13,60 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 100;
-int graph[MAX][MAX];
-int Y[4] = { -1, 1, 0, 0 };
-int X[4] = { 0, 0, -1, 1 };
-int N, M, K;
-int ans = 0;
-vector<int> area;
+const int MAX = 21;
+int N;
+int arr[MAX][MAX];
+bool check[MAX];
+int ans = 2e9;
 
-void bfs(int y, int x) {
-	int count = 0;
-	queue<pii> q;
-	q.push({ y, x });
-	graph[y][x] = 1;
-	count++;
+void backtraking(int count, int idx) {
+	if (count == N / 2) {
+		vector<int> start;
+		vector<int> link;
+		for (int i = 1; i <= N; i++) {
+			if (check[i] == true)
+				start.push_back(i);
+			else
+				link.push_back(i);
+		}
+		int start_sum = 0;
+		int link_sum = 0;
+		for (int i = 0; i < start.size(); i++) {
+			for (int j = 0; j < start.size(); j++) {
+				start_sum += arr[start[i]][start[j]];
+			}
+		}
 
-	while (!q.empty()) {
-		int cy = q.front().first;
-		int cx = q.front().second;
-		q.pop();
+		for (int i = 0; i < link.size(); i++) {
+			for (int j = 0; j < link.size(); j++) {
+				link_sum += arr[link[i]][link[j]];
+			}
+		}
 
-		for (int i = 0; i < 4; i++) {
-			int ny = cy + Y[i];
-			int nx = cx + X[i];
+		ans = min(ans, abs(start_sum - link_sum));
+	}
+	else {
+		for (int i = idx; i <= N; i++) {
+			if (check[i] == false) {
+				check[i] = true;
 
-			if (ny < M && ny >= 0 && nx < N && nx >= 0) {
-				if (graph[ny][nx] == 0) {
-					q.push({ ny, nx });
-					graph[ny][nx] = 1;
-					count++;
-				}
+				backtraking(count + 1, i + 1);
+
+				check[i] = false;
 			}
 		}
 	}
-
-	area.push_back(count);
 }
 
 int main() {
 	fastio;
-
-
-	cin >> N >> M >> K;
-
-	for (int i = 0; i < K; i++) {
-		int x1, y1, x2, y2;
-		cin >> x1 >> y1 >> x2 >> y2;
-
-		for (int y = x1; y < x2; y++) {
-			for (int x = y1; x < y2; x++) {
-				graph[y][x] = 1;
-			}
-		}
+	cin >> N;
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++)
+			cin >> arr[i][j];
 	}
 
-	for (int i = 0; i < M; i++) {
-		for (int j = 0; j < N; j++) {
-			if (graph[i][j] == 0) {
-				bfs(i, j);
-				ans++;
-			}
-		}
-	}
-	sort(area.begin(), area.end());
+	backtraking(0, 1);
+
 	cout << ans << endl;
-	for (auto i : area)
-		cout << i << " ";
-	return 0;
 }

@@ -13,46 +13,33 @@
 #define pll pair<ll, ll>
 using namespace std;
 
-const int MAX = 21;
 int N;
-int arr[MAX][MAX];
-bool check[MAX];
-int ans = 2e9;
+string ans;
 
-void backtraking(int count, int idx) {
-	if (count == N / 2) {
-		vector<int> start;
-		vector<int> link;
-		for (int i = 1; i <= N; i++) {
-			if (check[i] == true)
-				start.push_back(i);
-			else
-				link.push_back(i);
+bool IsGoodSequence(string str) {
+	for (int i = 1; i <= str.size() / 2; i++) {
+		for (int idx = 0; idx < str.size() - i; idx++) {
+			if (str.substr(idx, i) == str.substr(idx + i, i))
+				return false;
 		}
-		int start_sum = 0;
-		int link_sum = 0;
-		for (int i = 0; i < start.size(); i++) {
-			for (int j = 0; j < start.size(); j++) {
-				start_sum += arr[start[i]][start[j]];
-			}
-		}
+	}
 
-		for (int i = 0; i < link.size(); i++) {
-			for (int j = 0; j < link.size(); j++) {
-				link_sum += arr[link[i]][link[j]];
-			}
-		}
+	return true;
+}
 
-		ans = min(ans, abs(start_sum - link_sum));
+void backtracking(int count) {
+	if (count == N) {
+		cout << ans << endl;
+		exit(0);
 	}
 	else {
-		for (int i = idx; i <= N; i++) {
-			if (check[i] == false) {
-				check[i] = true;
+		for (int i = 1; i <= 3; i++) {
+			if (IsGoodSequence(ans + to_string(i))) {
+				ans += to_string(i);
 
-				backtraking(count + 1, i + 1);
-
-				check[i] = false;
+				backtracking(count + 1);
+				
+				ans.pop_back();
 			}
 		}
 	}
@@ -61,12 +48,5 @@ void backtraking(int count, int idx) {
 int main() {
 	fastio;
 	cin >> N;
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++)
-			cin >> arr[i][j];
-	}
-
-	backtraking(0, 1);
-
-	cout << ans << endl;
+	backtracking(0);
 }

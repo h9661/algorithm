@@ -40,6 +40,7 @@ void Air() {
 }
 
 void Melt() {
+	map<pii, int> mp;
 	for (int i = 1; i <= N; i++) {
 		for (int j = 1; j <= M; j++) {
 			if (arr[i][j] == 1) {
@@ -47,8 +48,13 @@ void Melt() {
 					int ny = i + Y[k];
 					int nx = j + X[k];
 
-					if (arr[ny][nx] == 3)
-						arr[i][j] = 4;
+					if (arr[ny][nx] == 3) {
+						mp[{i, j}]++;
+
+						if (mp[{i, j}] == 2) {
+							arr[i][j] = 4;
+						}
+					}
 				}
 			}
 		}
@@ -103,9 +109,6 @@ int main() {
 		if (flag == true)
 			break;
 
-		int temp = Count();
-		if (temp != 0)
-			count = temp;
 		Air();
 		Melt();
 		Set();
@@ -113,6 +116,4 @@ int main() {
 	}
 
 	cout << ans << endl;
-	cout << count << endl;
-
 }

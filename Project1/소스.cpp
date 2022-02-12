@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-using namespace std;
-
+#define ull unsigned long long
+#define ll long long int
 const int MAX = 51;
 
 int graph[MAX][MAX];
@@ -116,6 +116,48 @@ int main() {
 
 		Reset();
 	}
+	int ans = 0;
+
+	while (1) {
+		NumberingMap();
+		TransferPeople();
+
+		if (check[N][N] == N * N)
+			break;
+
+		ans++;
+
+
+		Reset();
+	}
+	store.push_back(temp2);
+	store.push_back(temp3);
+
+	sort(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
+	store.push_back(temp2);
+	store.push_back(temp3);
+
+	sort(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
+	store.push_back(temp2);
+	store.push_back(temp3);
+
+	sort(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
+	store.push_back(temp2);
+	store.push_back(temp3);
+
+	sort(store.begin(), store.end());
+
+	for (auto i : store)
+		cout << i << " ";
 
 	cout << ans << endl;
 }

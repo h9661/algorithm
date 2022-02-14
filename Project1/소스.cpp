@@ -1,47 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool solvTest() {
-	int n;
-	cin >> n;
+void SolveTest() {
+	int t, k;
+	cin >> t >> k;
 
-	vector<int> arr(n, 0);
-	vector<bool> used(n + 1, false);
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
+	string s;
+	cin >> s;
+
+	vector<int> cnt(26, 0);
+	for (char c : s) {
+		cnt[c - 'a']++;
 	}
 
-	sort(arr.begin(), arr.end(),
-		[](int a, int b) {
-			return a > b;
-		}
-	);
+	int cntPairs = 0;
+	int cntOdd = 0;
 
-	bool check = true;
-
-	for (int i = 0; i < n; i++) {
-		int x = arr[i];
-
-		while (x > n or used[x])
-			x /= 2;
-
-		if (x > 0)
-			used[x] = true;
-		else
-			check = false;
+	for (int c : cnt) {
+		cntPairs += c / 2;
+		cntOdd += c % 2;
 	}
 
-	return check;
+	int ans = 2 * (cntPairs / k);
+	cntOdd += 2 * (cntPairs % k);
+
+	if (cntOdd >= k)
+		ans += 1;
+	
+	cout << ans << endl;
 }
 
 int main() {
 	int t;
 	cin >> t;
-
-	while (t--) {
-		if (solvTest())
-			cout << "YES" << endl;
-		else
-			cout << "NO" << endl;
-	}
+	while (t--)
+		SolveTest();
 }

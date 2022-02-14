@@ -1,30 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solveTest() {
-	int a, b, c;
-	cin >> a >> b >> c;
+bool solvTest() {
+	int n;
+	cin >> n;
 
-	int new_a = 2 * b - c;
-	if (new_a >= a && new_a % a == 0 && new_a != 0) {
-		cout << "YES" << endl;
-		return;
+	vector<int> arr(n, 0);
+	vector<bool> used(n + 1, false);
+	for (int i = 0; i < n; i++) {
+		cin >> arr[i];
 	}
 
-	int new_b = a + (c - a) / 2;
-	if (new_b >= b && (c - a) % 2 == 0 && new_b % b == 0 && new_b != 0) {
-		cout << "YES" << endl;
-		return;
+	sort(arr.begin(), arr.end(),
+		[](int a, int b) {
+			return a > b;
+		}
+	);
+
+	bool check = true;
+
+	for (int i = 0; i < n; i++) {
+		int x = arr[i];
+
+		while (x > n or used[x])
+			x /= 2;
+
+		if (x > 0)
+			used[x] = true;
+		else
+			check = false;
 	}
 
-	int new_c = 2 * b - a;
-	if (new_c >= c && new_c % c == 0 && new_c != 0) {
-		cout << "YES" << endl;
-		return;
-	}
-
-	cout << "NO" << endl;
-	return;
+	return check;
 }
 
 int main() {
@@ -32,6 +39,9 @@ int main() {
 	cin >> t;
 
 	while (t--) {
-		solveTest();
+		if (solvTest())
+			cout << "YES" << endl;
+		else
+			cout << "NO" << endl;
 	}
 }

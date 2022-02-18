@@ -1,25 +1,54 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-const int MAX_N = 10000;
-vector<int> arr(MAX_N + 1);
-vector<int> dp(MAX_N + 1);
+typedef long long ll;
+const int MAX_N = 2e5;
 
 int main() {
-	int n;
-	cin >> n;
+	int t;
+	cin >> t;
 
-	for (int i = 0; i < n; i++)
-		cin >> arr[i];
+	for (int _ = 0; _ < t; _++) {
+		int n;
+		cin >> n;
 
-	dp[0] = arr[0];
-	dp[1] = arr[0] + arr[1];
-	dp[2] = max(arr[0] + arr[2], arr[1] + arr[2]);
-	for (int i = 3; i < n; i++) {
+		vector<int> a(n);
+		map<int, int> cnt;
 
-		dp[i] = max(*max_element(dp.begin(), dp.begin() + i - 2) + arr[i - 1] + arr[i], *max_element(dp.begin(), dp.begin() + i - 1) + arr[i]);
+		for (int i = 0; i < n; i++) {
+			cin >> a[i];
+			cnt[a[i]]++;
+		}
+
+		sort(a.begin(), a.end());
+
+		stack<int> st;
+		vector<ll> ans(n + 1, -1);
+
+		ll sum = 0;
+
+		for (int i = 0; i <= n; i++) {
+			if (i > 0 && cnt[i - 1] == 0) {
+				if (st.empty())
+					break;
+
+				int j = st.top();
+				st.pop();
+				sum += i - j - 1;
+			}
+
+			ans[i] = sum + cnt[i];
+
+			while (i > 0 && cnt[i - 1] > 1) {
+				cnt[i - 1]--;
+				st.push(i - 1);
+			}
+		}
+
+		for (ll x : ans)
+			cout << x << " ";
+
+		cout << endl;
 	}
-
-	
-	cout << *max_element(dp.begin(), dp.begin() + n) << endl;
 }

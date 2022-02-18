@@ -1,53 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve() {
-	long long a, s;
-	cin >> a >> s;
-
-	vector<int> b;
-
-	while (s) {
-		int x = a % 10;
-		int y = s % 10;
-
-		if (x <= y)
-			b.push_back(y - x);
-		else {
-			s /= 10;
-			y += 10 * (s % 10);
-
-			if (y >= 10 && y <= 19)
-				b.push_back(y - x);
-			else {
-				cout << "-1" << endl;
-				return;
-			}
-		}
-
-		a /= 10;
-		s /= 10;
-	}
-
-	if (a)
-		cout << "-1" << endl;
-	else {
-		while (b.back() == 0)
-			b.pop_back();
-		
-		for (int i = b.size() - 1; i >= 0; i--)
-			cout << b[i];
-		cout << endl;
-	}
-}
+const int MAX_N = 10000;
+vector<int> arr(MAX_N + 1);
+vector<int> dp(MAX_N + 1);
 
 int main() {
-	int t;
-	cin >> t;
+	int n;
+	cin >> n;
 
-	while (t--) {
-		solve();
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	dp[0] = arr[0];
+	dp[1] = arr[0] + arr[1];
+	dp[2] = max(arr[0] + arr[2], arr[1] + arr[2]);
+	for (int i = 3; i < n; i++) {
+
+		dp[i] = max(*max_element(dp.begin(), dp.begin() + i - 2) + arr[i - 1] + arr[i], *max_element(dp.begin(), dp.begin() + i - 1) + arr[i]);
 	}
 
-	return 0;
+	
+	cout << *max_element(dp.begin(), dp.begin() + n) << endl;
 }

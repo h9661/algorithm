@@ -1,45 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int g_count[8010];
-
-int main() {
+void solve() {
 	int n;
 	cin >> n;
 
-	vector<int> a(n);
+	vector<long long> a(n);
+	int count = 0;
 
-	for (int i = 0; i < n; i++) {
+
+	for (int i = 0; i < n; i++)
 		cin >> a[i];
-		g_count[4000 + a[i]]++;
+
+	if (a[n - 2] > a[n - 1]) {
+		cout << -1 << endl;
+		return;
 	}
-
-	int k = 0;
-	for (int i = 0; i <= 8000; i++) {
-		if (k < g_count[i])
-			k = g_count[i];
-	}
-	bool check = false;
-
-	int z = 0;
-	for (int i = 0; i <= 8000; i++) {
-		if (g_count[i] == k) {
-			z = i - 4000;
-
-			if (check == true)
-				break;
-
-			check = true;
+	else {
+		if (a[n - 1] >= 0) {
+			for (int i = 0; i < n - 2; i++) {
+				a[i] = a[n - 2] - a[n - 1];
+				count++;
+			}
+			
+			cout << count << endl;
+			for (int i = 1; i <= n - 2; i++)
+				cout << i << " " << n - 1 << " " << n << endl;
+		}
+		else {
+			if (is_sorted(a.begin(), a.end(), [](long long a, long long b) {
+				return a < b;
+				})) {
+				cout << count << endl;
+			}
+			else
+				cout << -1 << endl;
 		}
 	}
+}
 
+int main() {
+	int t;
+	cin >> t;
 
-	sort(a.begin(), a.end());
-	if (round(accumulate(a.begin(), a.end(), 0) / (double)a.size()) == -0)
-		cout << 0 << endl;
-	else
-		cout << round(accumulate(a.begin(), a.end(), 0) / (double)a.size()) << endl;
-	cout << a[a.size() / 2] << endl;
-	cout << z << endl;
-	cout << a[a.size() - 1] - a[0] << endl;
+	while (t--)
+		solve();
+
+	return 0;
 }

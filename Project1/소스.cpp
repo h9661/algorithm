@@ -1,32 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve() {
+int main() {
 	int n;
 	cin >> n;
 
-	map<int, int> d;
-	for (int i = 0; i < n; i++) {
-		int x;
-		cin >> x;
-		d[x]++;
+	vector<int> a(n + 1, 0);
+	for (int i = 1; i <= n; i++)
+		cin >> a[i];
+
+	vector<int> dp(n + 1, 0);
+
+	dp[1] = a[1];
+
+	for (int i = 2; i <= n; i++) {
+		dp[i] = a[i];
+
+		for (int j = 1; j <= i / 2; j++) {
+			dp[i] = max(dp[j] + dp[i - j], dp[i]);
+		}
 	}
 
-	int cnt = 0;
-	for (auto i : d)
-		cnt++;
-
-	for (int k = 1; k <= n; k++)
-		cout << max(k, cnt) << " ";
-	cout << endl;
-}
-
-int main() {
-	int t;
-	cin >> t;
-
-	while (t--)
-		solve();
+	cout << dp[n] << endl;
 
 	return 0;
 }

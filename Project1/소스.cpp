@@ -2,26 +2,35 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
+	int t;
+	cin >> t;
 
-	vector<int> a(n + 1, 0);
-	for (int i = 1; i <= n; i++)
-		cin >> a[i];
+	while (t--) {
+		long long n, x;
+		cin >> n >> x;
+		map<long long, long long> m;
 
-	vector<int> dp(n + 1, 0);
-
-	dp[1] = a[1];
-
-	for (int i = 2; i <= n; i++) {
-		dp[i] = a[i];
-
-		for (int j = 1; j <= i / 2; j++) {
-			dp[i] = max(dp[j] + dp[i - j], dp[i]);
+		vector<long long> a(n);
+		for (int i = 0; i < n; i++) {
+			cin >> a[i];
+			m[a[i]]++;
 		}
+
+		sort(a.begin(), a.end());
+		int ans = 0;
+
+		for (int i = 0; i < n; i++) {
+			if (m[a[i]] > 0) {
+				if (m[a[i] * x] > 0) {
+					m[a[i]]--;
+					m[a[i] * x]--;
+				}
+				else {
+					m[a[i]]--;
+					ans++;
+				}
+			}
+		}
+		cout << ans << endl;
 	}
-
-	cout << dp[n] << endl;
-
-	return 0;
 }

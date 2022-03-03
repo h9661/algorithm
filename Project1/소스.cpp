@@ -1,36 +1,40 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void solve() {
+	int n;
+	cin >> n;
+
+	vector<int> a(n + 1, 0);
+	for (int i = 1; i <= n; i++)
+		cin >> a[i];
+
+	int start, end;
+	for (int i = 1; i <= n; i++) {
+		if (a[i] != i) {
+			start = i;
+
+			for (int j = start; j <= n; j++) {
+				if (start == a[j]) {
+					end = j;
+					reverse(a.begin() + start, a.begin() + end + 1);
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	for (int i = 1; i <= n; i++)
+		cout << a[i] << " ";
+	cout << endl;
+}
+
 int main() {
 	int t;
 	cin >> t;
 
 	while (t--) {
-		long long n, x;
-		cin >> n >> x;
-		map<long long, long long> m;
-
-		vector<long long> a(n);
-		for (int i = 0; i < n; i++) {
-			cin >> a[i];
-			m[a[i]]++;
-		}
-
-		sort(a.begin(), a.end());
-		int ans = 0;
-
-		for (int i = 0; i < n; i++) {
-			if (m[a[i]] > 0) {
-				if (m[a[i] * x] > 0) {
-					m[a[i]]--;
-					m[a[i] * x]--;
-				}
-				else {
-					m[a[i]]--;
-					ans++;
-				}
-			}
-		}
-		cout << ans << endl;
+		solve();
 	}
 }

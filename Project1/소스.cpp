@@ -5,29 +5,27 @@ void solve() {
 	int n;
 	cin >> n;
 
-	vector<int> a(n + 1, 0);
-	for (int i = 1; i <= n; i++)
-		cin >> a[i];
+	vector<int> even;
+	vector<int> odd;
+	for (int i = 0; i < n; i++) {
+		int x;
+		cin >> x;
 
-	int start, end;
-	for (int i = 1; i <= n; i++) {
-		if (a[i] != i) {
-			start = i;
-
-			for (int j = start; j <= n; j++) {
-				if (start == a[j]) {
-					end = j;
-					reverse(a.begin() + start, a.begin() + end + 1);
-					break;
-				}
-			}
-			break;
-		}
+		if (x % 2 == 0)
+			even.push_back(x);
+		else
+			odd.push_back(x);
 	}
 
-	for (int i = 1; i <= n; i++)
-		cout << a[i] << " ";
-	cout << endl;
+	bool check = false;
+
+	if (is_sorted(even.begin(), even.end()) && is_sorted(odd.begin(), odd.end()))
+		check = true;
+	
+	if (check)
+		cout << "YES" << endl;
+	else
+		cout << "NO" << endl;
 }
 
 int main() {

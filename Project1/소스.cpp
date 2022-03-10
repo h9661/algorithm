@@ -2,36 +2,39 @@
 using namespace std;
 
 void solve() {
-	int n;
-	cin >> n;
+	string s;
+	char c;
+	cin >> s >> c;
 
-	vector<int> even;
-	vector<int> odd;
-	for (int i = 0; i < n; i++) {
-		int x;
-		cin >> x;
+	vector<pair<int, int>> count;
+	int countLeft = 0;
 
-		if (x % 2 == 0)
-			even.push_back(x);
-		else
-			odd.push_back(x);
+	for (int i = 0; i < s.size(); i++) {
+		if (i == 0 && s[i] == c || i == s.size() - 1 && s[i] == c) {
+			cout << "YES" << endl;
+			return;
+		}
+
+		if (s[i] == c) {
+			count.push_back({ countLeft, s.size() - countLeft - 1 });
+		}
+
+		countLeft++;
 	}
 
-	bool check = false;
+	for (auto i : count) {
+		if (i.first % 2 == 0 && i.second % 2 == 0) {
+			cout << "YES" << endl;
+			return;
+		}
+	}
 
-	if (is_sorted(even.begin(), even.end()) && is_sorted(odd.begin(), odd.end()))
-		check = true;
-	
-	if (check)
-		cout << "YES" << endl;
-	else
-		cout << "NO" << endl;
+	cout << "NO" << endl;
 }
 
 int main() {
 	int t;
 	cin >> t;
-
 	while (t--) {
 		solve();
 	}

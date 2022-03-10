@@ -1,41 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve() {
-	string s;
-	char c;
-	cin >> s >> c;
-
-	vector<pair<int, int>> count;
-	int countLeft = 0;
-
-	for (int i = 0; i < s.size(); i++) {
-		if (i == 0 && s[i] == c || i == s.size() - 1 && s[i] == c) {
-			cout << "YES" << endl;
-			return;
-		}
-
-		if (s[i] == c) {
-			count.push_back({ countLeft, s.size() - countLeft - 1 });
-		}
-
-		countLeft++;
-	}
-
-	for (auto i : count) {
-		if (i.first % 2 == 0 && i.second % 2 == 0) {
-			cout << "YES" << endl;
-			return;
-		}
-	}
-
-	cout << "NO" << endl;
-}
-
 int main() {
-	int t;
-	cin >> t;
-	while (t--) {
-		solve();
+	int n;
+	cin >> n;
+
+	vector<int> a(n);
+
+	for (int i = 0; i < n; i++)
+		cin >> a[i];
+
+	int b, c;
+	cin >> b >> c;
+
+	long long ans = a.size();
+
+	for (int i = 0; i < n; i++) {
+		a[i] -= b;
+
+		if (a[i] < 0)
+			continue;
+		else if (a[i] <= c && a[i] != 0)
+			ans++;
+		else {
+			if (a[i] % c == 0)
+				ans += a[i] / c;
+			else
+				ans += (a[i] / c) + 1;
+		}
 	}
+
+	cout << ans << endl;
 }

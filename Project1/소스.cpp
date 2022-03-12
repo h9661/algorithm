@@ -1,34 +1,25 @@
 #include <bits/stdc++.h>
+#define x first
+#define y second
 using namespace std;
 
+void solve() {
+	int l, r, a;
+	cin >> l >> r >> a;
+
+	int k = r - r % a - 1;
+
+	if (k >= l)
+		cout << max(r / a + r % a, k / a + k % a) << endl;
+	else
+		cout << r / a + r % a << endl;
+}
+
 int main() {
-	int n;
-	cin >> n;
-
-	vector<int> a(n);
-
-	for (int i = 0; i < n; i++)
-		cin >> a[i];
-
-	int b, c;
-	cin >> b >> c;
-
-	long long ans = a.size();
-
-	for (int i = 0; i < n; i++) {
-		a[i] -= b;
-
-		if (a[i] < 0)
-			continue;
-		else if (a[i] <= c && a[i] != 0)
-			ans++;
-		else {
-			if (a[i] % c == 0)
-				ans += a[i] / c;
-			else
-				ans += (a[i] / c) + 1;
-		}
+	int t;
+	cin >> t;
+	
+	while (t--) {
+		solve();
 	}
-
-	cout << ans << endl;
 }

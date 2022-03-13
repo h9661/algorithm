@@ -3,23 +3,19 @@
 #define y second
 using namespace std;
 
-void solve() {
-	int l, r, a;
-	cin >> l >> r >> a;
-
-	int k = r - r % a - 1;
-
-	if (k >= l)
-		cout << max(r / a + r % a, k / a + k % a) << endl;
-	else
-		cout << r / a + r % a << endl;
-}
-
 int main() {
-	int t;
-	cin >> t;
-	
-	while (t--) {
-		solve();
+	long long n, k;
+
+	while (cin >> n >> k) {
+		long long ans = n;
+
+		while (n >= k) {
+			ans += n / k;
+			int temp = n % k;
+			n /= k;
+			n += temp;
+		}
+
+		cout << ans << endl;
 	}
 }

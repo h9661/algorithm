@@ -3,19 +3,49 @@
 #define y second
 using namespace std;
 
-int main() {
-	long long n, k;
+struct point {
+	int weight, position, id;
+};
 
-	while (cin >> n >> k) {
-		long long ans = n;
+void solve() {
+	int n, m;
+	cin >> n >> m;
+	
+	vector<point> points(m);
+	for (int i = 0; i < m; i++) {
+		cin >> points[i].position >> points[i].weight;
+		points[i].id = i + 1;
+	}
 
-		while (n >= k) {
-			ans += n / k;
-			int temp = n % k;
-			n /= k;
-			n += temp;
+	sort(points.begin(), points.end(), [](point a, point b) {
+		return a.weight < b.weight;
 		}
+	);
 
-		cout << ans << endl;
+	int sum = 0;
+	
+	for (int i = 0; i < m; i++) {
+		if (i < 2 * n)
+			sum += points[i].weight;
+		else
+			points.pop_back();
+	}
+
+	sort(points.begin(), points.end(), [](point a, point b) {
+		return a.position < b.position;
+		}
+	);
+
+	cout << sum << endl;
+	for (int i = 0; i < n; i++)
+		cout << points[i].id << ' ' << points[2 * n - i - 1].id << endl;
+}
+
+int main() {
+	int t;
+	cin >> t;
+
+	while (t--) {
+		solve();
 	}
 }

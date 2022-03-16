@@ -1,30 +1,51 @@
 #include <bits/stdc++.h>
-#define x first
-#define y second
 using namespace std;
 
-void solve() {
-	long long m, p;
-	cin >> m >> p;
-	long long a, b;
-	b = max(m, p);
-	a = min(m, p);
+string str;
+int ans = 0;
+map<int, bool> mp;
 
-	int ans = 0;
+void dfs(string numbers, vector<bool>& check) {
+    if (str.size() > 0) {
+        int num = stoi(str);
+        bool isPrime = true;
 
-	if (3 * a <= b)
-		ans = a;
-	else
-		ans = (a + b) / 4;
+        if (mp[num] == false)
+            mp[num] = true;
+        else
+            isPrime = false;
 
-	cout << ans << endl;
+        if (num < 2)
+            isPrime = false;
+
+        for (int i = 2; i <= num - 1; i++) {
+            if (num % i == 0) {
+                isPrime = false;
+                break;
+            }
+        }
+
+        if (isPrime)
+            ans++;
+    }
+
+    for (int i = 0; i < numbers.size(); i++) {
+        if (check[i] == false) {
+            check[i] = true;
+            str.push_back(numbers[i]);
+
+            dfs(numbers, check);
+
+            check[i] = false;
+            str.pop_back();
+        }
+    }
 }
 
-int main() {
-	int t;
-	cin >> t;
+int solution(string numbers) {
+    vector<bool> check(numbers.size(), false);
 
-	while (t--) {
-		solve();
-	}
+    dfs(numbers, check);
+
+    return ans;
 }

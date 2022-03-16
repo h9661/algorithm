@@ -4,40 +4,18 @@
 using namespace std;
 
 void solve() {
-	string s;
-	cin >> s;
+	long long m, p;
+	cin >> m >> p;
+	long long a, b;
+	b = max(m, p);
+	a = min(m, p);
 
 	int ans = 0;
 
-	if (s.size() == 1) {
-		if ((s[0] - '0') % 2 == 0)
-			ans = 0;
-		else
-			ans = -1;
-	}
-	else {
-		if ((s[s.size() - 1] - '0') % 2 == 0)
-			ans = 0;
-		else {
-			if ((s[0] - '0') % 2 == 0)
-				ans = 1;
-			else {
-				bool check = false;
-
-				for (int i = 1; i < s.size() - 1; i++) {
-					if ((s[i] - '0') % 2 == 0) {
-						check = true;
-						break;
-					}
-				}
-
-				if (check)
-					ans = 2;
-				else
-					ans = -1;
-			}
-		}
-	}
+	if (3 * a <= b)
+		ans = a;
+	else
+		ans = (a + b) / 4;
 
 	cout << ans << endl;
 }

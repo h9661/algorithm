@@ -1,21 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve() {
-	int n;
-	cin >> n;
+vector<string> subseqs = { "00", "25", "50", "75" };
 
-	vector<int> a(n);
-	for (int i = 0; i < n; i++)
-		cin >> a[i];
+int solve(string s, string t) {
+	int sptr = s.size() - 1;
+	int ans = 0;
 
-	if (a[0] != n && a[n - 1] != n)
-		cout << -1 << endl;
-	else {
-		for (int i = n - 1; i >= 0; i--)
-			cout << a[i] << " ";
-		cout << endl;
+	while (sptr >= 0 && s[sptr] != t[1]) {
+		sptr--;
+		ans++;
 	}
+	if (sptr < 0)
+		return 100;
+
+	sptr--;
+
+	while (sptr >= 0 && s[sptr] != t[0]) {
+		sptr--;
+		ans++;
+	}
+	if (sptr < 0)
+		return 100;
+	else
+		return ans;
 }
 
 int main() {
@@ -23,6 +31,13 @@ int main() {
 	cin >> t;
 
 	while (t--) {
-		solve();
+		string n;
+		cin >> n;
+
+		int ans = 100;
+		for (auto e : subseqs)
+			ans = min(ans, solve(n, e));
+
+		cout << ans << endl;
 	}
 }

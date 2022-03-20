@@ -1,43 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<string> subseqs = { "00", "25", "50", "75" };
-
-int solve(string s, string t) {
-	int sptr = s.size() - 1;
-	int ans = 0;
-
-	while (sptr >= 0 && s[sptr] != t[1]) {
-		sptr--;
-		ans++;
-	}
-	if (sptr < 0)
-		return 100;
-
-	sptr--;
-
-	while (sptr >= 0 && s[sptr] != t[0]) {
-		sptr--;
-		ans++;
-	}
-	if (sptr < 0)
-		return 100;
-	else
-		return ans;
-}
-
 int main() {
-	int t;
-	cin >> t;
+	int n, k;
+	cin >> n >> k;
+	vector<int> arr(n);
+	vector<int> dp(k + 1);
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
 
-	while (t--) {
-		string n;
-		cin >> n;
-
-		int ans = 100;
-		for (auto e : subseqs)
-			ans = min(ans, solve(n, e));
-
-		cout << ans << endl;
+	dp[0] = 1;
+	for (int i = 0; i < n; i++) {
+		for (int j = arr[i]; j <= k; j++)
+			dp[j] += dp[j - arr[i]];
 	}
+	
+	cout << dp[k] << endl;
+	return 0;
 }

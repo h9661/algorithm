@@ -1,20 +1,22 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-	int n, k;
-	cin >> n >> k;
-	vector<int> arr(n);
-	vector<int> dp(k + 1);
-	for (int i = 0; i < n; i++)
-		cin >> arr[i];
+bool solution(vector<string> phone_book) {
+    bool answer = true;
+    map<string, pair<bool, int>> mp;
 
-	dp[0] = 1;
-	for (int i = 0; i < n; i++) {
-		for (int j = arr[i]; j <= k; j++)
-			dp[j] += dp[j - arr[i]];
-	}
-	
-	cout << dp[k] << endl;
-	return 0;
+    for (int i = 0; i < phone_book.size(); i++) {
+        for (int j = 0; j < phone_book[i].size(); j++) {
+            mp[phone_book[i].substr(0, j)] = { true, i };
+        }
+    }
+
+    for (int i = 0; i < phone_book.size(); i++) {
+        if (mp[phone_book[i]].first == true && mp[phone_book[i]].second != i) {
+            answer = false;
+            break;
+        }
+    }
+
+    return answer;
 }

@@ -1,20 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool solution(vector<string> phone_book) {
-    bool answer = true;
-    map<string, pair<bool, int>> mp;
+int solution(vector<int> priorities, int location) {
+    int answer = 0;
+    deque<pair<int, int>> dq;
 
-    for (int i = 0; i < phone_book.size(); i++) {
-        for (int j = 0; j < phone_book[i].size(); j++) {
-            mp[phone_book[i].substr(0, j)] = { true, i };
-        }
+    for (int i = 0; i < priorities.size(); i++) {
+        dq.push_back({ i, priorities[i] });
     }
 
-    for (int i = 0; i < phone_book.size(); i++) {
-        if (mp[phone_book[i]].first == true && mp[phone_book[i]].second != i) {
-            answer = false;
-            break;
+    int target_index = location;
+
+    while (1) {
+        pair<int, int> max_value = *max_element(dq.begin(), dq.end(), [](pair<int, int> a, pair<int, int> b) {
+            return a.second < b.second;
+            });
+
+        if (dq.front().second == max_value.second) {
+            answer++;
+
+            if (dq.front().first == target_index)
+                break;
+
+            dq.pop_front();
+        }
+        else {
+            dq.push_back(dq.front());
+            dq.pop_front();
         }
     }
 

@@ -1,34 +1,19 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int solution(vector<int> priorities, int location) {
-    int answer = 0;
-    deque<pair<int, int>> dq;
+int solution(vector<vector<string>> clothes) {
+    int answer = 1;
 
-    for (int i = 0; i < priorities.size(); i++) {
-        dq.push_back({ i, priorities[i] });
+    map<string, int> mp;
+    for (int i = 0; i < clothes.size(); i++) {
+        mp[clothes[i][1]]++;
     }
 
-    int target_index = location;
+    map<string, int>::iterator iter;
 
-    while (1) {
-        pair<int, int> max_value = *max_element(dq.begin(), dq.end(), [](pair<int, int> a, pair<int, int> b) {
-            return a.second < b.second;
-            });
-
-        if (dq.front().second == max_value.second) {
-            answer++;
-
-            if (dq.front().first == target_index)
-                break;
-
-            dq.pop_front();
-        }
-        else {
-            dq.push_back(dq.front());
-            dq.pop_front();
-        }
+    for (iter = mp.begin(); iter != mp.end(); iter++) {
+        answer *= (iter->second + 1);
     }
 
-    return answer;
+    return answer - 1;
 }

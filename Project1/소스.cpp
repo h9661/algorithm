@@ -1,53 +1,31 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-string my_reverse(string str) {
-	string retStr = str;
-	for (int i = 0; i < retStr.size() / 2; i++) {
-		char temp = retStr[retStr.size() - i - 1];
-		retStr[retStr.size() - i - 1] = retStr[i];
-		retStr[i] = temp;
-	}
-
-	return retStr;
-}
-
-void solve() {
-	int n, k;
-	cin >> n >> k;
-
-	string s;
-	cin >> s;
-
-	if (n % 2 == 0) {
-		if (s.substr(0, n / 2) == my_reverse(s.substr(n / 2, 5555555))) {
-			cout << 1 << endl;
-		}
-		else {
-			if (k >= 1)
-				cout << 2 << endl;
-			else
-				cout << 1 << endl;
-		}
-	}
-	else {
-		if (s.substr(0, n / 2) == my_reverse(s.substr(n / 2 + 1, 5555555))) {
-			cout << 1 << endl;
-		}
-		else {
-			if (k >= 1)
-				cout << 2 << endl;
-			else
-				cout << 1 << endl;
-		}
-	}
-}
-
 int main() {
-	int t;
-	cin >> t;
+	int n;
+	cin >> n;
 
-	while (t--) {
-		solve();
+	priority_queue<int, vector<int>, greater<int>> pq;
+
+	for (int i = 0; i < n; i++) {
+		int temp;
+		cin >> temp;
+
+		pq.push(temp);
 	}
+
+	if (n >= 2) {
+		int sum = 0;
+
+		for (int i = 0; i < n - 1; i++) {
+			int a = pq.top(); pq.pop();
+			int b = pq.top(); pq.pop();
+			sum += a + b;
+			pq.push(a + b);
+		}
+
+		cout << sum << endl;
+	}
+	else
+		cout << 0 << endl;
 }

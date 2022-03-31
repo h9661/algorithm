@@ -1,62 +1,53 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void shiftLeft(vector<int>& arr) {
-    for (int i = 0; i < arr.size() - 1; i++) {
-        arr[i] = arr[i + 1];
-        arr[i + 1] = 0;
-    }
+string my_reverse(string str) {
+	string retStr = str;
+	for (int i = 0; i < retStr.size() / 2; i++) {
+		char temp = retStr[retStr.size() - i - 1];
+		retStr[retStr.size() - i - 1] = retStr[i];
+		retStr[i] = temp;
+	}
+
+	return retStr;
 }
 
-bool isEmpty(vector<int> arr) {
-    bool check = true;
-    for (int i = 0; i < arr.size(); i++) {
-        if (arr[i] != 0) {
-            check = false;
-            break;
-        }
-    }
+void solve() {
+	int n, k;
+	cin >> n >> k;
 
-    return check;
-}
+	string s;
+	cin >> s;
 
-int solution(int bridge_length, int weight, vector<int> truck_weights) {
-    int time = 0;
-    vector<int> arr(bridge_length + 1, 0);
-
-    queue<int> q;
-    for (int i = 0; i < truck_weights.size(); i++)
-        q.push(truck_weights[i]);
-
-    int curWeight = 0;
-
-    while (1) {
-
-        if (!q.empty()) {
-            if (curWeight + q.front() <= weight) {
-                curWeight += q.front();
-                arr[bridge_length] = q.front();
-
-                q.pop();
-            }
-        }
-
-        shiftLeft(arr);
-        time++;
-
-        if (arr[0] != 0) {
-            curWeight -= arr[0];
-            arr[0] = 0;
-        }
-
-        if (isEmpty(arr) && q.empty())
-            break;
-    }
-
-    return time + 1;
+	if (n % 2 == 0) {
+		if (s.substr(0, n / 2) == my_reverse(s.substr(n / 2, 5555555))) {
+			cout << 1 << endl;
+		}
+		else {
+			if (k >= 1)
+				cout << 2 << endl;
+			else
+				cout << 1 << endl;
+		}
+	}
+	else {
+		if (s.substr(0, n / 2) == my_reverse(s.substr(n / 2 + 1, 5555555))) {
+			cout << 1 << endl;
+		}
+		else {
+			if (k >= 1)
+				cout << 2 << endl;
+			else
+				cout << 1 << endl;
+		}
+	}
 }
 
 int main() {
-    vector<int> arr = { 7, 4, 5, 6 };
-    cout << solution(2, 10, arr) << endl;
+	int t;
+	cin >> t;
+
+	while (t--) {
+		solve();
+	}
 }

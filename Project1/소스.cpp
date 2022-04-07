@@ -1,50 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int coefficient[26];
+string solution(string number, int k) {
+    string answer = "";
 
-int main() {
-	int n;
-	cin >> n;
+    vector<char> st;
 
-	vector<string> arr(n);
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		int level = pow(10, arr[i].size());
+    for (auto i : number) {
+        while (!st.empty() && st.back() < i && k > 0) {
+            st.pop_back();
+            k -= 1;
+        }
 
-		for (int j = 0; j < arr[i].size(); j++) {
-			coefficient[arr[i][j] - 'A'] += level;
-			level /= 10;
-		}
-	}
+        st.push_back(i);
+    }
 
-	vector<pair<char, int>> countArr;
-	for (int i = 0; i < 26; i++) {
-		if (coefficient[i] != 0) {
-			countArr.push_back({ i + 'A' , coefficient[i] });
-		}
-	}
+    while (k > 0) {
+        st.pop_back();
+        k -= 1;
+    }
 
-	sort(countArr.begin(), countArr.end(), [](pair<char, int> a, pair<char, int> b){
-		return a.second > b.second;
-		});
-
-	map<char, int> mp;
-
-	int k = 9;
-	for (int i = 0; i < countArr.size(); i++) {
-		mp[countArr[i].first] = k--;
-	}
+    for (auto i : st)
+        answer += i;
 
 
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < arr[i].size(); j++) {
-			arr[i][j] = mp[arr[i][j]] + '0';
-		}
-	}
-	int sum = 0;
-	for (int i = 0; i < arr.size(); i++)
-		sum += stoi(arr[i]);
-
-	cout << sum << endl;
+    return answer;
 }

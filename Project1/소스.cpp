@@ -1,28 +1,24 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-string solution(string number, int k) {
-    string answer = "";
+int solution(vector<int> people, int limit) {
+    int answer = 0;
 
-    vector<char> st;
+    int left = 0;
+    int right = people.size() - 1;
+    sort(people.begin(), people.end());
 
-    for (auto i : number) {
-        while (!st.empty() && st.back() < i && k > 0) {
-            st.pop_back();
-            k -= 1;
+    while (left <= right) {
+        if (people[left] + people[right] <= limit) {
+            left++;
+            right--;
+        }
+        else {
+            right--;
         }
 
-        st.push_back(i);
+        answer++;
     }
-
-    while (k > 0) {
-        st.pop_back();
-        k -= 1;
-    }
-
-    for (auto i : st)
-        answer += i;
-
 
     return answer;
 }

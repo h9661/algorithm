@@ -1,23 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int solution(vector<int> people, int limit) {
+int solution(vector<int> citations) {
     int answer = 0;
+    sort(citations.begin(), citations.end(), greater<int>());
 
-    int left = 0;
-    int right = people.size() - 1;
-    sort(people.begin(), people.end());
-
-    while (left <= right) {
-        if (people[left] + people[right] <= limit) {
-            left++;
-            right--;
-        }
-        else {
-            right--;
-        }
-
-        answer++;
+    for (int i = 0; i < citations.size(); i++) {
+        if (citations[i] > i)
+            answer++;
+        else
+            break;
     }
 
     return answer;

@@ -1,49 +1,25 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
-void bfs(vector<int> graph[], int startloc, const int n, vector<bool>& check) {
-    queue<int> q;
+int memo[5001];
+const int INF = 1e8;
+int main() {
+	int N;
+	cin >> N;
 
-    q.push(startloc);
-    check[startloc] = true;
+	memo[0] = 0;
+	memo[1] = INF;
+	memo[2] = INF;
+	memo[3] = 1;
+	memo[4] = INF;
+	memo[5] = 1;
 
-    while (!q.empty()) {
-        int curNode = q.front();
-        q.pop();
+	for (int i = 6; i <= 5000; i++) {
+		memo[i] = min(memo[i - 3] + 1, memo[i - 5] + 1);
+	}
 
-        for (int i = 0; i < graph[curNode].size(); i++) {
-            int nextNode = graph[curNode][i];
-
-            if (check[nextNode] == false) {
-                check[nextNode] = true;
-                q.push(nextNode);
-            }
-        }
-    }
-}
-
-int solution(int n, vector<vector<int>> computers) {
-    int answer = 0;
-
-    vector<bool> check(n, false);
-    vector<int> graph[n];
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (computers[i][j] == 1) {
-                graph[i].push_back(j);
-                graph[j].push_back(i);
-            }
-        }
-    }
-
-    for (int i = 0; i < n; i++) {
-        if (check[i] == false) {
-            bfs(graph, i, n, check);
-            answer++;
-        }
-    }
-
-
-    return answer;
+	if (memo[N] >= 50000)
+		cout << -1 << endl;
+	else
+		cout << memo[N] << endl;
 }

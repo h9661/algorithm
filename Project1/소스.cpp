@@ -1,50 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int MAX = 129;
-int paper[MAX][MAX];
-int white = 0;
-int blue = 0;
-
-bool checking(int n, int x, int y) {
-	int temp = paper[y][x];
-
-	for (int i = y; i < n + y; i++) {
-		for (int j = x; j < n + x; j++) {
-			if (paper[i][j] != temp)
-				return false;
-		}
-	}
-
-	return true;
-}
-
-void devide_paper(int n, int x, int y) {
-	if (!checking(n, x, y)) {
-		devide_paper(n / 2, x, y);
-		devide_paper(n / 2, x + n / 2, y);
-		devide_paper(n / 2, x, y + n / 2);
-		devide_paper(n / 2, x + n / 2, y + n / 2);
-	}
-	else {
-		if (paper[y][x] == 1)
-			blue++;
-		else
-			white++;
-	}
-}
-
 int main() {
-	int N;
-	cin >> N;
+	int N, K;
+	cin >> N >> K;
 
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++)
-			cin >> paper[i][j];
+	vector<int> a(N);
+	for (int i = 0; i < N; i++)
+		cin >> a[i];
+
+	int count = 0;
+	int startIdx = 0;
+
+	for (int i = 0; i < N; i++) {
+		if (K < a[i])
+			break;
+
+		startIdx = i;
 	}
 
-	devide_paper(N, 1, 1);
+	for (int i = startIdx; K != 0;) {
+		if (K >= a[i]) {
+			K -= a[i];
+			count++;
+		}
+		else
+			i--;
+	}
 
-	cout << white << endl;
-	cout << blue << endl;
+	cout << count << endl;
 }

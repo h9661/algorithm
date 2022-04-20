@@ -1,32 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main() {
-	int N, K;
-	cin >> N >> K;
-
-	vector<int> a(N);
-	for (int i = 0; i < N; i++)
-		cin >> a[i];
-
+void solve(vector<int>& arr, int k, int end) {
+	int n = arr.size() / k;
 	int count = 0;
-	int startIdx = 0;
-
-	for (int i = 0; i < N; i++) {
-		if (K < a[i])
-			break;
-
-		startIdx = i;
+	int adder = 0;
+	while (count < k) {
+		sort(arr.begin() + adder, arr.begin() + adder + n);
+		adder += n;
+		count++;
 	}
+	
+	if (k == end)
+		return;
 
-	for (int i = startIdx; K != 0;) {
-		if (K >= a[i]) {
-			K -= a[i];
-			count++;
-		}
-		else
-			i--;
-	}
+	solve(arr, k / 2, end);
+}
 
-	cout << count << endl;
+int main() {
+	int n;
+	cin >> n;
+
+	vector<int> arr(n);
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	int k;
+	cin >> k;
+
+	solve(arr, n / 2, k);
+
+	for (auto i : arr)
+		cout << i << " ";
+
+	return 0;
 }

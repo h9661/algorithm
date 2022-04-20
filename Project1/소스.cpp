@@ -1,37 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve(vector<int>& arr, int k, int end) {
-	int n = arr.size() / k;
-	int count = 0;
-	int adder = 0;
-	while (count < k) {
-		sort(arr.begin() + adder, arr.begin() + adder + n);
-		adder += n;
-		count++;
-	}
-	
-	if (k == end)
-		return;
-
-	solve(arr, k / 2, end);
-}
+int dp[1000001];
 
 int main() {
-	int n;
-	cin >> n;
+	int x;
+	cin >> x;
 
-	vector<int> arr(n);
-	for (int i = 0; i < n; i++)
-		cin >> arr[i];
+	fill(dp, dp + 1000001, 1e9);
+	dp[0] = 0;
+	dp[1] = 0;
+	dp[2] = 1;
+	dp[3] = 1;
 
-	int k;
-	cin >> k;
+	for (int i = 4; i <= 1000000; i++) {
+		if (i % 3 == 0)
+			dp[i] = min(dp[i], dp[i / 3] + 1);
 
-	solve(arr, n / 2, k);
+		if (i % 2 == 0)
+			dp[i] = min(dp[i], dp[i / 2] + 1);
 
-	for (auto i : arr)
-		cout << i << " ";
+		dp[i] = min(dp[i], dp[i - 1] + 1);
+	}
 
-	return 0;
+	cout << dp[x] << endl;
 }

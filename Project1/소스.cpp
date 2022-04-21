@@ -1,27 +1,40 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int dp[1000001];
-
+/*
+* 브루트포스는 안됨.......
+* 
+*/
 int main() {
-	int x;
-	cin >> x;
+	int n;
+	cin >> n;
 
-	fill(dp, dp + 1000001, 1e9);
-	dp[0] = 0;
-	dp[1] = 0;
-	dp[2] = 1;
-	dp[3] = 1;
-
-	for (int i = 4; i <= 1000000; i++) {
-		if (i % 3 == 0)
-			dp[i] = min(dp[i], dp[i / 3] + 1);
-
-		if (i % 2 == 0)
-			dp[i] = min(dp[i], dp[i / 2] + 1);
-
-		dp[i] = min(dp[i], dp[i - 1] + 1);
+	vector<pair<long long, long long>> parr(n);
+	for (int i = 0; i < n; i++) {
+		cin >> parr[i].first;
+		cin >> parr[i].second;
 	}
 
-	cout << dp[x] << endl;
+	sort(parr.begin(), parr.end(), [](pair<int, int> a, pair<int, int> b) {
+		if (a.second == b.second)
+			return a.first < b.first;
+		else
+			return a.second < b.second;
+		});
+	int i = 0;
+	int answer = 0;
+	long long end = parr[0].second;
+	i++;
+	answer++;
+
+	while (i < parr.size()) {
+		if (end <= parr[i].first) {
+			answer++;
+			end = parr[i].second;
+		}
+
+		i++;
+	}
+	cout << answer << endl;
+
+	return 0;
 }

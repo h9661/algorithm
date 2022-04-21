@@ -1,40 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
-/*
-* 브루트포스는 안됨.......
-* 
-*/
+
 int main() {
-	int n;
-	cin >> n;
+	int t;
+	cin >> t;
 
-	vector<pair<long long, long long>> parr(n);
-	for (int i = 0; i < n; i++) {
-		cin >> parr[i].first;
-		cin >> parr[i].second;
-	}
+	while (t--) {
+		int n;
+		cin >> n;
 
-	sort(parr.begin(), parr.end(), [](pair<int, int> a, pair<int, int> b) {
-		if (a.second == b.second)
-			return a.first < b.first;
-		else
-			return a.second < b.second;
-		});
-	int i = 0;
-	int answer = 0;
-	long long end = parr[0].second;
-	i++;
-	answer++;
+		vector<pair<int, int>> dp(41);
+		dp[0].first = 1;
+		dp[1].second = 0;
 
-	while (i < parr.size()) {
-		if (end <= parr[i].first) {
-			answer++;
-			end = parr[i].second;
+		dp[1].first = 0;
+		dp[1].second = 1;
+
+		for (int i = 2; i <= 40; i++) {
+			dp[i].first = dp[i - 1].first + dp[i - 2].first;
+			dp[i].second = dp[i - 1].second + dp[i - 2].second;
 		}
 
-		i++;
+		cout << dp[n].first << " " << dp[n].second << endl;
 	}
-	cout << answer << endl;
-
-	return 0;
 }

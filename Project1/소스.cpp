@@ -2,17 +2,21 @@
 using namespace std;
 
 int main() {
-	while (1) {
-		string str = "";
-		cin >> str;
-		string temp = str;
-		if (str == "0")
-			break;
+	int N;
+	cin >> N;
+	int count = 0;
+	int number = 1;
 
-		reverse(str.begin(), str.end());
-		if (temp == str)
-			cout << "yes" << endl;
-		else
-			cout << "no" << endl;
+	while (count <= 10000) {
+		if (to_string(number).find("666") != string::npos) {
+			count++;
+		}
+
+		if (count == N) {
+			cout << number << endl;
+			break;
+		}
+
+		number++;
 	}
 }

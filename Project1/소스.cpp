@@ -1,29 +1,46 @@
 #include <bits/stdc++.h>
+#define endl '\n'
 using namespace std;
 
 int main() {
-	int K, N;
-	cin >> K >> N;
+	int n;
+	cin >> n;
 
-	vector<int> arr(K, 0);
-	for (int i = 0; i < K; i++)
+	vector<int> arr(n, 0);
+	for (int i = 0; i < n; i++)
 		cin >> arr[i];
 
-	long long left = 1;
-	long long right = *max_element(arr.begin(), arr.end());
+	int i = 0;
+	int num = 1;
+	stack<int> stk;
+	vector<char> op;
 
-	while (left <= right) {
-		long long cnt = 0;
-		long long middle = (left + right) / 2;
+	while (i < arr.size()) {
+		if (op.size() > n * 2)
+			break;
 
-		for (int i = 0; i < arr.size(); i++)
-			cnt += arr[i] / middle;
-		
-		if (cnt >= N)
-			left = middle + 1;
-		else
-			right = middle - 1;
+		if (stk.size() == 0) {
+			stk.push(num);
+			num += 1;
+			op.push_back('+');
+		}
+
+		if (stk.top() == arr[i]) {
+			stk.pop();
+			op.push_back('-');
+			i += 1;
+		}
+		else {
+			stk.push(num);
+			num += 1;
+			op.push_back('+');
+		}
 	}
 
-	cout << left - 1 << endl;
+	if (op.size() == n * 2) {
+		for (auto x : op)
+			cout << x << endl;
+	}
+	else
+		cout << "NO" << endl;
 }

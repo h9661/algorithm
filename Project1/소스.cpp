@@ -3,44 +3,24 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
+	int C;
+	cin >> C;
 
-	vector<int> arr(n, 0);
-	for (int i = 0; i < n; i++)
-		cin >> arr[i];
+	while (C--) {
+		int N;
+		cin >> N;
+		vector<int> arr(N, 0);
+		for (int i = 0; i < N; i++)
+			cin >> arr[i];
 
-	int i = 0;
-	int num = 1;
-	stack<int> stk;
-	vector<char> op;
+		double average = (double)accumulate(arr.begin(), arr.end(), 0) / N;
 
-	while (i < arr.size()) {
-		if (op.size() > n * 2)
-			break;
-
-		if (stk.size() == 0) {
-			stk.push(num);
-			num += 1;
-			op.push_back('+');
+		int cnt = 0;
+		for (int i = 0; i < arr.size(); i++) {
+			if (arr[i] > average)
+				cnt++;
 		}
 
-		if (stk.top() == arr[i]) {
-			stk.pop();
-			op.push_back('-');
-			i += 1;
-		}
-		else {
-			stk.push(num);
-			num += 1;
-			op.push_back('+');
-		}
+		printf("%.3f%%\n", ((double)cnt / N) * 100);
 	}
-
-	if (op.size() == n * 2) {
-		for (auto x : op)
-			cout << x << endl;
-	}
-	else
-		cout << "NO" << endl;
 }

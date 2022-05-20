@@ -3,24 +3,22 @@
 using namespace std;
 
 int main() {
-	int C;
-	cin >> C;
+	int N;
+	cin >> N;
+	vector<int> arr1(N, 0);
+	for (int i = 0; i < N; i++)
+		cin >> arr1[i];
+	sort(arr1.begin(), arr1.end());
+	int M;
+	cin >> M;
+	vector<int> arr2(M, 0);
+	for (int i = 0; i < M; i++)
+		cin >> arr2[i];
 
-	while (C--) {
-		int N;
-		cin >> N;
-		vector<int> arr(N, 0);
-		for (int i = 0; i < N; i++)
-			cin >> arr[i];
-
-		double average = (double)accumulate(arr.begin(), arr.end(), 0) / N;
-
-		int cnt = 0;
-		for (int i = 0; i < arr.size(); i++) {
-			if (arr[i] > average)
-				cnt++;
-		}
-
-		printf("%.3f%%\n", ((double)cnt / N) * 100);
+	for (auto i : arr2) {
+		if (binary_search(arr1.begin(), arr1.end(), i))
+			cout << 1 << endl;
+		else
+			cout << 0 << endl;
 	}
 }

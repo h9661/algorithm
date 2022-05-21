@@ -2,23 +2,25 @@
 #define endl '\n'
 using namespace std;
 
-int main() {
-	int N;
-	cin >> N;
-	vector<int> arr1(N, 0);
-	for (int i = 0; i < N; i++)
-		cin >> arr1[i];
-	sort(arr1.begin(), arr1.end());
-	int M;
-	cin >> M;
-	vector<int> arr2(M, 0);
-	for (int i = 0; i < M; i++)
-		cin >> arr2[i];
+vector<int> prime(1000001, 0);
 
-	for (auto i : arr2) {
-		if (binary_search(arr1.begin(), arr1.end(), i))
-			cout << 1 << endl;
-		else
-			cout << 0 << endl;
+void eratos() {
+	for (int i = 2; i <= 1000000; i++)
+		prime[i] = i;
+
+	for (int i = 2; i <= 1000000; i++) {
+		for (int j = 2 * i; j <= 1000000; j += i)
+			prime[j] = 0;
+	}
+}
+
+int main() {
+	eratos();
+	int M, N;
+	cin >> M >> N;
+
+	for (int i = M; i <= N; i++) {
+		if (prime[i] != 0)
+			cout << i << endl;
 	}
 }

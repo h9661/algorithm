@@ -2,25 +2,45 @@
 #define endl '\n'
 using namespace std;
 
-vector<int> prime(1000001, 0);
-
-void eratos() {
-	for (int i = 2; i <= 1000000; i++)
-		prime[i] = i;
-
-	for (int i = 2; i <= 1000000; i++) {
-		for (int j = 2 * i; j <= 1000000; j += i)
-			prime[j] = 0;
-	}
-}
-
 int main() {
-	eratos();
-	int M, N;
-	cin >> M >> N;
+	int tc;
+	cin >> tc;
+	while (tc--) {
+		int N, M;
+		cin >> N >> M;
 
-	for (int i = M; i <= N; i++) {
-		if (prime[i] != 0)
-			cout << i << endl;
+		deque<int> q;
+		for (int i = 0; i < N; i++) {
+			int temp;
+			cin >> temp;
+
+			q.push_back(temp);
+		}
+
+		int ans = 0;
+		int idx = M;
+
+		while (1) {
+			if (q.front() == *max_element(q.begin(), q.end())) {
+				q.pop_front();
+				ans++;
+
+				if (idx == 0) {
+					cout << ans << endl;
+					break;
+				}
+				else
+					idx -= 1;
+			}
+			else {
+				q.push_back(q.front());
+				q.pop_front();
+
+				if (idx == 0)
+					idx = q.size() - 1;
+				else
+					idx -= 1;
+			}
+		}
 	}
 }

@@ -2,32 +2,38 @@
 #define endl '\n'
 using namespace std;
 
-vector<int> primeNumber(1001);
-void eratos() {
-	for (int i = 2; i <= 1000; i++)
-		primeNumber[i] = i;
-
-	for (int i = 2; i <= 1000; i++) {
-		for (int j = 2 * i; j <= 1000; j += i) {
-			primeNumber[j] = 0;
-		}
-	}
-}
-
 int main() {
 	int N;
 	cin >> N;
-	eratos();
+
 	vector<int> arr(N, 0);
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
-
-	int count = 0;
-
-	for (int i = 0; i < arr.size(); i++) {
-		if (primeNumber[arr[i]] != 0)
-			count++;
+	vector<int> frequency(8001, 0);
+	vector<int> max_frequency_arr;
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
+		arr[i] = temp;
+		frequency[temp + 4000]++;
+	}
+	int max_frequency = *max_element(frequency.begin(), frequency.end());
+	for (int i = 0; i <= 8000; i++) {
+		if (frequency[i] == max_frequency)
+			max_frequency_arr.push_back(i - 4000);
 	}
 
-	cout << count << endl;
+	sort(arr.begin(), arr.end());
+	sort(max_frequency_arr.begin(), max_frequency_arr.end());
+	max_frequency_arr.erase(unique(max_frequency_arr.begin(), max_frequency_arr.end()), max_frequency_arr.end());
+
+	double average = floor(((double)accumulate(arr.begin(), arr.end(), 0) / N) + 0.5);
+	int middle = arr[(N - 1) / 2];
+
+	cout << average << endl;
+	cout << middle << endl;
+	if (max_frequency_arr.size() > 1)
+		cout << max_frequency_arr[1] << endl;
+	else
+		cout << max_frequency_arr[0] << endl;
+	cout << *max_element(arr.begin(), arr.end()) - *min_element(arr.begin(), arr.end()) << endl;
+
 }

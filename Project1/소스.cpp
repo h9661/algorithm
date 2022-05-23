@@ -5,16 +5,26 @@ using namespace std;
 int main() {
 	int N;
 	cin >> N;
+	bool flag = false;
 
-	deque<int> dq;
-	for (int i = 1; i <= N; i++)
-		dq.push_back(i);
+	for (int i = 1; i < N; i++) {
+		int x = i;
+		int sum = i;
 
-	while (dq.size() > 1) {
-		dq.pop_front();
-		dq.push_back(dq.front());
-		dq.pop_front();
+		int k = (int)log10(i) + 1;
+
+		while (k >= 0) {
+			sum += (x / (int)pow(10, k)) % 10;
+			k -= 1;
+		}
+
+		if (sum == N) {
+			cout << i << endl;
+			flag = true;
+			break;
+		}
 	}
-
-	cout << dq[0] << endl;
+	
+	if (flag == false)
+		cout << 0 << endl;
 }

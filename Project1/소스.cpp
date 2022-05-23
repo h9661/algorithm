@@ -5,26 +5,16 @@ using namespace std;
 int main() {
 	int N;
 	cin >> N;
-	bool flag = false;
 
-	for (int i = 1; i < N; i++) {
-		int x = i;
-		int sum = i;
+	int adder = 6;
+	int k = 1;
+	int sum = 1;
 
-		int k = (int)log10(i) + 1;
-
-		while (k >= 0) {
-			sum += (x / (int)pow(10, k)) % 10;
-			k -= 1;
-		}
-
-		if (sum == N) {
-			cout << i << endl;
-			flag = true;
-			break;
-		}
+	while (N > sum) {
+		sum += adder;
+		adder += 6;
+		k += 1;
 	}
-	
-	if (flag == false)
-		cout << 0 << endl;
+
+	cout << k << endl;
 }

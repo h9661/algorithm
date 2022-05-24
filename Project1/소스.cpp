@@ -3,18 +3,14 @@
 using namespace std;
 
 int main() {
-	int N;
-	cin >> N;
+	int n;
+	cin >> n;
 
-	int adder = 6;
-	int k = 1;
-	int sum = 1;
+	vector<int> arr(n, 0);
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+	sort(arr.begin(), arr.end());
 
-	while (N > sum) {
-		sum += adder;
-		adder += 6;
-		k += 1;
-	}
-
-	cout << k << endl;
+	for (auto i : arr)
+		cout << i << endl;
 }

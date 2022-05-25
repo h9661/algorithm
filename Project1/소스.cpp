@@ -3,22 +3,21 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
+	int N;
+	cin >> N;
+	vector<int> arr(N, 0);
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
+	sort(arr.begin(), arr.end());
+	
+	int M;
+	cin >> M;
 
-	vector<pair<int, string>> members;
-	for (int i = 0; i < n; i++) {
-		int age; string name;
-		cin >> age >> name;
+	vector<int> arr2(M, 0);
+	for (int i = 0; i < M; i++)
+		cin >> arr2[i];
 
-		members.push_back({ age, name });
+	for (int i = 0; i < M; i++) {
+		cout << upper_bound(arr.begin(), arr.end(), arr2[i]) - lower_bound(arr.begin(), arr.end(), arr2[i]) << " ";
 	}
-
-	stable_sort(members.begin(), members.end(), [](pair<int, string> a, pair<int, string> b) {
-		return a.first < b.first;
-		}
-	);
-
-	for (auto& i : members)
-		cout << i.first << " " << i.second << endl;	
 }

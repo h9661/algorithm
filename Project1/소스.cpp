@@ -3,23 +3,32 @@
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
-	vector<pair<int, int>> coordinate;
-	
-	for (int i = 0; i < n; i++) {
-		int x, y;
-		cin >> x >> y;
-		coordinate.push_back({ x, y });
+	int N, K;
+	cin >> N >> K;
+
+	deque<int> numbers;
+	for (int i = 1; i <= N; i++)
+		numbers.push_back(i);
+
+	int count = 0;
+	vector<int> answer;
+
+	while (numbers.size() != 0) {
+		if (count == K - 1) {
+			answer.push_back(numbers.front());
+			numbers.pop_front();
+			count = 0;
+		}
+		else {
+			numbers.push_back(numbers.front());
+			numbers.pop_front();
+			count++;
+		}
 	}
 
-	sort(coordinate.begin(), coordinate.end(), [](pair<int, int> a, pair<int, int> b) {
-		if (a.first != b.first)
-			return a.first < b.first;
-		else
-			return a.second < b.second;
-		});
-
-	for (auto i : coordinate)
-		cout << i.first << " " << i.second << endl;
+	cout << "<";
+	for (int i = 0; i < N - 1; i++)
+		cout << answer[i] << ", ";
+	cout << answer.back();
+	cout << ">";
 }

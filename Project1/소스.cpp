@@ -3,21 +3,23 @@
 using namespace std;
 
 int main() {
-	int tc;
-	cin >> tc;
-
-	while (tc--) {
-		int n;
-		cin >> n;
-
-		vector<int> arr(n, 0);
-		for (int i = 0; i < n; i++)
-			cin >> arr[i];
-
-		int sum = 0;
-		for (int i = 0; i < n; i++)
-			sum += arr[i] - *min_element(arr.begin(), arr.end());
-
-		cout << sum << endl;
+	int n;
+	cin >> n;
+	vector<pair<int, int>> coordinate;
+	
+	for (int i = 0; i < n; i++) {
+		int x, y;
+		cin >> x >> y;
+		coordinate.push_back({ x, y });
 	}
+
+	sort(coordinate.begin(), coordinate.end(), [](pair<int, int> a, pair<int, int> b) {
+		if (a.first != b.first)
+			return a.first < b.first;
+		else
+			return a.second < b.second;
+		});
+
+	for (auto i : coordinate)
+		cout << i.first << " " << i.second << endl;
 }

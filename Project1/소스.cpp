@@ -3,21 +3,21 @@
 using namespace std;
 
 int main() {
-	int N;
-	cin >> N;
-	vector<int> arr(N, 0);
-	for (int i = 0; i < N; i++)
-		cin >> arr[i];
-	sort(arr.begin(), arr.end());
-	
-	int M;
-	cin >> M;
+	int tc;
+	cin >> tc;
 
-	vector<int> arr2(M, 0);
-	for (int i = 0; i < M; i++)
-		cin >> arr2[i];
+	while (tc--) {
+		int n;
+		cin >> n;
 
-	for (int i = 0; i < M; i++) {
-		cout << upper_bound(arr.begin(), arr.end(), arr2[i]) - lower_bound(arr.begin(), arr.end(), arr2[i]) << " ";
+		vector<int> arr(n, 0);
+		for (int i = 0; i < n; i++)
+			cin >> arr[i];
+
+		int sum = 0;
+		for (int i = 0; i < n; i++)
+			sum += arr[i] - *min_element(arr.begin(), arr.end());
+
+		cout << sum << endl;
 	}
 }

@@ -2,33 +2,29 @@
 #define endl '\n'
 using namespace std;
 
+const int MAX_K = 15;
+const int MAX_N = 15;
+int people[MAX_K][MAX_N];
+
 int main() {
-	int N, K;
-	cin >> N >> K;
+	int T;
+	cin >> T;
 
-	deque<int> numbers;
-	for (int i = 1; i <= N; i++)
-		numbers.push_back(i);
+	for (int j = 0; j < 15; j++) {
+		people[0][j] = j + 1;
+	}
 
-	int count = 0;
-	vector<int> answer;
-
-	while (numbers.size() != 0) {
-		if (count == K - 1) {
-			answer.push_back(numbers.front());
-			numbers.pop_front();
-			count = 0;
-		}
-		else {
-			numbers.push_back(numbers.front());
-			numbers.pop_front();
-			count++;
+	for (int k = 1; k < 15; k++) {
+		for (int j = 0; j < 15; j++) {
+			for (int i = 0; i <= j; i++) {
+				people[k][j] += people[k - 1][i];
+			}
 		}
 	}
 
-	cout << "<";
-	for (int i = 0; i < N - 1; i++)
-		cout << answer[i] << ", ";
-	cout << answer.back();
-	cout << ">";
+	while (T--) {
+		int k, n; cin >> k >> n;
+
+		cout << people[k][n - 1] << endl;
+	}
 }

@@ -2,31 +2,26 @@
 #define endl '\n'
 using namespace std;
 
+int dp[5001];
+const int INF = 1e9;
+
 int main() {
-	int N, M;
-	cin >> N >> M;
+	int N;
+	cin >> N;
 
-	vector<int> woods(N, 0);
-	for (int i = 0; i < N; i++)
-		cin >> woods[i];
+	dp[1] = INF;
+	dp[2] = INF;
+	dp[3] = 1;
+	dp[4] = INF;
+	dp[5] = 1;
 
-	int left = 0;
-	int right = *max_element(woods.begin(), woods.end());
 
-	while (left <= right) {
-		long long sum = 0;
-		long long middle = (left + right) / 2;
-
-		for (int i = 0; i < woods.size(); i++) {
-			if (woods[i] - middle >= 0)
-				sum += woods[i] - middle;
-		}
-
-		if (sum >= M)
-			left = middle + 1;
-		else
-			right = middle - 1;
+	for (int i = 6; i <= 5000; i++) {
+		dp[i] = min(dp[i - 3] + 1, dp[i - 5] + 1);
 	}
 
-	cout << left - 1 << endl;
+	if (dp[N] >= 1e8)
+		cout << -1 << endl;
+	else
+		cout << dp[N] << endl;
 }

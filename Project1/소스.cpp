@@ -2,29 +2,31 @@
 #define endl '\n'
 using namespace std;
 
-const int MAX_K = 15;
-const int MAX_N = 15;
-int people[MAX_K][MAX_N];
-
 int main() {
-	int T;
-	cin >> T;
+	int N, M;
+	cin >> N >> M;
 
-	for (int j = 0; j < 15; j++) {
-		people[0][j] = j + 1;
-	}
+	vector<int> woods(N, 0);
+	for (int i = 0; i < N; i++)
+		cin >> woods[i];
 
-	for (int k = 1; k < 15; k++) {
-		for (int j = 0; j < 15; j++) {
-			for (int i = 0; i <= j; i++) {
-				people[k][j] += people[k - 1][i];
-			}
+	int left = 0;
+	int right = *max_element(woods.begin(), woods.end());
+
+	while (left <= right) {
+		long long sum = 0;
+		long long middle = (left + right) / 2;
+
+		for (int i = 0; i < woods.size(); i++) {
+			if (woods[i] - middle >= 0)
+				sum += woods[i] - middle;
 		}
+
+		if (sum >= M)
+			left = middle + 1;
+		else
+			right = middle - 1;
 	}
 
-	while (T--) {
-		int k, n; cin >> k >> n;
-
-		cout << people[k][n - 1] << endl;
-	}
+	cout << left - 1 << endl;
 }

@@ -2,30 +2,60 @@
 #define endl '\n'
 using namespace std;
 
-#define zero first
-#define one second
+int Y[4] = { 1, -1, 0, 0 };
+int X[4] = { 0, 0, -1, 1 };
+
+void bfs(int i, int j, vector<vector<int>>& arr, int M, int N) {
+	queue<pair<int, int>> q;
+	q.push({ i, j });
+	arr[i][j] = 0;
+
+	while (!q.empty()) {
+		int cy = q.front().first;
+		int cx = q.front().second;
+		q.pop();
+
+		for (int k = 0; k < 4; k++) {
+			int ny = cy + Y[k];
+			int nx = cx + X[k];
+
+			if (ny >= 0 && ny < M && nx >= 0 && nx < N) {
+				if (arr[ny][nx] != 0) {
+					q.push({ ny, nx });
+					arr[ny][nx] = 0;
+				}
+			}
+		}
+	}
+}
 
 int main() {
 	int T;
 	cin >> T;
 
-	vector<pair<int, int>> dp(41);
-	dp[0].zero = 1;
-	dp[0].one = 0;
-
-	dp[1].zero = 0;
-	dp[1].one = 1;
-
-	for (int i = 2; i <= 40; i++) {
-		dp[i].zero = dp[i - 1].zero + dp[i - 2].zero;
-		dp[i].one = dp[i - 1].one + dp[i - 2].one;
-	}
-
-
 	while (T--) {
-		int n;
-		cin >> n;
+		int M, N, K;
+		cin >> M >> N >> K;
 
-		cout << dp[n].zero << " " << dp[n].one << endl;
+		vector<vector<int>> arr(M, vector<int>(N, 0));
+
+		for (int i = 0; i < K; i++) {
+			int y, x;
+			cin >> y >> x;
+			arr[y][x] = 1;
+		}
+
+		int answer = 0;
+
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+				if (arr[i][j] == 1) {
+					bfs(i, j, arr, M, N);
+					answer++;
+				}
+			}
+		}
+
+		cout << answer << endl;
 	}
 }

@@ -2,60 +2,28 @@
 #define endl '\n'
 using namespace std;
 
-int Y[4] = { 1, -1, 0, 0 };
-int X[4] = { 0, 0, -1, 1 };
+int g_count = 0;
+int g_r, g_c;
 
-void bfs(int i, int j, vector<vector<int>>& arr, int M, int N) {
-	queue<pair<int, int>> q;
-	q.push({ i, j });
-	arr[i][j] = 0;
+void DC(int r, int c, int N, int num) {
+	if (abs(r - g_r) + abs(c - g_c) > pow(2, N + 1))
+		return;
 
-	while (!q.empty()) {
-		int cy = q.front().first;
-		int cx = q.front().second;
-		q.pop();
-
-		for (int k = 0; k < 4; k++) {
-			int ny = cy + Y[k];
-			int nx = cx + X[k];
-
-			if (ny >= 0 && ny < M && nx >= 0 && nx < N) {
-				if (arr[ny][nx] != 0) {
-					q.push({ ny, nx });
-					arr[ny][nx] = 0;
-				}
-			}
-		}
+	if (N == 0) {
+		if (r == g_r and c == g_c)
+			cout << num << endl;
+	}
+	else {
+		DC(r, c, N - 1, num);
+		DC(r, c + pow(2, N - 1), N - 1, num + pow(4, N - 1) * 1);
+		DC(r + pow(2, N - 1), c, N - 1, num + pow(4, N - 1) * 2);
+		DC(r + pow(2, N - 1), c + pow(2, N - 1), N - 1, num + pow(4, N - 1) * 3);
 	}
 }
 
 int main() {
-	int T;
-	cin >> T;
+	int N;
+	cin >> N >> g_r >> g_c;
 
-	while (T--) {
-		int M, N, K;
-		cin >> M >> N >> K;
-
-		vector<vector<int>> arr(M, vector<int>(N, 0));
-
-		for (int i = 0; i < K; i++) {
-			int y, x;
-			cin >> y >> x;
-			arr[y][x] = 1;
-		}
-
-		int answer = 0;
-
-		for (int i = 0; i < M; i++) {
-			for (int j = 0; j < N; j++) {
-				if (arr[i][j] == 1) {
-					bfs(i, j, arr, M, N);
-					answer++;
-				}
-			}
-		}
-
-		cout << answer << endl;
-	}
+	DC(0, 0, N, 0);
 }

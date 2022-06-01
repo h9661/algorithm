@@ -6,17 +6,42 @@ int main() {
 	int N;
 	cin >> N;
 
-	int count = 0;
-	for (int i = 1; i <= N; i++) {
-		if (i % 5 == 0)
-			count++;
+	vector<bool> availibleNumber(10, true);
+	int M;
+	cin >> M;
 
-		if (i % 25 == 0)
-			count++;
+	for (int i = 0; i < M; i++) {
+		int x;
+		cin >> x;
 
-		if (i % 125 == 0)
-			count++;
+		availibleNumber[x] = false;
 	}
 
-	cout << count << endl;
+	int min_number = 1e9;
+	int key_channel = 1e9;
+	for (int number = 0; number <= 1000000; number++) {
+		string str_number = to_string(number);
+		bool flag = false;
+
+		for (int i = 0; i < str_number.size(); i++) {
+			if (availibleNumber[str_number[i] - '0'] == false) {
+				flag = true;
+				break;
+			}
+		}
+
+		if (flag)
+			continue;
+
+		if (abs(N - number) < min_number) {
+			key_channel = number;
+			min_number = abs(N - number);
+		}
+	}
+
+	int answer_1 = to_string(key_channel).size();
+	answer_1 += abs(N - key_channel);
+	int answer_2 = abs(N - 100);
+	
+	cout << min(answer_1, answer_2) << endl;
 }

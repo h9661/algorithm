@@ -2,46 +2,45 @@
 #define endl '\n'
 using namespace std;
 
+const int INF = 1e9;
+
 int main() {
-	int N;
-	cin >> N;
+	int N, M;
+	cin >> N >> M;
 
-	vector<bool> availibleNumber(10, true);
-	int M;
-	cin >> M;
-
+	vector<vector<int>> graph(N + 1, vector<int>(N + 1, INF));
 	for (int i = 0; i < M; i++) {
-		int x;
-		cin >> x;
+		int u, v;
+		cin >> u >> v;
 
-		availibleNumber[x] = false;
+		graph[u][v] = 1;
+		graph[v][u] = 1;
 	}
 
-	int min_number = 1e9;
-	int key_channel = 1e9;
-	for (int number = 0; number <= 1000000; number++) {
-		string str_number = to_string(number);
-		bool flag = false;
-
-		for (int i = 0; i < str_number.size(); i++) {
-			if (availibleNumber[str_number[i] - '0'] == false) {
-				flag = true;
-				break;
+	for (int k = 1; k <= N; k++) {
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				if (graph[i][k] + graph[k][j] < graph[i][j])
+					graph[i][j] = graph[i][k] + graph[k][j];
 			}
 		}
-
-		if (flag)
-			continue;
-
-		if (abs(N - number) < min_number) {
-			key_channel = number;
-			min_number = abs(N - number);
-		}
 	}
 
-	int answer_1 = to_string(key_channel).size();
-	answer_1 += abs(N - key_channel);
-	int answer_2 = abs(N - 100);
-	
-	cout << min(answer_1, answer_2) << endl;
+	vector<pair<int, int>> answer;
+
+	for (int i = 1; i <= N; i++) {
+		int sum = 0;
+		for (int j = 1; j <= N; j++) {
+			if (i == j)
+				continue;
+			sum += graph[i][j];
+		}
+		answer.push_back({ i, sum });
+	}
+
+	sort(answer.begin(), answer.end(), [](pair<int, int> a, pair<int, int> b) {
+		return a.second < b.second;
+		});
+
+	cout << answer[0].first << endl;
 }

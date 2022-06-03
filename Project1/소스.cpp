@@ -2,26 +2,27 @@
 #define endl '\n'
 using namespace std;
 
-
 int main() {
-	int N;
-	cin >> N;
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
-	vector<int> dp(1000001, 1000000);
+	int N, M;
+	cin >> N >> M;
+	map<string, string> poket;
 
-	dp[1] = 0;
-	dp[2] = 1;
-	dp[3] = 1;
+	for (int i = 1; i <= N; i++) {
+		string s;
+		cin >> s;
 
-	for (int i = 4; i <= 1000000; i++) {
-		if (i % 3 == 0)
-			dp[i] = min(dp[i], dp[i / 3] + 1);
-
-		if (i % 2 == 0)
-			dp[i] = min(dp[i], dp[i / 2] + 1);
-
-		dp[i] = min(dp[i], dp[i - 1] + 1);
+		poket[s] = to_string(i);
+		poket[to_string(i)] = s;
 	}
 
-	cout << dp[N] << endl;
+	for (int i = 0; i < M; i++) {
+		string s;
+		cin >> s;
+
+		cout << poket[s] << endl;
+	}
 }

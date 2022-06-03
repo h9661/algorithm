@@ -2,27 +2,49 @@
 #define endl '\n'
 using namespace std;
 
+const int MAX = 100001;
+bool check[MAX];
+
 int main() {
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
+	int N, K;
+	cin >> N >> K;
 
-	int N, M;
-	cin >> N >> M;
-	map<string, string> poket;
+	queue<pair<int, int>> q;
+	q.push({ N, 0 });
+	check[N] = true;
 
-	for (int i = 1; i <= N; i++) {
-		string s;
-		cin >> s;
+	int min_ans = 1e9;
 
-		poket[s] = to_string(i);
-		poket[to_string(i)] = s;
+	while (!q.empty()) {
+		int curN = q.front().first;
+		int curC = q.front().second;
+		q.pop();
+
+		if (curN == K)
+			min_ans = min(min_ans, curC);
+
+
+		if (2 * curN <= 100000 && 2 * curN >= 0) {
+			if (check[2 * curN] == false) {
+				q.push({ 2 * curN, curC + 1 });
+				check[2 * curN] = true;
+			}
+		}
+
+		if (curN + 1 <= 100000) {
+			if (check[curN + 1] == false) {
+				q.push({ curN + 1, curC + 1 });
+				check[1 + curN] = true;
+			}
+		}
+
+		if (curN - 1 >= 0) {
+			if (check[curN - 1] == false) {
+				q.push({ curN - 1, curC + 1 });
+				check[curN - 1] = true;
+			}
+		}
 	}
 
-	for (int i = 0; i < M; i++) {
-		string s;
-		cin >> s;
-
-		cout << poket[s] << endl;
-	}
+	cout << min_ans << endl;
 }

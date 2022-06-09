@@ -3,38 +3,54 @@
 #define ii pair<long long, long long>
 using namespace std;
 
-int main() {
-	ios::sync_with_stdio(false);
-	cout.tie(NULL);
-	cin.tie(NULL);
+const int MAX = 64;
+int graph[MAX][MAX];
 
-	int N;
-	cin >> N;
+vector<char> ansvec;
 
-	vector<ii> arr;
-	for (int i = 0; i < N; i++) {
-		long long start, end;
-		cin >> start >> end;
+void DC(int row, int col, int N) {
+	int temp = graph[row][col];
+	bool contFlag = false;
 
-		arr.push_back({ start, end });
-	}
-
-	sort(arr.begin(), arr.end(), [](ii a, ii b) {
-		if (a.second != b.second)
-			return a.second < b.second;
-		else
-			return a.first < b.first;
-		});
-
-	int count = 0;
-	long long end = 0;
-
-	for (int i = 0; i < N; i++) {
-		if (end <= arr[i].first) {
-			end = arr[i].second;
-			count++;
+	for (int i = row; i < N + row; i++) {
+		for (int j = col; j < N + col; j++) {
+			if (graph[i][j] != temp) {
+				contFlag = true;
+				break;
+			}
 		}
 	}
 
-	cout << count << endl;
+	if (contFlag) {
+		ansvec.push_back('(');
+		DC(row, col, N / 2);
+		DC(row, col + N / 2, N / 2);
+		DC(row + N / 2, col, N / 2);
+		DC(row + N / 2, col + N / 2, N / 2);
+		ansvec.push_back(')');
+	}
+	else {
+		if (temp == 1)
+			ansvec.push_back('1');
+		else
+			ansvec.push_back('0');
+	}
+}
+
+int main() {
+	int N;
+	cin >> N;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			char x;
+			cin >> x;
+			graph[i][j] = (int)x - 48;
+		}
+	}
+
+	DC(0, 0, N);
+
+	for (auto i : ansvec)
+		cout << i;
 }

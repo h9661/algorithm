@@ -3,53 +3,49 @@
 #define ii pair<long long, long long>
 using namespace std;
 
-const int MAX = 100;
+const int MAX = 128;
 int graph[MAX][MAX];
-bool check[MAX][MAX];
-int Y[4] = { -1, 1, 0,0 };
-int X[4] = { 0, 0, -1, 1 };
+int one = 0;
+int zero = 0;
 
-int bfs(int N, int M) {
-	queue<pair<ii, int>> q;
-	q.push({ {0, 0}, 1 });
-	check[0][0] = true;
+void DC(int row, int col, int N) {
+	int temp = graph[row][col];
+	bool contFlag = false;
 
-	while (!q.empty()) {
-		int curY = q.front().first.first;
-		int curX = q.front().first.second;
-		int curC = q.front().second;
-		q.pop();
+	for (int i = row; i < row + N; i++)
+		for (int j = col; j < col + N; j++)
+			if (graph[i][j] != temp)
+				contFlag = true;
 
-		if (curY == N - 1 and curX == M - 1)
-			return curC;
-
-		for (int i = 0; i < 4; i++) {
-			int nxtY = curY + Y[i];
-			int nxtX = curX + X[i];
-			int nxtC = curC + 1;
-
-			if (nxtY >= 0 && nxtY < N && nxtX >= 0 && nxtX < M) {
-				if (check[nxtY][nxtX] == false && graph[nxtY][nxtX] == 1) {
-					q.push({ {nxtY, nxtX}, nxtC });
-					check[nxtY][nxtX] = true;
-				}
-			}
-		}
+	if (contFlag) {
+		DC(row, col, N / 2);
+		DC(row, col + N / 2, N / 2);
+		DC(row + N / 2, col, N / 2);
+		DC(row + N / 2, col + N / 2, N / 2);
+	}
+	else {
+		if (temp == 0)
+			zero++;
+		else
+			one++;
 	}
 }
 
 int main() {
-	int N, M;
-	cin >> N >> M;
+	ios::sync_with_stdio(false);
+	cout.tie(NULL);
+	cin.tie(NULL);
+
+	int N;
+	cin >> N;
 
 	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			char x;
-			cin >> x;
-
-			graph[i][j] = x - 48;
+		for (int j = 0; j < N; j++) {
+			cin >> graph[i][j];
 		}
 	}
 
-	cout << bfs(N, M) << endl;
+	DC(0, 0, N);
+	cout << zero << endl;
+	cout << one << endl;
 }

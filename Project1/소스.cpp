@@ -3,52 +3,24 @@
 #define ii pair<long long, long long>
 using namespace std;
 
-const int MAX = 101;
-vector<int> graph[MAX];
-bool check[MAX];
-
-int bfs() {
-	queue<int> q;
-	q.push(1);
-	check[1] = true;
-	int count = 0;
-
-	while (!q.empty()) {
-		int curNode = q.front();
-		q.pop();
-
-		for (int i = 0; i < graph[curNode].size(); i++) {
-			int nxtNode = graph[curNode][i];
-
-			if (check[nxtNode] == false) {
-				q.push(nxtNode);
-				check[nxtNode] = true;
-				count++;
-			}
-		}
-	}
-
-	return count;
-}
+int dp[10010];
 
 int main() {
-	ios::sync_with_stdio(false);
-	cout.tie(NULL);
-	cin.tie(NULL);
-
 	int N;
 	cin >> N;
 
-	int M;
-	cin >> M;
+	vector<int> score(N, 0);
 
-	for (int i = 0; i < M; i++) {
-		int u, v;
-		cin >> u >> v;
+	for (int i = 0; i < N; i++)
+		cin >> score[i];
 
-		graph[u].push_back(v);
-		graph[v].push_back(u);
+	dp[0] = score[0];
+	dp[1] = dp[0] + score[1];
+	dp[2] = max(dp[0] + score[2], score[1] + score[2]);
+
+	for (int i = 3; i < N; i++) {
+		dp[i] = max(dp[i - 2] + score[i], dp[i - 3] + score[i - 1] + score[i]);
 	}
 
-	cout << bfs() << endl;
+	cout << dp[N - 1] << endl;
 }

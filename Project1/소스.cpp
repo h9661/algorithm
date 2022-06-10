@@ -3,32 +3,32 @@
 #define ii pair<long long, long long>
 using namespace std;
 
-const int MAX = 128;
-int graph[MAX][MAX];
-int one = 0;
-int zero = 0;
+const int MAX = 101;
+vector<int> graph[MAX];
+bool check[MAX];
 
-void DC(int row, int col, int N) {
-	int temp = graph[row][col];
-	bool contFlag = false;
+int bfs() {
+	queue<int> q;
+	q.push(1);
+	check[1] = true;
+	int count = 0;
 
-	for (int i = row; i < row + N; i++)
-		for (int j = col; j < col + N; j++)
-			if (graph[i][j] != temp)
-				contFlag = true;
+	while (!q.empty()) {
+		int curNode = q.front();
+		q.pop();
 
-	if (contFlag) {
-		DC(row, col, N / 2);
-		DC(row, col + N / 2, N / 2);
-		DC(row + N / 2, col, N / 2);
-		DC(row + N / 2, col + N / 2, N / 2);
+		for (int i = 0; i < graph[curNode].size(); i++) {
+			int nxtNode = graph[curNode][i];
+
+			if (check[nxtNode] == false) {
+				q.push(nxtNode);
+				check[nxtNode] = true;
+				count++;
+			}
+		}
 	}
-	else {
-		if (temp == 0)
-			zero++;
-		else
-			one++;
-	}
+
+	return count;
 }
 
 int main() {
@@ -39,13 +39,16 @@ int main() {
 	int N;
 	cin >> N;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			cin >> graph[i][j];
-		}
+	int M;
+	cin >> M;
+
+	for (int i = 0; i < M; i++) {
+		int u, v;
+		cin >> u >> v;
+
+		graph[u].push_back(v);
+		graph[v].push_back(u);
 	}
 
-	DC(0, 0, N);
-	cout << zero << endl;
-	cout << one << endl;
+	cout << bfs() << endl;
 }

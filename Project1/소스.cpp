@@ -4,68 +4,96 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 25;
-int graph[MAX][MAX];
-bool check[MAX][MAX];
-int Y[4] = { -1 , 1, 0, 0 };
-int X[4] = { 0, 0, 1, -1 };
+vector<string> split(string str, char token) {
+	vector<string> retval;
+	
+	if (str == "")
+		return retval;
 
-int dfs(int row, int col, int N) {
-	queue<ii> q;
-	q.push({ row, col });
-	check[row][col] = true;
-	int count = 1;
-
-	while (!q.empty()) {
-		int curY = q.front().first;
-		int curX = q.front().second;
-		q.pop();
-
-		for (int i = 0; i < 4; i++) {
-			int nxtY = curY + Y[i];
-			int nxtX = curX + X[i];
-
-			if (nxtY >= 0 && nxtY < N && nxtX >= 0 && nxtX < N) {
-				if (graph[nxtY][nxtX] != 0 && check[nxtY][nxtX] == false) {
-					q.push({ nxtY, nxtX });
-					check[nxtY][nxtX] = true;
-					count++;
-				}
-			}
-		}
+	if (str.size() == 1) {
+		retval.push_back(str);
+		return retval;
 	}
 
-	return count;
+	int start = 0;
+	int d = str.find(token);
+
+	while (d != -1) {
+		retval.push_back(str.substr(start, d - start));
+		start = d + 1;
+		d = str.find(token, start);
+	}
+	retval.push_back(str.substr(start, d - start));
+
+	return retval;
 }
 
 int main() {
-	int N;
-	cin >> N;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int t;
+	cin >> t;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			char x;
-			cin >> x;
+	while (t--) {
+		string op;
+		cin >> op;
 
-			graph[i][j] = x - 48;
-		}
-	}
+		int n;
+		cin >> n;
 
-	vector<int> ansArr;
-	int count = 0;
+		string temp;
+		cin >> temp;
+		temp.pop_back();
+		temp.erase(temp.begin());
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			if (graph[i][j] != 0 && check[i][j] == false) {
-				int c = dfs(i, j, N);
-				ansArr.push_back(c);
-				count++;
+		vector<string> temparr = split(temp, ',');
+
+		deque<string> arr;
+		for (int i = 0; i < temparr.size(); i++)
+			arr.push_back(temparr[i]);
+
+		bool f = true;
+		bool contFlag = false;
+		for (int i = 0; i < op.size(); i++) {
+			if (op[i] == 'R')
+				f = !f;
+
+			if (op[i] == 'D') {
+				if (arr.size() == 0) {
+					cout << "error" << endl;
+					contFlag = true;
+					break;
+				}
+				else {
+					if (f == true)
+						arr.pop_front();
+					else
+						arr.pop_back();
+				}
 			}
 		}
-	}
 
-	sort(ansArr.begin(), ansArr.end());
-	cout << count << endl;
-	for (auto i : ansArr)
-		cout << i << endl;
+		if (contFlag)
+			continue;
+
+		if (arr.size() == 0) {
+			cout << "[]";
+		}
+		else {
+			if (f == true) {
+				cout << '[';
+				for (int i = 0; i < arr.size() - 1; i++)
+					cout << arr[i] << ",";
+				cout << arr[arr.size() - 1] << ']';
+			}
+			else {
+				cout << '[';
+				for (int i = arr.size() - 1; i >= 1; i--)
+					cout << arr[i] << ",";
+				cout << arr[0] << ']';
+			}
+		}
+		cout << endl;
+	}
 }

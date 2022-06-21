@@ -4,29 +4,68 @@
 #define ii pair<int, int>
 using namespace std;
 
-int dp[12];
+const int MAX = 25;
+int graph[MAX][MAX];
+bool check[MAX][MAX];
+int Y[4] = { -1 , 1, 0, 0 };
+int X[4] = { 0, 0, 1, -1 };
+
+int dfs(int row, int col, int N) {
+	queue<ii> q;
+	q.push({ row, col });
+	check[row][col] = true;
+	int count = 1;
+
+	while (!q.empty()) {
+		int curY = q.front().first;
+		int curX = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int nxtY = curY + Y[i];
+			int nxtX = curX + X[i];
+
+			if (nxtY >= 0 && nxtY < N && nxtX >= 0 && nxtX < N) {
+				if (graph[nxtY][nxtX] != 0 && check[nxtY][nxtX] == false) {
+					q.push({ nxtY, nxtX });
+					check[nxtY][nxtX] = true;
+					count++;
+				}
+			}
+		}
+	}
+
+	return count;
+}
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	int N;
+	cin >> N;
 
-	int t;
-	cin >> t;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			char x;
+			cin >> x;
 
-	dp[1] = 1;
-	dp[2] = 2;
-	dp[3] = 4;
-
-	for (int i = 4; i <= 11; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+			graph[i][j] = x - 48;
+		}
 	}
 
+	vector<int> ansArr;
+	int count = 0;
 
-	while (t--) {
-		int n;
-		cin >> n;
-
-		cout << dp[n] << endl;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (graph[i][j] != 0 && check[i][j] == false) {
+				int c = dfs(i, j, N);
+				ansArr.push_back(c);
+				count++;
+			}
+		}
 	}
+
+	sort(ansArr.begin(), ansArr.end());
+	cout << count << endl;
+	for (auto i : ansArr)
+		cout << i << endl;
 }

@@ -4,40 +4,37 @@
 #define ii pair<int, int>
 using namespace std;
 
-int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-	int N;
-	cin >> N;
-
-	int M;
-	cin >> M;
-
-	string s;
-	cin >> s;
-
-	int count = 0;
-
-	for (int i = 0; i < M; i++) {
-		int k = 0;
-
-		if (s[i] == 'O')
-			continue;
-		else {
-			while (s[i + 1] == 'O' && s[i + 2] == 'I') {
-				k++;
-				if (k == N) {
-					k--;
-					count++;
-				}
-				
-				i += 2;
-			}
-
-			k = 0;
-		}
+int gcd(int a, int b) {
+	if (b == 0) {
+		return a;
 	}
+	else {
+		return gcd(b, a % b);
+	}
+}
 
-	cout << count << endl;
+int lcm(int a, int b) {
+	return a * b / gcd(a, b);
+}
+
+int main() {
+	int t;
+	cin >> t;
+	while (t--) {
+		int M, N, x, y;
+		cin >> M >> N >> x >> y;
+
+		int maxYear = lcm(M, N);
+		
+		while (1) {
+			if (x > maxYear or (x - 1) % N + 1 == y)
+				break;
+
+			x += M;
+		}
+		if (x > maxYear)
+			cout << -1 << endl;
+		else
+			cout << x << endl;
+	}
 }

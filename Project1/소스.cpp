@@ -4,37 +4,29 @@
 #define ii pair<int, int>
 using namespace std;
 
-int gcd(int a, int b) {
-	if (b == 0) {
-		return a;
-	}
-	else {
-		return gcd(b, a % b);
-	}
-}
-
-int lcm(int a, int b) {
-	return a * b / gcd(a, b);
-}
-
 int main() {
-	int t;
-	cin >> t;
-	while (t--) {
-		int M, N, x, y;
-		cin >> M >> N >> x >> y;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	priority_queue<int, vector<int>, less<int>> pq;
 
-		int maxYear = lcm(M, N);
-		
-		while (1) {
-			if (x > maxYear or (x - 1) % N + 1 == y)
-				break;
+	int N;
+	cin >> N;
 
-			x += M;
+	for (int i = 0; i < N; i++) {
+		int x;
+		cin >> x;
+
+		if (x != 0) {
+			pq.push(x);
 		}
-		if (x > maxYear)
-			cout << -1 << endl;
-		else
-			cout << x << endl;
+		else {
+			if (pq.size() == 0)
+				cout << 0 << endl;
+			else {
+				cout << pq.top() << endl;
+				pq.pop();
+			}
+		}
 	}
 }

@@ -8,25 +8,22 @@ int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	priority_queue<int, vector<int>, less<int>> pq;
-
 	int N;
 	cin >> N;
+	vector<int> arr(N);
+	map<int, int> mp;
 
 	for (int i = 0; i < N; i++) {
-		int x;
-		cin >> x;
-
-		if (x != 0) {
-			pq.push(x);
-		}
-		else {
-			if (pq.size() == 0)
-				cout << 0 << endl;
-			else {
-				cout << pq.top() << endl;
-				pq.pop();
-			}
-		}
+		cin >> arr[i];
 	}
+	vector<int> temp = arr;
+
+	sort(arr.begin(), arr.end());
+	arr.erase(unique(arr.begin(), arr.end()), arr.end());
+
+	for (int i = 0; i < arr.size(); i++)
+		mp[arr[i]] = i;
+
+	for (int i = 0; i < temp.size(); i++)
+		cout << mp[temp[i]] << " ";
 }

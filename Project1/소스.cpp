@@ -4,48 +4,17 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 1001;
-vector<int> graph[MAX];
-bool check[MAX];
-
-void bfs(int node) {
-	queue<int> q;
-	q.push(node);
-	check[node] = true;
-
-	while (!q.empty()) {
-		int cn = q.front();
-		q.pop();
-
-		for (int i = 0; i < graph[cn].size(); i++) {
-			int nn = graph[cn][i];
-			
-			if (check[nn] == false) {
-				q.push(nn);
-				check[nn] = true;
-			}
-		}
-	}
-}
+int dp[1001];
 
 int main() {
-	int N, M;
-	cin >> N >> M;
-	int count = 0;
-	for (int i = 0; i < M; i++) {
-		int u, v;
-		cin >> u >> v;
+	dp[1] = 1;
+	dp[2] = 2;
+	
+	for (int i = 3; i <= 1000; i++)
+		dp[i] = (dp[i - 1] % 10007 + dp[i - 2] % 10007) % 10007;
 
-		graph[u].push_back(v);
-		graph[v].push_back(u);
-	}
+	int n;
+	cin >> n;
 
-	for (int i = 1; i <= N; i++) {
-		if (check[i] == false) {
-			bfs(i);
-			count++;
-		}
-	}
-
-	cout << count << endl;
+	cout << dp[n] << endl;
 }

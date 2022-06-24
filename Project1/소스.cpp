@@ -4,40 +4,37 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 101;
-const int INF = 1e9;
-int graph[MAX][MAX];
+struct cmp {
+	bool operator()(ii a, ii b) {
+		if (a.first != b.first)
+			return a.first > b.first;
+		else
+			return a.second > b.second;
+	}
+};
 
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 	int N;
 	cin >> N;
+	priority_queue<ii, vector<ii>, cmp> pq;
 
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++) {
-			int x;
-			cin >> x;
-			if (x != 0)
-				graph[i][j] = x;
-			else
-				graph[i][j] = INF;
-		}
-	}
+	for (int i = 0; i < N; i++) {
+		int x;
+		cin >> x;
 
-	for (int k = 1; k <= N; k++) {
-		for (int i = 1; i <= N; i++) {
-			for (int j = 1; j <= N; j++) {
-				if (graph[i][j] > graph[i][k] + graph[k][j])
-					graph[i][j] = 1;
+		if (x != 0)
+			pq.push({ abs(x), x });
+
+		if (x == 0) {
+			if(pq.size() == 0)
+				cout << 0 << endl;
+			else {
+				cout << pq.top().second << endl;
+				pq.pop();
 			}
 		}
-	}
-
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++) {
-			if (graph[i][j] == INF)
-				graph[i][j] = 0;
-			cout << graph[i][j] << " ";
-		}
-		cout << endl;
 	}
 }

@@ -4,61 +4,27 @@
 #define ii pair<int, int>
 using namespace std;
 
+int dp[50001];
+
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int t;
-	cin >> t;
+	for (int i = 0; i <= 50000; i++)
+		dp[i] = 50000;
 
-	while (t--) {
-		priority_queue<ii, vector<ii>, greater<ii>> minHeap;
-		priority_queue<ii, vector<ii>, less<ii>> maxHeap;
-		vector<bool> check(1000000, false);
-		int k;
-		cin >> k;
+	int n;
+	cin >> n;
 
-		for (int i = 0; i < k; i++) {
-			char op;
-			int n;
-			cin >> op >> n;
+	dp[0] = 0;
+	dp[1] = 1;
 
-			if (op == 'I') {
-				minHeap.push({ n, i });
-				maxHeap.push({ n, i });
-				check[i] = true;
-			}
-			else {
-				if (n == 1) {
-					while (!maxHeap.empty() and !check[maxHeap.top().second])
-						maxHeap.pop();
-
-					if (!maxHeap.empty()) {
-						check[maxHeap.top().second] = false;
-						maxHeap.pop();
-					}
-				}
-				else {
-					while (!minHeap.empty() and !check[minHeap.top().second])
-						minHeap.pop();
-
-					if (!minHeap.empty()) {
-						check[minHeap.top().second] = false;
-						minHeap.pop();
-					}
-				}
-			}
+	for (int i = 2; i <= 50000; i++) {
+		for (int j = 1; j * j <= i; j++) {
+			dp[i] = min(dp[i], dp[i - j * j] + 1);
 		}
-
-		while (!maxHeap.empty() and !check[maxHeap.top().second])
-			maxHeap.pop();
-		while (!minHeap.empty() and !check[minHeap.top().second])
-			minHeap.pop();
-
-		if (minHeap.empty() and maxHeap.empty())
-			cout << "EMPTY" << endl;
-		else
-			cout << maxHeap.top().first << " " << minHeap.top().first << endl;
 	}
+
+	cout << dp[n] << endl;
 }

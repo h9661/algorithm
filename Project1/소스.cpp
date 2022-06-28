@@ -4,81 +4,91 @@
 #define ii pair<int, int>
 using namespace std;
 
-int M, N, H;
+int Y[4] = { 1 ,0, -1, 0 };
+int X[4] = { 0, 1, 0, -1 };
+int N, M;
+const int MAX = 500;
+int graph[MAX][MAX];
+int ans = 0;
 
-const int MAX = 100;
-int graph[MAX][MAX][MAX];
-bool check[MAX][MAX][MAX];
-int Z[6] = { 0, 0, 0, 0, -1, 1 };
-int Y[6] = { -1, 1, 0, 0 , 0, 0};
-int X[6] = { 0, 0, -1, 1 , 0, 0};
+void dfs(int y, int x, int count, int sum, vector<vector<bool>>& check) {
+	if (count == 3) {
+		ans = max(ans, sum);
+	}
+	else {
+		for (int i = 0; i < 4; i++) {
+			int ny = y + Y[i];
+			int nx = x + X[i];
 
-int bfs() {
-	queue<tuple<int, int, int, int>> q;
-	for (int i = 0; i < H; i++) {
-		for (int j = 0; j < N; j++) {
-			for (int k = 0; k < M; k++) {
-				if (graph[i][j][k] == 1) {
-					q.push(make_tuple(i, j, k, 0));
-					check[i][j][k] = true;
+			if (0 <= ny and ny < N and 0 <= nx and nx < M) {
+				if (check[ny][nx] == false) {
+					check[ny][nx] = true;
+					dfs(ny, nx, count + 1, sum + graph[ny][nx], check);
+					check[ny][nx] = false;
 				}
 			}
 		}
 	}
-	int retval = 0;
-
-	while (!q.empty()) {
-		int ch = get<0>(q.front());
-		int cy = get<1>(q.front());
-		int cx = get<2>(q.front());
-		int cc = get<3>(q.front());
-		retval = max(retval, cc);
-
-		q.pop();
-
-		for (int i = 0; i < 6; i++) {
-			int nh = ch + Z[i];
-			int ny = cy + Y[i];
-			int nx = cx + X[i];
-			int nc = cc + 1;
-
-			if (nh >= 0 and nh < H and ny >= 0 and ny < N and nx >= 0 and nx < M) {
-				if (graph[nh][ny][nx] == 0 and check[nh][ny][nx] == false) {
-					graph[nh][ny][nx] = 1;
-					check[nh][ny][nx] = true;
-					q.push(make_tuple(nh, ny, nx, nc));
-				}
-			}
-		}
-	}
-
-	return retval;
 }
 
+void ex(int y, int x) {
+	for (int i = 0; i < 4; i++) {
+		int count = 0;
+		int sum = graph[y][x];
+
+		int ny = Y[(i) % 4] + y;
+		int nx = X[(i) % 4] + x;
+
+		if (ny >= 0 and ny < N and nx >= 0 and nx < M) {
+			sum += graph[ny][nx];
+			count++;
+		}
+
+		ny = Y[(i + 1) % 4] + y;
+		nx = X[(i + 1) % 4] + x;
+
+		if (ny >= 0 and ny < N and nx >= 0 and nx < M) {
+			sum += graph[ny][nx];
+			count++;
+		}
+
+		ny = Y[(i + 2) % 4] + y;
+		nx = X[(i + 2) % 4] + x;
+
+		if (ny >= 0 and ny < N and nx >= 0 and nx < M) {
+			sum += graph[ny][nx];
+			count++;
+		}
+
+		if(count == 3)
+			ans = max(ans, sum);
+	}
+}
+
+
 int main() {
-	cin >> M >> N >> H;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
-	for (int k = 0; k < H; k++) {
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++)
-				cin >> graph[k][i][j];
-		}
-	}
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < M; j++)
+			cin >> graph[i][j];
 
-	bool flag = true;
-	int retval = bfs();
+	vector<vector<bool>> check(N, vector<bool>(M, false));
 
-	for (int i = 0; i < H; i++) {
-		for (int j = 0; j < N; j++) {
-			for (int k = 0; k < M; k++) {
-				if (graph[i][j][k] == 0)
-					flag = false;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			if (check[i][j] == false) {
+				check[i][j] = true;
+				dfs(i, j, 0, graph[i][j], check);
+				check[i][j] = false;
 			}
+
+			ex(i, j);
 		}
 	}
 
-	if (flag)
-		cout << retval << endl;
-	else
-		cout << -1 << endl;
+	cout << ans << endl;
 }

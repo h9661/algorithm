@@ -4,91 +4,114 @@
 #define ii pair<int, int>
 using namespace std;
 
-int Y[4] = { 1 ,0, -1, 0 };
-int X[4] = { 0, 1, 0, -1 };
-int N, M;
-const int MAX = 500;
+const int MAX = 20;
 int graph[MAX][MAX];
-int ans = 0;
+bool check[MAX][MAX];
+int N;
+int Y[4] = { -1, 1, 0, 0 };
+int X[4] = { 0, 0, -1, 1 };
 
-void dfs(int y, int x, int count, int sum, vector<vector<bool>>& check) {
-	if (count == 3) {
-		ans = max(ans, sum);
+struct cmp {
+	bool operator()(pair<int, ii> a, pair<int, ii> b) {
+		if (a.first != b.first)
+			return a.first > b.first;
+		else {
+			if (a.second.first != b.second.first)
+				return a.second.first > b.second.first;
+			else
+				return a.second.second > b.second.second;
+		}
 	}
-	else {
-		for (int i = 0; i < 4; i++) {
-			int ny = y + Y[i];
-			int nx = x + X[i];
+};
 
-			if (0 <= ny and ny < N and 0 <= nx and nx < M) {
-				if (check[ny][nx] == false) {
-					check[ny][nx] = true;
-					dfs(ny, nx, count + 1, sum + graph[ny][nx], check);
-					check[ny][nx] = false;
-				}
+int bfs() {
+	queue<pair<int, ii>> q;
+	int t = 0;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (graph[i][j] == 9) {
+				q.push({ 0,  {i,j} });
+				graph[i][j] = 0;
+				check[i][j] = true;
 			}
 		}
 	}
-}
+	
+	int size = 2;
+	int count = 0;
+	int eat_count = 0;
 
-void ex(int y, int x) {
-	for (int i = 0; i < 4; i++) {
-		int count = 0;
-		int sum = graph[y][x];
+	int pos_y = q.front().second.first;
+	int pos_x = q.front().second.second;
 
-		int ny = Y[(i) % 4] + y;
-		int nx = X[(i) % 4] + x;
+	while(1) {
+		priority_queue<pair<int, ii>, vector<pair<int, ii>>, cmp> minHeap;
 
-		if (ny >= 0 and ny < N and nx >= 0 and nx < M) {
-			sum += graph[ny][nx];
-			count++;
+		while (!q.empty()) {
+			int cy = q.front().second.first;
+			int cx = q.front().second.second;
+			int ct = q.front().first;
+			q.pop();
+
+			for (int i = 0; i < 4; i++) {
+				int ny = cy + Y[i];
+				int nx = cx + X[i];
+				int nt = ct + 1;
+
+				if (0 <= ny and ny < N and 0 <= nx and nx < N) {
+					if (check[ny][nx] == false and graph[ny][nx] <= size) {
+						q.push({ nt, {ny, nx} });
+						check[ny][nx] = true;
+
+						if (0 < graph[ny][nx] and graph[ny][nx] < size)
+							minHeap.push({ nt, {ny, nx} });
+					}
+				}
+			}
 		}
 
-		ny = Y[(i + 1) % 4] + y;
-		nx = X[(i + 1) % 4] + x;
+		if (minHeap.empty())
+			break;
+		else {
+			while (!q.empty())
+				q.pop();
 
-		if (ny >= 0 and ny < N and nx >= 0 and nx < M) {
-			sum += graph[ny][nx];
+			memset(check, false, sizeof(check));
 			count++;
+			eat_count++;
+			if (count >= size) {
+				size++;
+				count = 0;
+			}
+			t += minHeap.top().first;
+
+			pos_y = minHeap.top().second.first;
+			pos_x = minHeap.top().second.second;
+
+			while (!minHeap.empty())
+				minHeap.pop();
+
+			graph[pos_y][pos_x] = 0;
+			q.push({ 0, {pos_y, pos_x} });
+			check[pos_y][pos_x] = true;
 		}
-
-		ny = Y[(i + 2) % 4] + y;
-		nx = X[(i + 2) % 4] + x;
-
-		if (ny >= 0 and ny < N and nx >= 0 and nx < M) {
-			sum += graph[ny][nx];
-			count++;
-		}
-
-		if(count == 3)
-			ans = max(ans, sum);
 	}
-}
 
+	return t;
+}
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	cin >> N >> M;
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < M; j++)
-			cin >> graph[i][j];
-
-	vector<vector<bool>> check(N, vector<bool>(M, false));
+	cin >> N;
 
 	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (check[i][j] == false) {
-				check[i][j] = true;
-				dfs(i, j, 0, graph[i][j], check);
-				check[i][j] = false;
-			}
-
-			ex(i, j);
-		}
+		for (int j = 0; j < N; j++)
+			cin >> graph[i][j];
 	}
 
-	cout << ans << endl;
+	cout << bfs() << endl;
 }

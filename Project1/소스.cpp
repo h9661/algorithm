@@ -4,114 +4,104 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 20;
-int graph[MAX][MAX];
+const int MAX = 100;
+int graphNomal[MAX][MAX];
+int graphNotNomal[MAX][MAX];
 bool check[MAX][MAX];
 int N;
+
 int Y[4] = { -1, 1, 0, 0 };
 int X[4] = { 0, 0, -1, 1 };
 
-struct cmp {
-	bool operator()(pair<int, ii> a, pair<int, ii> b) {
-		if (a.first != b.first)
-			return a.first > b.first;
-		else {
-			if (a.second.first != b.second.first)
-				return a.second.first > b.second.first;
-			else
-				return a.second.second > b.second.second;
-		}
-	}
-};
-
-int bfs() {
-	queue<pair<int, ii>> q;
-	int t = 0;
-
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			if (graph[i][j] == 9) {
-				q.push({ 0,  {i,j} });
-				graph[i][j] = 0;
-				check[i][j] = true;
-			}
-		}
-	}
+void bfs1(int row, int col, int color) {
+	queue<ii> q;
+	q.push({ row, col });
+	check[row][col] = true;
 	
-	int size = 2;
-	int count = 0;
-	int eat_count = 0;
+	while (!q.empty()) {
+		int cy = q.front().first;
+		int cx = q.front().second;
+		q.pop();
 
-	int pos_y = q.front().second.first;
-	int pos_x = q.front().second.second;
+		for (int i = 0; i < 4; i++) {
+			int ny = cy + Y[i];
+			int nx = cx + X[i];
 
-	while(1) {
-		priority_queue<pair<int, ii>, vector<pair<int, ii>>, cmp> minHeap;
-
-		while (!q.empty()) {
-			int cy = q.front().second.first;
-			int cx = q.front().second.second;
-			int ct = q.front().first;
-			q.pop();
-
-			for (int i = 0; i < 4; i++) {
-				int ny = cy + Y[i];
-				int nx = cx + X[i];
-				int nt = ct + 1;
-
-				if (0 <= ny and ny < N and 0 <= nx and nx < N) {
-					if (check[ny][nx] == false and graph[ny][nx] <= size) {
-						q.push({ nt, {ny, nx} });
-						check[ny][nx] = true;
-
-						if (0 < graph[ny][nx] and graph[ny][nx] < size)
-							minHeap.push({ nt, {ny, nx} });
-					}
+			if (0 <= ny and ny < N and 0 <= nx and nx < N) {
+				if (graphNomal[ny][nx] == color and check[ny][nx] == false) {
+					check[ny][nx] = true;
+					q.push({ ny,nx });
 				}
 			}
 		}
+	}
+}
+void bfs2(int row, int col, int color) {
+	queue<ii> q;
+	q.push({ row, col });
+	check[row][col] = true;
 
-		if (minHeap.empty())
-			break;
-		else {
-			while (!q.empty())
-				q.pop();
+	while (!q.empty()) {
+		int cy = q.front().first;
+		int cx = q.front().second;
+		q.pop();
 
-			memset(check, false, sizeof(check));
-			count++;
-			eat_count++;
-			if (count >= size) {
-				size++;
-				count = 0;
+		for (int i = 0; i < 4; i++) {
+			int ny = cy + Y[i];
+			int nx = cx + X[i];
+
+			if (0 <= ny and ny < N and 0 <= nx and nx < N) {
+				if (graphNotNomal[ny][nx] == color and check[ny][nx] == false) {
+					check[ny][nx] = true;
+					q.push({ ny,nx });
+				}
 			}
-			t += minHeap.top().first;
-
-			pos_y = minHeap.top().second.first;
-			pos_x = minHeap.top().second.second;
-
-			while (!minHeap.empty())
-				minHeap.pop();
-
-			graph[pos_y][pos_x] = 0;
-			q.push({ 0, {pos_y, pos_x} });
-			check[pos_y][pos_x] = true;
 		}
 	}
-
-	return t;
 }
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-
 	cin >> N;
 
 	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++)
-			cin >> graph[i][j];
+		for (int j = 0; j < N; j++) {
+			char color;
+			cin >> color;
+
+			if (color == 'R') {
+				graphNomal[i][j] = 1;
+				graphNotNomal[i][j] = 1;
+			}
+			else if (color == 'G') {
+				graphNomal[i][j] = 2;
+				graphNotNomal[i][j] = 1;
+			}
+			else {
+				graphNomal[i][j] = 3;
+				graphNotNomal[i][j] = 2;
+			}
+		}
 	}
 
-	cout << bfs() << endl;
+	int count1 = 0;
+	int count2 = 0;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (check[i][j] == false) {
+				bfs1(i, j, graphNomal[i][j]);
+				count1++;
+			}
+		}
+	}
+	memset(check, false, sizeof(check));
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (check[i][j] == false) {
+				bfs2(i, j, graphNotNomal[i][j]);
+				count2++;
+			}
+		}
+	}
+
+	cout << count1 << " " << count2 << endl;
 }

@@ -4,51 +4,27 @@
 #define ii pair<int, int>
 using namespace std;
 
-int N, M;
-vector<bool> check(9, false);
-vector<int> nums;
-vector<int> arr;
-
-void dfs(int k, int count) {
-	if (count == M) {
-
-			for (auto i : arr)
-				cout << i << " ";
-
-			cout << endl;
-		
-	}
-	else {
-		for (int i = 0; i < N; i++) {
-			if (check[i] == false) {
-				check[i] = true;
-
-				arr.push_back(nums[i]);
-				dfs(0, count + 1);
-				arr.pop_back();
-				
-				check[i] = false;
-			}
-		}
-	}
-}
+const int MAX = 1000;
+int dp[MAX][3];
+int arr[MAX][3];
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	int n;
+	cin >> n;
 
-	cin >> N >> M;
-
-
-	for (int i = 0; i < N; i++) {
-		int temp;
-		cin >> temp;
-
-		nums.push_back(temp);
+	for (int i = 0; i < n; i++) {
+		cin >> arr[i][0] >> arr[i][1] >> arr[i][2];
 	}
 	
-	sort(nums.begin(), nums.end());
+	dp[0][0] = arr[0][0];
+	dp[0][1] = arr[0][1];
+	dp[0][2] = arr[0][2];
 
-	dfs(0, 0);
+	for (int i = 1; i < n; i++) {
+		dp[i][0] = min(arr[i][0] + dp[i - 1][1], arr[i][0] + dp[i - 1][2]);
+		dp[i][1] = min(arr[i][1] + dp[i - 1][0], arr[i][1] + dp[i - 1][2]);
+		dp[i][2] = min(arr[i][2] + dp[i - 1][0], arr[i][2] + dp[i - 1][1]);
+	}
+
+	cout << min(min(dp[n - 1][0], dp[n - 1][1]), dp[n - 1][2]) << endl;
 }

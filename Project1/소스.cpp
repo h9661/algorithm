@@ -18,9 +18,9 @@ void dfs(int k, int count) {
 		}
 	}
 	else {
-		for (int i = k; i <= N; i++) {
+		for (int i = 1; i <= N; i++) {
 			if (check[i] == false) {
-				check[i] = true;
+				check[i] = false;
 
 				arr.push_back(i);
 				dfs(i + 1, count + 1);

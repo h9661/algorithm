@@ -9,81 +9,34 @@ int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	
-	int tc;
-	cin >> tc;
-	while (tc--) {
-		vector<bool> check(10001, false);
-		queue<pair<int, string>> q;
-		int cur, target;
-		cin >> cur >> target;
 
-		q.push({ cur, "" });
-		check[cur] = true;
+	long long A, B;
+	cin >> A >> B;
 
-		string ans = "2432432423423232323232323232323323";
+	queue<ll> q;
+	q.push({ A, 0 });
+	map<long long, bool> mp;
 
-		while (!q.empty()) {
-			int curPos = q.front().first;
-			string curOp = q.front().second;
-			//cout << curPos << " " << curOp << endl;
-			q.pop();
+	while (!q.empty()) {
+		long long curX = q.front().first;
+		long long curC = q.front().second;
+		q.pop();
 
-			if (curPos == target) {
-				if (ans.size() >= curOp.size())
-					ans = curOp;
-				break;
-			}
-
-			//D
-			int nxtPos = (curPos * 2) % 10000;
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "D" });
-				check[nxtPos] = true;
-			}
-
-			//S
-			nxtPos = curPos - 1 < 0 ? 9999 : curPos - 1;
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "S" });
-				check[nxtPos] = true;
-			}
-
-			//L
-			string temp = to_string(curPos);
-			if (temp.size() < 4) {
-				for (int i = 0; i < 4 - temp.size(); i++)
-					temp.insert(temp.begin(), '0');
-			}
-			char strtemp = temp[0];
-			for (int i = 0; i < temp.size() - 1; i++) {
-				temp[i] = temp[i + 1];
-			}
-			temp[temp.size() - 1] = strtemp;
-			nxtPos = stoi(temp);
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "L" });
-				check[nxtPos] = true;
-			}
-
-			//R
-			temp = to_string(curPos);
-			if (temp.size() < 4) {
-				for (int i = 0; i < 4 - temp.size(); i++)
-					temp.insert(temp.begin(), '0');
-			}
-			char strTemp = temp[temp.size() - 1];
-			for (int i = temp.size() - 1; i >= 1; i--) {
-				temp[i] = temp[i - 1];
-			}
-			temp[0] = strTemp;
-			nxtPos = stoi(temp);
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "R" });
-				check[nxtPos] = true;
-			}
-
+		if (curX == B) {
+			cout << curC + 1 << endl;
+			return 0;
 		}
-		cout << ans << endl;
+
+		if (2 * curX <= B and mp[2 * curX] == false) {
+			q.push({ 2 * curX, curC + 1 });
+			mp[2 * curX] = true;
+		}
+
+		if (10 * curX + 1 <= B and mp[10 * curX + 1] == false) {
+			q.push({ curX * 10 + 1, curC + 1 });
+			mp[10 * curX + 1] = true;
+		}
 	}
+
+	cout << -1 << endl;
 }

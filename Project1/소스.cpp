@@ -6,24 +6,25 @@ using namespace std;
 
 int N, M;
 vector<bool> check(9, false);
+vector<int> nums;
 vector<int> arr;
 
 void dfs(int k, int count) {
 	if (count == M) {
-		if (is_sorted(arr.begin(), arr.end())) {
+
 			for (auto i : arr)
 				cout << i << " ";
 
 			cout << endl;
-		}
+		
 	}
 	else {
-		for (int i = 1; i <= N; i++) {
+		for (int i = 0; i < N; i++) {
 			if (check[i] == false) {
-				check[i] = false;
+				check[i] = true;
 
-				arr.push_back(i);
-				dfs(i + 1, count + 1);
+				arr.push_back(nums[i]);
+				dfs(0, count + 1);
 				arr.pop_back();
 				
 				check[i] = false;
@@ -38,6 +39,16 @@ int main() {
 	cout.tie(NULL);
 
 	cin >> N >> M;
+
+
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
+
+		nums.push_back(temp);
+	}
 	
-	dfs(1, 0);
+	sort(nums.begin(), nums.end());
+
+	dfs(0, 0);
 }

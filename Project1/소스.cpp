@@ -39,4 +39,5 @@ int main() {
 	}
 
 	cout << -1 << endl;
+	cout << "hello" << endl;
 }

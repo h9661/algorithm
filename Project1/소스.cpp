@@ -4,24 +4,25 @@
 #define ii pair<int, int>
 using namespace std;
 
-vector<bool> check(10001, false);
 int N, M;
 vector<int> arr;
+vector<bool> check(9);
 vector<int> ans;
 
 void dfs(int count) {
 	if (count == M) {
-
+		if (is_sorted(ans.begin(), ans.end())) {
 			for (auto i : ans)
 				cout << i << " ";
 			cout << endl;
+		}
 	}
 	else {
 		int k = 0;
 
-		for (int i = 0; i < arr.size(); i++) {
+		for (int i = 0; i < N; i++) {
 			if (check[i] == false and arr[i] != k) {
-				check[i] = true;
+				check[i] = false;
 				k = arr[i];
 
 				ans.push_back(arr[i]);
@@ -36,7 +37,7 @@ void dfs(int count) {
 
 int main() {
 	cin >> N >> M;
-	
+
 	for (int i = 0; i < N; i++) {
 		int x;
 		cin >> x;
@@ -45,7 +46,6 @@ int main() {
 	}
 
 	sort(arr.begin(), arr.end());
-
 
 	dfs(0);
 }

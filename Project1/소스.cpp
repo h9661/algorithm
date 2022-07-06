@@ -5,49 +5,31 @@
 using namespace std;
 
 int main() {
-	int N, K;
-	cin >> N >> K;
-	int count = 0;
+	int T;
+	cin >> T;
 
-	vector<int> multitap(K);
-	for (int i = 0; i < K; i++)
-		cin >> multitap[i];
+	while (T--) {
+		int n;
+		cin >> n;
 
-	vector<int> plug;
+		vector<vector<int>> dp(2, vector<int>(n, 0));
+		vector<vector<int>> arr(2, vector<int>(n, 0));
 
-	for (int i = 0; i < K; i++) {
-		if (find(plug.begin(), plug.end(), multitap[i]) != plug.end())
-			continue;
-
-		if (plug.size() < N) {
-			plug.push_back(multitap[i]);
-			continue;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < n; j++)
+				cin >> arr[i][j];
 		}
 
-		vector<int> multitap_Idxs;
-		int multitap_idx = 0;
-		bool cont_flag = true;
+		dp[0][0] = arr[0][0];
+		dp[1][0] = arr[1][0];
+		dp[0][1] = arr[0][1] + dp[1][0];
+		dp[1][1] = arr[1][1] + dp[0][0];
 
-		for (int j = 0; j < N; j++) {
-			if (find(multitap.begin() + i, multitap.end(), plug[j]) != multitap.end())
-				multitap_idx = find(multitap.begin() + i, multitap.end(), plug[j]) - (multitap.begin() + i);
-			else {
-				multitap_idx = 101;
-				cont_flag = false;
-			}
-
-			multitap_Idxs.push_back(multitap_idx);
-
-			if (!cont_flag)
-				break;
+		for (int i = 2; i < n; i++) {
+			dp[0][i] = max(dp[1][i - 1], dp[1][i - 2]) + arr[0][i];
+			dp[1][i] = max(dp[0][i - 1], dp[0][i - 2]) + arr[1][i];
 		}
 
-		int plugOut_idx = find(multitap_Idxs.begin(), multitap_Idxs.end(),
-			*max_element(multitap_Idxs.begin(), multitap_Idxs.end())) - multitap_Idxs.begin();
-		plug.erase(plug.begin() + plugOut_idx);
-		plug.push_back(multitap[i]);
-		count++;
+		cout << max(dp[0][n - 1], dp[1][n - 1]) << endl;
 	}
-
-	cout << count << endl;
 } 

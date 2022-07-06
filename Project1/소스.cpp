@@ -4,32 +4,52 @@
 #define ii pair<int, int>
 using namespace std;
 
+map<char, pair<char, char>> tree;
+
+void preOrder(char node) {
+	cout << node;
+	if (tree[node].first != '.')
+		preOrder(tree[node].first);
+	if (tree[node].second != '.')
+		preOrder(tree[node].second);
+}
+
+void inOrder(char node) {
+	if (tree[node].first != '.')
+		inOrder(tree[node].first);
+	cout << node;
+	if (tree[node].second != '.')
+		inOrder(tree[node].second);
+}
+
+void postOrder(char node) {
+	if (tree[node].first != '.')
+		postOrder(tree[node].first);
+	if (tree[node].second != '.')
+		postOrder(tree[node].second);
+	cout << node;
+}
+
 int main() {
-	int T;
-	cin >> T;
+	int N;
+	cin >> N;
 
-	while (T--) {
-		int n;
-		cin >> n;
+	char a, b, c;
+	cin >> a >> b >> c;
 
-		vector<vector<int>> dp(2, vector<int>(n, 0));
-		vector<vector<int>> arr(2, vector<int>(n, 0));
+	tree['A'] = { b, c };
 
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < n; j++)
-				cin >> arr[i][j];
-		}
+	for (int i = 0; i < N - 1; i++) {
+		char p, l, r;
+		cin >> p >> l >> r;
 
-		dp[0][0] = arr[0][0];
-		dp[1][0] = arr[1][0];
-		dp[0][1] = arr[0][1] + dp[1][0];
-		dp[1][1] = arr[1][1] + dp[0][0];
-
-		for (int i = 2; i < n; i++) {
-			dp[0][i] = max(dp[1][i - 1], dp[1][i - 2]) + arr[0][i];
-			dp[1][i] = max(dp[0][i - 1], dp[0][i - 2]) + arr[1][i];
-		}
-
-		cout << max(dp[0][n - 1], dp[1][n - 1]) << endl;
+		tree[p] = { l, r };
 	}
-} 
+
+	preOrder('A');
+	cout << endl;
+	inOrder('A');
+	cout << endl;
+	postOrder('A');
+	cout << endl;
+}

@@ -4,52 +4,49 @@
 #define ii pair<int, int>
 using namespace std;
 
-map<char, pair<char, char>> tree;
+const int MAX = 100001;
+vector<int> tree[MAX];
+vector<bool> check(MAX, false);
+map<int, int> parent;
 
-void preOrder(char node) {
-	cout << node;
-	if (tree[node].first != '.')
-		preOrder(tree[node].first);
-	if (tree[node].second != '.')
-		preOrder(tree[node].second);
-}
+void bfs() {
+	queue<int> q;
+	q.push(1);
+	check[1] = true;
 
-void inOrder(char node) {
-	if (tree[node].first != '.')
-		inOrder(tree[node].first);
-	cout << node;
-	if (tree[node].second != '.')
-		inOrder(tree[node].second);
-}
+	while (!q.empty()) {
+		int curC = q.front();
+		q.pop();
 
-void postOrder(char node) {
-	if (tree[node].first != '.')
-		postOrder(tree[node].first);
-	if (tree[node].second != '.')
-		postOrder(tree[node].second);
-	cout << node;
+		for (int i = 0; i < tree[curC].size(); i++) {
+			int nxtC = tree[curC][i];
+
+			if (check[nxtC] == false) {
+				parent[nxtC] = curC;
+				check[nxtC] = true;
+				q.push(nxtC);
+			}
+		}
+	}
 }
 
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 	int N;
 	cin >> N;
 
-	char a, b, c;
-	cin >> a >> b >> c;
-
-	tree['A'] = { b, c };
-
 	for (int i = 0; i < N - 1; i++) {
-		char p, l, r;
-		cin >> p >> l >> r;
+		int u, v;
+		cin >> u >> v;
 
-		tree[p] = { l, r };
+		tree[u].push_back(v);
+		tree[v].push_back(u);
 	}
 
-	preOrder('A');
-	cout << endl;
-	inOrder('A');
-	cout << endl;
-	postOrder('A');
-	cout << endl;
+	bfs();
+
+	for (int i = 2; i <= N; i++)
+		cout << parent[i] << endl;
 }

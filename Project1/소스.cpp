@@ -4,49 +4,52 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 100001;
-vector<int> tree[MAX];
-vector<bool> check(MAX, false);
-map<int, int> parent;
+int main() {
+	int N, K;
+	cin >> N >> K;
 
-void bfs() {
-	queue<int> q;
-	q.push(1);
-	check[1] = true;
+	vector<ii> arr;
+	for (int i = 0; i < N; i++) {
+		int w, v;
+		cin >> w >> v;
 
-	while (!q.empty()) {
-		int curC = q.front();
-		q.pop();
+		arr.push_back(make_pair(w, v));
+	}
 
-		for (int i = 0; i < tree[curC].size(); i++) {
-			int nxtC = tree[curC][i];
+	vector<int> backpack;
+	for (int i = 0; i < K; i++) {
+		int x;
+		cin >> x;
 
-			if (check[nxtC] == false) {
-				parent[nxtC] = curC;
-				check[nxtC] = true;
-				q.push(nxtC);
-			}
+		backpack.push_back(x);
+	}
+
+	sort(arr.begin(), arr.end(), [](ii a, ii b) {
+		if (a.first != b.first)
+			return a.first < b.first;
+		else
+			return a.second > b.second;
+		}
+	);
+	sort(backpack.begin(), backpack.end(), [](int a, int b){
+		return a < b;
+		}
+	);
+
+	priority_queue<int, vector<int>, less<int>> pq;
+
+	int idx = 0;
+	long long ans = 0;
+
+	for (int i = 0; i < K; i++) {
+		while (idx < N and backpack[i] >= arr[idx].first)
+			pq.push(arr[idx++].second);
+
+		if (!pq.empty()) {
+			ans += pq.top();
+			pq.pop();
 		}
 	}
-}
 
-int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-	int N;
-	cin >> N;
-
-	for (int i = 0; i < N - 1; i++) {
-		int u, v;
-		cin >> u >> v;
-
-		tree[u].push_back(v);
-		tree[v].push_back(u);
-	}
-
-	bfs();
-
-	for (int i = 2; i <= N; i++)
-		cout << parent[i] << endl;
+	cout << ans << endl;
 }

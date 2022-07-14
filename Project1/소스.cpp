@@ -4,57 +4,78 @@
 #define ii pair<int, int>
 using namespace std;
 
-vector<int> arr(4000001);
+const int MAX = 801;
+vector<ii> graph[MAX];
+const int INF = 50000000;
+vector<long long> dist(MAX, INF);
 
-void eratos() {
-	for (int i = 2; i <= 4000000; i++)
-		arr[i] = i;
-
-	for (int i = 2; i <= 4000000; i++) {
-		if (arr[i] == 0)
-			continue;
-
-		for (int j = 2 * i; j <= 4000000; j += i)
-			arr[j] = 0;
+struct cmp {
+	bool operator()(ii a, ii b) {
+		return a.second > b.second;
 	}
+};
+
+int djk(int source, int target) {
+	priority_queue<ii, vector<ii>, cmp> pq;
+	pq.push({ source, 0 });
+	dist[source] = 0;
+
+	while (!pq.empty()) {
+		int cn = pq.top().first;
+		int cc = pq.top().second;
+		pq.pop();
+
+		if (cn == target)
+			return dist[cn];
+
+		for (int i = 0; i < graph[cn].size(); i++) {
+			int nn = graph[cn][i].first;
+			int nc = graph[cn][i].second;
+
+			if (dist[nn] > dist[cn] + nc) {
+				dist[nn] = dist[cn] + nc;
+				pq.push({ nn, dist[nn]});
+			}
+		}
+	}
+
+	return INF;
 }
 
 int main() {
-	eratos();
-	
-	int N;
-	cin >> N;
+	int N, E;
+	cin >> N >> E;
 
-	int left = N;
-	int right = N;
+	for (int i = 0; i < E; i++) {
+		int u, v, c;
+		cin >> u >> v >> c;
 
-	int count = 0;
-
-	while (left <= right and left >= 0) {
-		if (arr[left] == 0) {
-			left--;
-			continue;
-		}
-		if (arr[right] == 0) {
-			right--;
-			continue;
-		}
-
-		/*cout << left << " " << right << endl;
-		cout << arr[left] << " " << arr[right] << endl;*/
-
-		int sum = accumulate(arr.begin() + left, arr.begin() + right + 1, 0);
-		/*cout << sum << endl;*/
-		
-		if (sum <= N) {
-			left--;
-
-			if (sum == N)
-				count++;
-		}
-		else
-			right--;
+		graph[u].push_back({ v, c });
+		graph[v].push_back({ u, c });
 	}
 
-	cout << count << endl;
+	int v1, v2;
+	cin >> v1 >> v2;
+
+	long long sum1 = 0;
+	sum1 += djk(1, v1);
+	fill(dist.begin(), dist.end(), INF);
+	sum1 += djk(v1, v2);
+	fill(dist.begin(), dist.end(), INF);
+	sum1 += djk(v2, N);
+	fill(dist.begin(), dist.end(), INF);
+
+	long long sum2 = 0;
+	sum2 += djk(1, v2);
+	fill(dist.begin(), dist.end(), INF);
+	sum2 += djk(v2, v1);
+	fill(dist.begin(), dist.end(), INF);
+	sum2 += djk(v1, N);
+
+	long long ans = min(sum1, sum2);
+
+	if (ans >= 40000000)
+		cout << -1 << endl;
+	else
+		cout << ans << endl;
 }

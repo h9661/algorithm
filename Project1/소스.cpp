@@ -4,74 +4,54 @@
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 50 + 1;
-int graph[MAX][MAX];
-bool check[MAX][MAX];
-int N, M;
-int r, c, d;
-bool ansFlag = false;
+const int MAX = 10001;
+vector<ll> graph[MAX];
+bool check[MAX];
 
-int Y[4] = { -1,0,1,0 };
-int X[4] = { 0,1,0,-1 };
+struct cmp {
+	bool operator()(ll a, ll b) {
+		return a.second > b.second;
+	}
+};
 
-bool isValidPos(int y, int x) {
-	if (y >= 0 and y < N and x >= 0 and x < M)
-		return true;
-	else
-		return false;
-}
+int prim() {
+	long long retval = 0;
+	priority_queue<ll, vector<ll>, cmp> min_heap;
+	min_heap.push({ 1, 0 });
 
-void dfs(int currentY, int currentX, int currentDir, int count) {
-	if (ansFlag)
-		return;
+	while (!min_heap.empty()) {
+		long long curNode = min_heap.top().first;
+		long long curCost = min_heap.top().second;
+		min_heap.pop();
 
-	for (int i = 0; i < 4; i++) {
-		int nextDir = (currentDir + 3 - i) % 4;
-		int nextY = currentY + Y[nextDir];
-		int nextX = currentX + X[nextDir];
-
-		if (!isValidPos(nextY, nextX) or graph[nextY][nextX] == 1)
+		if (check[curNode] == true)
 			continue;
+		check[curNode] = true;
+		retval += curCost;
 
-		if (check[nextY][nextX] == false and graph[nextY][nextX] == 0) {
-			check[nextY][nextX] = true;
-			dfs(nextY, nextX, nextDir, count + 1);
+
+		for (int i = 0; i < graph[curNode].size(); i++) {
+			int nextNode = graph[curNode][i].first;
+			int nextCost = graph[curNode][i].second;
+
+			min_heap.push({ nextNode, nextCost });
 		}
 	}
 
-	int nextY = currentY;
-	int nextX = currentX;
-
-	if (currentDir == 0)
-		nextY += 1;
-	else if (currentDir == 1)
-		nextX -= 1;
-	else if (currentDir == 2)
-		nextY -= 1;
-	else
-		nextX += 1;
-
-	if (isValidPos(nextY, nextX)) {
-		if (graph[nextY][nextX] == 0)
-			dfs(nextY, nextX, currentDir, count);
-		else {
-			if (ansFlag == false) {
-				cout << count << endl;
-				ansFlag = true;
-			}
-		}
-	}
+	return retval;
 }
 
 int main() {
-	cin >> N >> M;
-	cin >> r >> c >> d;
+	int V, E;
+	cin >> V >> E;
 
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++)
-			cin >> graph[i][j];
+	for (int i = 0; i < E; i++) {
+		int u, v, c;
+		cin >> u >> v >> c;
+
+		graph[u].push_back({ v, c });
+		graph[v].push_back({ u, c });
 	}
 
-	check[r][c] = true;
-	dfs(r, c, d, 1);
+	cout << prim() << endl;
 }

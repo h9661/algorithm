@@ -1,99 +1,74 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>
+#include <utility>
+#include <cmath>
 #define endl '\n'
 #define ll pair<long long, long long>
 #define ii pair<int, int>
 using namespace std;
 
-const int MAX = 9;
-vector<vector<int>> sudokuBoard(MAX, vector<int>(MAX));
-vector<vector<bool>> check(MAX, vector<bool>(MAX));
-
-bool CheckRow(int row, int columm, int number) {
-	for (int i = 0; i < 9; i++) {
-		if (columm == i)
-			continue;
-
-		if (number == sudokuBoard[row][i])
-			return false;
-	}
-
-	return true;
+long long init(vector<long long>& a, vector<long long>& tree, int node, int start, int end) {
+	if (start == end)
+		return tree[node] = a[start];
+	else
+		return tree[node] = init(a, tree, node * 2, start, (start + end) / 2) + init(a, tree, node * 2 + 1, (start + end) / 2 + 1, end);
 }
 
-bool CheckColumm(int row, int columm, int number) {
-	for (int i = 0; i < 9; i++) {
-		if (row == i)
-			continue;
+long long sum(vector<long long>& tree, int node, int start, int end, int left, int right) {
+	if (left > end || right < start)
+		return 0;
+	
+	if (left <= start && end <= right)
+		return tree[node];
 
-		if (number == sudokuBoard[i][columm])
-			return false;
-	}
-
-	return true;
+	return sum(tree, node * 2, start, (start + end) / 2, left, right) + sum(tree, node * 2 + 1, (start + end) / 2 + 1, end, left, right);
 }
 
-bool CheckSquare(int row, int columm, int number) {
-	int newRow = row / 3;
-	int newColumm = columm / 3;
+void update(vector<long long>& tree, int node, int start, int end, int index, long long diff) {
+	if (index < start || index > end)
+		return;
 
-	for (int i = newRow * 3; i < (newRow + 1) * 3; i++) {
-		for (int j = newColumm * 3; j < (newColumm + 1) * 3; j++) {
-			if (row == newRow && columm == newColumm)
-				continue;
-
-			if (number == sudokuBoard[i][j])
-				return false;
-		}
-	}
-
-	return true;
-}
-
-void dfs(int pos) {
-	if (pos == 81) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++)
-				cout << sudokuBoard[i][j] << " ";
-			cout << endl;
-		}
-
-		exit(0);
-	}
-	else {
-		int row = pos / 9;
-		int columm = pos % 9;
-
-		if (check[row][columm] == false) {
-			check[row][columm] = true;
-
-			if (sudokuBoard[row][columm] == 0) {
-				for (int i = 1; i <= 9; i++) {
-					if (CheckRow(row, columm, i) && CheckColumm(row, columm, i) && CheckSquare(row, columm, i)) {
-						sudokuBoard[row][columm] = i;
-
-						dfs(pos + 1);
-
-						sudokuBoard[row][columm] = 0;
-					}
-				}
-			}
-			else
-				dfs(pos + 1);
-
-			check[row][columm] = false;
-		}
+	tree[node] = tree[node] + diff;
+	
+	if (start != end) {
+		update(tree, node * 2, start, (start + end) / 2, index, diff);
+		update(tree, node * 2 + 1, (start + end) / 2 + 1, end, index, diff);
 	}
 }
 
 int main() {
-	cin.tie(NULL);
-	cout.tie(NULL);
-	ios::sync_with_stdio(false);
+	int N, M, K;
+	cin >> N >> M >> K;
 
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
-			cin >> sudokuBoard[i][j];
+	int h = (int)ceil(log2(N));
+	int tree_size = (1 << (h + 1));
 
-	dfs(0);
+	vector<long long> a(N, 0);
+	vector<long long> tree(tree_size, 0);
+
+	for (int i = 0; i < N; i++)
+		cin >> a[i];
+
+	init(a, tree, 1, 0, N - 1);
+
+	M += K;
+
+	while (M--) {
+		long long op, b, c;
+		cin >> op >> b >> c;
+
+		if (op == 1) {
+			b -= 1;
+			long long diff = c - a[b];
+
+			a[b] = c;
+			update(tree, 1, 0, N - 1, b, diff);
+		}
+		else {
+			b -= 1;
+			c -= 1;
+			cout << sum(tree, 1, 0, N - 1, b, c) << endl;
+		}
+	}
 }

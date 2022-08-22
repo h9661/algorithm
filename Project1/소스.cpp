@@ -12,29 +12,31 @@ long long init(vector<long long>& a, vector<long long>& tree, int node, int star
 	if (start == end)
 		return tree[node] = a[start];
 	else
-		return tree[node] = init(a, tree, node * 2, start, (start + end) / 2) + init(a, tree, node * 2 + 1, (start + end) / 2 + 1, end);
+		return tree[node] = (init(a, tree, node * 2, start, (start + end) / 2) * init(a, tree, node * 2 + 1, (start + end) / 2 + 1, end)) % 1000000007;
 }
 
 long long sum(vector<long long>& tree, int node, int start, int end, int left, int right) {
 	if (left > end || right < start)
-		return 0;
+		return 1;
 	
 	if (left <= start && end <= right)
 		return tree[node];
 
-	return sum(tree, node * 2, start, (start + end) / 2, left, right) + sum(tree, node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+	return sum(tree, node * 2, start, (start + end) / 2, left, right) % 1000000007 * sum(tree, node * 2 + 1, (start + end) / 2 + 1, end, left, right) % 1000000007;
 }
 
 void update(vector<long long>& tree, int node, int start, int end, int index, long long diff) {
 	if (index < start || index > end)
 		return;
 
-	tree[node] = tree[node] + diff;
-	
-	if (start != end) {
-		update(tree, node * 2, start, (start + end) / 2, index, diff);
-		update(tree, node * 2 + 1, (start + end) / 2 + 1, end, index, diff);
+	if (start == end) {
+		tree[node] = tree[node] + diff;
+		return;
 	}
+
+	update(tree, node * 2, start, (start + end) / 2, index, diff);
+	update(tree, node * 2 + 1, (start + end) / 2 + 1, end, index, diff);
+	tree[node] = (tree[node * 2] * tree[node * 2 + 1]) % 1000000007;
 }
 
 int main() {

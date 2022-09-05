@@ -1,89 +1,52 @@
 #include <bits/stdc++.h>
-#define endl '\n'
-#define ll pair<long long, long long>
-#define ii pair<int, int>
+
 using namespace std;
 
+int solution(vector<int> queue1, vector<int> queue2) {
+    queue<int> que1;
+    queue<int> que2;
 
-int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-	
-	int tc;
-	cin >> tc;
-	while (tc--) {
-		vector<bool> check(10001, false);
-		queue<pair<int, string>> q;
-		int cur, target;
-		cin >> cur >> target;
+    for (int i = 0; i < queue1.size(); i++)
+        que1.push(queue1[i]);
 
-		q.push({ cur, "" });
-		check[cur] = true;
+    for (int i = 0; i < queue2.size(); i++)
+        que2.push(queue2[i]);
 
-		string ans = "2432432423423232323232323232323323";
+    long long sumOfQue1 = accumulate(queue1.begin(), queue1.end(), 0);
+    long long sumOfQue2 = accumulate(queue2.begin(), queue2.end(), 0);
+    long long targetValue = (sumOfQue1 + sumOfQue2) / 2;
+    int retval = 0;
+    bool cantFindAnswer = false;
 
-		while (!q.empty()) {
-			int curPos = q.front().first;
-			string curOp = q.front().second;
-			//cout << curPos << " " << curOp << endl;
-			q.pop();
+    while (true) {
+        if (sumOfQue1 == targetValue)
+            break;
 
-			if (curPos == target) {
-				if (ans.size() >= curOp.size())
-					ans = curOp;
-				break;
-			}
+        if (que1.size() + que2.size() + 100000 < retval) {
+            cantFindAnswer = true;
+            break;
+        }
 
-			//D
-			int nxtPos = (curPos * 2) % 10000;
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "D" });
-				check[nxtPos] = true;
-			}
+        if (sumOfQue1 < targetValue) {
+            sumOfQue1 += que2.front();
+            sumOfQue2 -= que2.front();
 
-			//S
-			nxtPos = curPos - 1 < 0 ? 9999 : curPos - 1;
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "S" });
-				check[nxtPos] = true;
-			}
+            que1.push(que2.front());
+            que2.pop();
+        }
+        else if (sumOfQue1 > targetValue) {
+            sumOfQue1 -= que1.front();
+            sumOfQue2 += que1.front();
 
-			//L
-			string temp = to_string(curPos);
-			if (temp.size() < 4) {
-				for (int i = 0; i < 4 - temp.size(); i++)
-					temp.insert(temp.begin(), '0');
-			}
-			char strtemp = temp[0];
-			for (int i = 0; i < temp.size() - 1; i++) {
-				temp[i] = temp[i + 1];
-			}
-			temp[temp.size() - 1] = strtemp;
-			nxtPos = stoi(temp);
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "L" });
-				check[nxtPos] = true;
-			}
+            que2.push(que1.front());
+            que1.pop();
+        }
 
-			//R
-			temp = to_string(curPos);
-			if (temp.size() < 4) {
-				for (int i = 0; i < 4 - temp.size(); i++)
-					temp.insert(temp.begin(), '0');
-			}
-			char strTemp = temp[temp.size() - 1];
-			for (int i = temp.size() - 1; i >= 1; i--) {
-				temp[i] = temp[i - 1];
-			}
-			temp[0] = strTemp;
-			nxtPos = stoi(temp);
-			if (check[nxtPos] == false) {
-				q.push({ nxtPos, curOp + "R" });
-				check[nxtPos] = true;
-			}
+        retval++;
+    }
 
-		}
-		cout << ans << endl;
-	}
+    if (cantFindAnswer == true)
+        return -1;
+    else
+        return retval;
 }

@@ -1,82 +1,80 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int maxValue = -10000;
-vector<int> answer;
+vector<string> split(string s) {
+	stringstream ss;
+	ss.str(s);
+	vector<string> retval;
+	string temp;
 
-void ArrowComb(int count, int index, int n, vector<int>& comb, vector<int>& info, int& arrowN) {
-    if (count == n) {
-        vector<int> arrowArr(11, 0);
-        int remainArrow = arrowN;
+	while (ss >> temp)
+		retval.push_back(temp);
 
-        for (int i = 0; i < 11; i++) {
-            if (comb[i] == 1) {
-                if (remainArrow > info[i]) {
-                    arrowArr[i] = info[i] + 1;
-                    remainArrow -= info[i] + 1;
-                }
-            }
-            else
-                continue;
-        }
-
-        if (remainArrow > 0) {
-            arrowArr[10] += remainArrow;
-            remainArrow = 0;
-        }
-
-        int lionScore = 0;
-        int apeachScore = 0;
-
-        for (int i = 0; i < 11; i++) {
-            if (info[i] == 0 and arrowArr[i] == 0)
-                continue;
-
-            if (info[i] < arrowArr[i])
-                lionScore += 10 - i;
-            else
-                apeachScore += 10 - i;
-        }
-
-        if (lionScore - apeachScore >= maxValue) {
-            if (lionScore - apeachScore == maxValue) {
-                for (int i = 10; i >= 0; i--) {
-                    if (answer[i] < arrowArr[i]) {
-                        answer = arrowArr;
-                        break;
-                    }
-                    else if (answer[i] == arrowArr[i])
-                        continue;
-                    else
-                        break;
-                }
-            }
-            else {
-                maxValue = lionScore - apeachScore;
-                answer = arrowArr;
-            }
-        }
-
-    }
-    else {
-        for (int i = index; i < 11; i++) {
-            comb[i] = 1;
-
-            ArrowComb(count + 1, index + 1, n, comb, info, arrowN);
-
-            comb[i] = 0;
-        }
-    }
+	return retval;
 }
 
-vector<int> solution(int n, vector<int> info) {
-    for (int i = 1; i <= n; i++) {
-        vector<int> comb = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        ArrowComb(0, 0, i, comb, info, n);
-    }
+vector<int> solution(vector<int> fees, vector<string> records) {
+	map<int, vector<vector<int>>> recorder;
+	map<int, int> feeRecorder;
 
-    if (maxValue <= 0)
-        return { -1 };
-    else
-        return answer;
+	for (int i = 0; i < records.size(); i++) {
+		vector<string> record = split(records[i]);
+		string time = record[0];
+		int number = stoi(record[1]);
+		string direction = record[2];
+
+		int h = stoi(time.substr(0, 2));
+		int m = stoi(time.substr(3, 5));
+		int nTime = h * 60 + m;
+
+		if (direction == "IN")
+			recorder[number].push_back({ nTime, 0 });
+		else
+			recorder[number].push_back({ nTime, 1 });
+	}
+
+	for (map<int, vector<vector<int>>>::iterator iter = recorder.begin(); iter != recorder.end(); iter++) {
+		int number = iter->first;
+		vector<vector<int>> infos = iter->second;
+
+		int in_t = -999;
+		int out_t = -999;
+		int fee = fees[1];
+		int parking_t = out_t - in_t;
+
+		if (infos.size() % 2 != 0)
+			infos.push_back({ 23 * 60 + 59, 1 });
+
+		for (int i = 0; i < infos.size(); i++) {
+			int t = infos[i][0];
+			int d = infos[i][1];
+
+			if (d == 0)
+				in_t = t;
+			else
+				out_t = t;
+
+			if (in_t < out_t)
+				parking_t += out_t - in_t;
+		}
+
+		parking_t -= fees[0];
+
+		if (parking_t > 0) {
+			if (parking_t % fees[2] == 0)
+				fee += (parking_t / fees[2]) * fees[3];
+			else
+				fee += ((parking_t / fees[2]) + 1) * fees[3];
+		}
+
+		feeRecorder[number] = fee;
+	}
+
+	vector<int> retval;
+
+	for (map<int, int>::iterator iter = feeRecorder.begin(); iter != feeRecorder.end(); iter++) {
+		retval.push_back(iter->second);
+	}
+
+	return retval;
 }

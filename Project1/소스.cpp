@@ -1,79 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<string> split(string s) {
-	stringstream ss;
-	ss.str(s);
-	vector<string> retval;
+vector<string> split(string input, char delimiter) {
+	vector<string> answer;
+	stringstream ss(input);
 	string temp;
 
-	while (ss >> temp)
-		retval.push_back(temp);
+	while (getline(ss, temp, delimiter))
+		answer.push_back(temp);
 
-	return retval;
+	return answer;
 }
 
-vector<int> solution(vector<int> fees, vector<string> records) {
-	map<int, vector<vector<int>>> recorder;
-	map<int, int> feeRecorder;
+bool isPrime(long long n) {
+	if (n == 1)
+		return false;
 
-	for (int i = 0; i < records.size(); i++) {
-		vector<string> record = split(records[i]);
-		string time = record[0];
-		int number = stoi(record[1]);
-		string direction = record[2];
-
-		int h = stoi(time.substr(0, 2));
-		int m = stoi(time.substr(3, 5));
-		int nTime = h * 60 + m;
-
-		if (direction == "IN")
-			recorder[number].push_back({ nTime, 0 });
-		else
-			recorder[number].push_back({ nTime, 1 });
+	for (int i = 2; i < int(sqrt(n)) + 1; i++) {
+		if (n % i == 0)
+			return false;
 	}
 
-	for (map<int, vector<vector<int>>>::iterator iter = recorder.begin(); iter != recorder.end(); iter++) {
-		int number = iter->first;
-		vector<vector<int>> infos = iter->second;
+	return true;
+}
 
-		int in_t = -999;
-		int out_t = -999;
-		int fee = fees[1];
-		int parking_t = out_t - in_t;
+int solution(int n, int k) {
+	int retval = 0;
+	string answer = "";
 
-		if (infos.size() % 2 != 0)
-			infos.push_back({ 23 * 60 + 59, 1 });
-
-		for (int i = 0; i < infos.size(); i++) {
-			int t = infos[i][0];
-			int d = infos[i][1];
-
-			if (d == 0)
-				in_t = t;
-			else
-				out_t = t;
-
-			if (in_t < out_t)
-				parking_t += out_t - in_t;
-		}
-
-		parking_t -= fees[0];
-
-		if (parking_t > 0) {
-			if (parking_t % fees[2] == 0)
-				fee += (parking_t / fees[2]) * fees[3];
-			else
-				fee += ((parking_t / fees[2]) + 1) * fees[3];
-		}
-
-		feeRecorder[number] = fee;
+	while (n > 0) {
+		answer += to_string(n % k);
+		n /= k;
 	}
 
-	vector<int> retval;
+	reverse(answer.begin(), answer.end());
 
-	for (map<int, int>::iterator iter = feeRecorder.begin(); iter != feeRecorder.end(); iter++) {
-		retval.push_back(iter->second);
+	vector<string> lst = split(answer, '0');
+
+	for (int i = 0; i < lst.size(); i++) {
+		if (lst[i].size() == 0)
+			continue;
+
+		if (isPrime(stoll(lst[i])) == true)
+			retval += 1;
 	}
 
 	return retval;

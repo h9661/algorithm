@@ -1,42 +1,15 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-vector<int> ansVec;
-vector<bool> check(9, false);
-int g_count = 0;
+vector<int> solution(int n, long long left, long long right) {
+    vector<int> retval;
 
-void dfs(vector<vector<int>> dungeons, int k) {
-    for (int i = 0; i < dungeons.size(); i++) {
-        if (check[i] == false) {
-            check[i] = true;
+    for (long long i = left; i <= right; i++) {
+        int y = i / n;
+        int x = i % n;
 
-            int minCost = dungeons[i][0];
-            int useCost = dungeons[i][1];
-
-            if (minCost <= k) {
-                k -= useCost;
-                g_count++;
-
-                dfs(dungeons, k);
-                ansVec.push_back(g_count);
-
-                g_count--;
-                k += useCost;
-            }
-
-            check[i] = false;
-        }
+        retval.push_back(max(x + 1, y + 1));
     }
-}
 
-int solution(int k, vector<vector<int>> dungeons) {
-    ansVec.clear();
-    check.clear();
-    g_count = 0;
-
-
-    dfs(dungeons, k);
-
-    return *max_element(ansVec.begin(), ansVec.end());
+    return retval;
 }

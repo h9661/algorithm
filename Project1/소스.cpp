@@ -1,49 +1,42 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-vector<string> split(string input, char delimiter) {
-	vector<string> answer;
-	stringstream ss(input);
-	string temp;
+vector<int> ansVec;
+vector<bool> check(9, false);
+int g_count = 0;
 
-	while (getline(ss, temp, delimiter))
-		answer.push_back(temp);
+void dfs(vector<vector<int>> dungeons, int k) {
+    for (int i = 0; i < dungeons.size(); i++) {
+        if (check[i] == false) {
+            check[i] = true;
 
-	return answer;
+            int minCost = dungeons[i][0];
+            int useCost = dungeons[i][1];
+
+            if (minCost <= k) {
+                k -= useCost;
+                g_count++;
+
+                dfs(dungeons, k);
+                ansVec.push_back(g_count);
+
+                g_count--;
+                k += useCost;
+            }
+
+            check[i] = false;
+        }
+    }
 }
 
-bool isPrime(long long n) {
-	if (n == 1)
-		return false;
+int solution(int k, vector<vector<int>> dungeons) {
+    ansVec.clear();
+    check.clear();
+    g_count = 0;
 
-	for (int i = 2; i < int(sqrt(n)) + 1; i++) {
-		if (n % i == 0)
-			return false;
-	}
 
-	return true;
-}
+    dfs(dungeons, k);
 
-int solution(int n, int k) {
-	int retval = 0;
-	string answer = "";
-
-	while (n > 0) {
-		answer += to_string(n % k);
-		n /= k;
-	}
-
-	reverse(answer.begin(), answer.end());
-
-	vector<string> lst = split(answer, '0');
-
-	for (int i = 0; i < lst.size(); i++) {
-		if (lst[i].size() == 0)
-			continue;
-
-		if (isPrime(stoll(lst[i])) == true)
-			retval += 1;
-	}
-
-	return retval;
+    return *max_element(ansVec.begin(), ansVec.end());
 }
